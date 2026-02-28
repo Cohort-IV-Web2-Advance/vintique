@@ -17,9 +17,10 @@ class ProductService:
     def get_all_products(self) -> List[Product]:
         return self.db.query(Product).all()
 
-    def create_product(self, product_data: ProductCreate, image_file=None) -> Product:
+    def create_product(self, product_data) -> Product:
         # Handle image upload if provided
         image_url = None
+        image_file = product_data.image_file
         if image_file:
             upload_result = upload_image(image_file)
             image_url = upload_result.get("secure_url")

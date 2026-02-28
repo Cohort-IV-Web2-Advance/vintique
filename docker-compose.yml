@@ -11,12 +11,12 @@ services:
       - "8000:8000"
     environment:
       - DATABASE_URL=mysql+pymysql://vintique_user:vintique_password@db:3306/vintique_db
-      - JWT_SECRET_KEY=your_super_secret_jwt_key_here_change_in_production
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
       - JWT_ALGORITHM=HS256
       - JWT_ACCESS_TOKEN_EXPIRE_MINUTES=30
-      - CLOUDINARY_CLOUD_NAME=your_cloud_name
-      - CLOUDINARY_API_KEY=your_api_key
-      - CLOUDINARY_API_SECRET=your_api_secret
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
       - ENVIRONMENT=production
       - GUNICORN_WORKERS=3
       - GUNICORN_TIMEOUT=120

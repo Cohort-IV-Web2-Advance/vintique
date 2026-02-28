@@ -64,14 +64,18 @@
                 </div>
             </div>
         </div>
-
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-cream border-t border-parchment">
+        <div id="mobile-menu"
+            style="max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.3s ease, opacity 0.3s ease;"
+            class="md:hidden bg-cream border-t border-parchment">
             <div class="px-4 py-4 flex flex-col gap-3">
                 <a href="index.html" class="text-sm text-brown hover:text-amber py-1">Home</a>
-                <a href="products.html" class="text-sm text-brown hover:text-amber py-1">Shop</a>
-                <a href="about.html" class="text-sm text-amber font-semibold py-1">About</a>
-                <a href="#contact" class="text-sm text-brown hover:text-amber py-1">Contact</a>
+                <a href="products.html" class="text-sm text-brown hover:text-amber py-1">Shop All</a>
+                <a href="about.html"
+                    class="text-sm font-sans tracking-wide text-amber transition-colors">About
+                    Us</a>
+                <a href="team.html"
+                    class="text-sm font-sans tracking-wide text-brown hover:text-amber transition-colors">Meet
+                    Our Team</a>
                 <a href="login.html" class="text-sm text-brown hover:text-amber py-1">Sign In</a>
             </div>
         </div>
@@ -289,7 +293,7 @@
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
                 <div class="col-span-2 md:col-span-1">
                     <p class="font-serif text-2xl text-cream font-bold mb-1">Vintique</p>
-                     <p class="text-xs tracking-widest text-amber uppercase mb-4">Est. 2026</p>
+                    <p class="text-xs tracking-widest text-amber uppercase mb-4">Est. 2026</p>
                     <p class="text-sm leading-relaxed text-cream/50">Curated vintage treasures, authenticated by
                         experts.</p>
                 </div>
@@ -330,11 +334,6 @@
 
     <script src="/js/app.js"></script>
     <script>
-        window.addEventListener('scroll', () => {
-            document.getElementById('navbar').classList.toggle('shadow-md', window.scrollY > 30);
-        });
-
-        // ── Scroll reveal ────────────────────────────────────────────────────────
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -370,20 +369,27 @@
 
         document.querySelectorAll('[data-target]').forEach(el => counterObserver.observe(el));
 
-        // ── Contact form ─────────────────────────────────────────────────────────
-        function handleContact(e) {
-            e.preventDefault();
-            const btn = document.getElementById('contact-btn');
-            const success = document.getElementById('contact-success');
-            btn.textContent = 'Sending…';
-            btn.disabled = true;
-            setTimeout(() => {
-                btn.classList.add('hidden');
-                success.classList.remove('hidden');
-                e.target.reset();
-            }, 1000);
-        }
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const btn = document.querySelector('[onclick="toggleMobileMenu()"]');
+            const isOpen = menu.classList.contains('open');
 
+            if (isOpen) {
+                menu.style.maxHeight = '0';
+                menu.style.opacity = '0';
+                setTimeout(() => menu.classList.remove('open'), 300);
+                btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+    </svg>`;
+            } else {
+                menu.classList.add('open');
+                menu.style.maxHeight = menu.scrollHeight + 'px';
+                menu.style.opacity = '1';
+                btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+    </svg>`;
+            }
+        }
     </script>
 </body>
 

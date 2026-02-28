@@ -222,13 +222,11 @@
   <script src="/js/app.js"></script>
   <script>
 
-    // ── Password toggle ───────────────────────────────────────────────────────
     function togglePassword(id) {
       const input = document.getElementById(id);
       input.type = input.type === 'password' ? 'text' : 'password';
     }
 
-    // ── Password strength meter ───────────────────────────────────────────────
     function updateStrength(val) {
       const wrap = document.getElementById('strength-bar-wrap');
       const label = document.getElementById('strength-label');
@@ -260,7 +258,6 @@
       label.className = `text-xs mt-0.5 ${level.textColor}`;
     }
 
-    // ── Confirm password match ────────────────────────────────────────────────
     function checkMatch() {
       const pw   = document.getElementById('password-input').value;
       const conf = document.getElementById('confirm-input').value;
@@ -279,7 +276,6 @@
       hint.classList.remove('hidden');
     }
 
-    // ── Username availability (debounced mock) ────────────────────────────────
     let usernameTimer;
     function checkUsername(val) {
       const status = document.getElementById('username-status');

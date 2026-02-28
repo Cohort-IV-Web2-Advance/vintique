@@ -26,6 +26,29 @@
           <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6" stroke-width="1.8"/><path stroke-linecap="round" stroke-linejoin="round" d="M16 10a4 4 0 01-8 0"/></svg>
           <span id="cart-count" class="absolute -top-0.5 -right-0.5 flex bg-rust text-white text-[10px] font-bold rounded-full w-4 h-4 items-center justify-center">0</span>
         </a>
+
+           <!-- Mobile Menu -->
+          <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-brown">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="1.8">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+      </div>
+    </div>
+
+      <!-- Mobile Menu -->
+    <div id="mobile-menu"
+      style="max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.3s ease, opacity 0.3s ease;"
+      class="md:hidden bg-cream border-t border-parchment">
+      <div class="px-4 py-4 flex flex-col gap-3">
+        <a href="index.html" class="text-sm text-brown hover:text-amber py-1">Home</a>
+        <a href="products.html" class="text-sm text-amber py-1">Shop All</a>
+        <a href="about.html" class="text-sm font-sans tracking-wide text-brown hover:text-amber transition-colors">About
+          Us</a>
+        <a href="team.html" class="text-sm font-sans tracking-wide text-brown hover:text-amber transition-colors">Meet
+          Our Team</a>
+        <a href="login.html" class="text-sm text-brown hover:text-amber py-1">Sign In</a>
       </div>
     </div>
   </nav>
@@ -73,7 +96,7 @@
         <div>
           <p class="text-cream text-sm font-sans font-semibold mb-4 tracking-wide">Shop</p>
           <ul class="space-y-2">
-            <li><a href="products.html" class="text-sm hover:text-amber transition-colors">All Products</a></li>
+            <li><a href="products.html" class="text-sm text-amber transition-colors">All Products</a></li>
             <li><a href="#" class="text-sm hover:text-amber transition-colors">Jewelry</a></li>
             <li><a href="#" class="text-sm hover:text-amber transition-colors">Clothing</a></li>
             <li><a href="#" class="text-sm hover:text-amber transition-colors">Home Décor</a></li>
@@ -106,14 +129,31 @@
     </div>
   </footer>
 
-  <!-- Toast -->
-  <div id="toast" class="fixed bottom-6 right-6 z-50 hidden">
-    <div class="bg-brown text-cream px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 text-sm font-sans">
-      <span class="text-amber">✓</span><span id="toast-msg"></span>
-    </div>
-  </div>
-
   <script src="/js/app.js"></script>
   <script src="/js/products.js"></script>
+
+   <script>
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const btn = document.querySelector('[onclick="toggleMobileMenu()"]');
+      const isOpen = menu.classList.contains('open');
+
+      if (isOpen) {
+        menu.style.maxHeight = '0';
+        menu.style.opacity = '0';
+        setTimeout(() => menu.classList.remove('open'), 300);
+        btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+    </svg>`;
+      } else {
+        menu.classList.add('open');
+        menu.style.maxHeight = menu.scrollHeight + 'px';
+        menu.style.opacity = '1';
+        btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+    </svg>`;
+      }
+    }
+  </script>
 </body>
 </html>

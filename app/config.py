@@ -20,9 +20,9 @@ class Settings(BaseSettings):
     jwt_access_token_expire_minutes: int = 30
     
     # Cloudinary
-    cloudinary_cloud_name: str = "fallback_cloud_name"
-    cloudinary_api_key: str = "fallback_api_key"
-    cloudinary_api_secret: str = "fallback_api_secret"
+    cloudinary_cloud_name: str = "dxdt9ryza"
+    cloudinary_api_key: str = "181989243158131"
+    cloudinary_api_secret: str = "ukBeknAHb_avpgRhcuVJH9oBI6o"
     
     # Environment
     environment: str = "development"

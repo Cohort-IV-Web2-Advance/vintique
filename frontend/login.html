@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — Vintique</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body class="bg-cream font-sans text-darkbrown min-h-screen container mx-auto">
+
+  <div class="min-h-screen grid lg:grid-cols-2">
+
+    <!-- Left: Image Panel -->
+    <div class="hidden lg:block relative overflow-hidden">
+      <img src="https://plus.unsplash.com/premium_photo-1701204056531-f82d31308f1f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDV8fHxlbnwwfHx8fHw%3D"
+        alt="Vintage treasures" class="absolute inset-0 w-full h-full object-cover" />
+      <div class="absolute inset-0 bg-linear-to-br from-darkbrown/80 to-brown/60"></div>
+      <div class="relative h-full flex flex-col justify-between p-12">
+        <a href="index.html" class="flex items-center gap-2">
+          <span class="font-serif text-3xl text-cream font-bold">Vintique</span>
+        </a>
+        <div>
+          <blockquote class="font-serif text-2xl text-cream italic leading-relaxed mb-4">
+            "Every vintage piece carries a century of stories. Welcome back to yours."
+          </blockquote>
+          <p class="text-cream/60 text-sm font-sans">— Margaret Holloway, Founder</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Form Panel -->
+    <div class="flex items-center justify-center px-6 py-12">
+      <div class="w-full max-w-md fade-in">
+        <!-- Mobile Logo -->
+        <a href="index.html" class="flex items-center gap-2 lg:hidden mb-10">
+          <span class="font-serif text-2xl text-brown font-bold">Vintique</span>
+        </a>
+
+        <p class="text-amber text-xs tracking-[0.3em] uppercase font-sans mb-3">Welcome Back</p>
+        <h1 class="font-serif text-4xl text-brown mb-2">Sign In</h1>
+        <p class="text-muted text-sm mb-8">New to Vintique? <a href="register.html" class="text-amber hover:text-rust font-semibold transition-colors">Create an account</a></p>
+
+        <!-- Error Banner -->
+        <div id="auth-error" class="hidden bg-rust/10 border border-rust/20 text-rust rounded-xl px-4 py-3 text-sm mb-5"></div>
+
+        <form id="login-form" class="space-y-4" onsubmit="handleLogin(event)">
+          <div>
+            <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Email Address</label>
+            <input type="email" name="email" required placeholder="margaret@example.com"
+              class="w-full bg-white border border-parchment rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-amber transition-colors" />
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="text-xs font-sans tracking-wide text-muted">Password</label>
+              <a href="#" class="text-xs text-amber hover:text-rust transition-colors">Forgot password?</a>
+            </div>
+            <div class="relative">
+              <input type="password" name="password" id="password-input" required placeholder="••••••••"
+                class="w-full bg-white border border-parchment rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-amber transition-colors pr-12" />
+              <button type="button" onclick="togglePassword()" class="absolute right-4 top-1/2 -translate-y-1/2 text-muted hover:text-brown transition-colors">
+                <svg id="eye-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="accent-amber rounded" />
+            <span class="text-sm text-muted">Remember me for 30 days</span>
+          </label>
+
+          <button type="submit" id="login-btn"
+            class="w-full bg-amber hover:bg-rust text-cream font-sans font-semibold py-4 rounded-xl transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 mt-2 cursor-pointer">
+            Sign In
+          </button>
+        </form>
+
+        <p class="text-xs text-muted text-center mt-8">
+          By signing in, you agree to our <a href="#" class="text-amber hover:underline">Terms</a> and <a href="#" class="text-amber hover:underline">Privacy Policy</a>.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+  <script>
+    async function handleLogin(e) {
+      e.preventDefault();
+      const btn = document.getElementById('login-btn');
+      const errEl = document.getElementById('auth-error');
+      const form = e.target;
+
+      btn.textContent = 'Signing in…';
+      btn.disabled = true;
+      errEl.classList.add('hidden');
+
+      try {
+        await login(form.email.value, form.password.value);
+        const redirect = sessionStorage.getItem('vintique_redirect') || '../index.html';
+        sessionStorage.removeItem('vintique_redirect');
+        window.location.href = redirect;
+      } catch (err) {
+        errEl.textContent = err.message || 'Invalid email or password.';
+        errEl.classList.remove('hidden');
+        btn.textContent = 'Sign In';
+        btn.disabled = false;
+      }
+    }
+
+    function togglePassword() {
+      const input = document.getElementById('password-input');
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    // Redirect if already logged in
+    if (isLoggedIn()) window.location.href = '../index.html';
+  </script>
+</body>
+</html>

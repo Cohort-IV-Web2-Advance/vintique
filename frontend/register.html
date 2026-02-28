@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account — Vintique</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body class="bg-cream font-sans text-darkbrown min-h-screen container mx-auto">
+
+  <div class="min-h-screen grid lg:grid-cols-2">
+
+    <!-- Left: Image Panel -->
+    <div class="hidden lg:block relative overflow-hidden">
+      <img src="https://plus.unsplash.com/premium_photo-1701204056531-f82d31308f1f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDV8fHxlbnwwfHx8fHw%3D"
+        alt="Vintage collection" class="absolute inset-0 w-full h-full object-cover" />
+      <div class="absolute inset-0 bg-linear-to-br from-darkbrown to-brown/50"></div>
+      <div class="relative h-full flex flex-col justify-between p-12">
+        <a href="index.html" class="flex items-center gap-2">
+          <span class="font-serif text-3xl text-cream font-bold">Vintique</span>
+        </a>
+        <div class="space-y-6">
+          <p class="font-serif text-2xl text-cream italic leading-relaxed">
+            "Join a community of collectors who believe the past is worth preserving."
+          </p>
+          <p class="text-cream/60 text-sm font-sans">— Margaret Holloway, Founder</p>
+
+          <!-- Perks -->
+          <div class="space-y-4 pt-4 border-t border-cream/20">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-amber/20 flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4 text-amber" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+              <span class="text-cream/80 text-sm font-sans">First access to new arrivals every week</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-amber/20 flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4 text-amber" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+              <span class="text-cream/80 text-sm font-sans">Exclusive member discounts up to 20%</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-amber/20 flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4 text-amber" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+              <span class="text-cream/80 text-sm font-sans">Saved orders, wishlist & order tracking</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-amber/20 flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4 text-amber" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+              <span class="text-cream/80 text-sm font-sans">Authenticity certificates with every piece</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Form Panel -->
+    <div class="flex items-center justify-center px-6 py-12 overflow-y-auto">
+      <div class="w-full max-w-md fade-in">
+
+        <!-- Mobile Logo -->
+        <a href="index.html" class="flex items-center gap-2 lg:hidden mb-10">
+          <span class="font-serif text-2xl text-brown font-bold">Vintique</span>
+        </a>
+
+        <p class="text-amber text-xs tracking-[0.3em] uppercase font-sans mb-3">Join the Collection</p>
+        <h1 class="font-serif text-4xl text-brown mb-2">Create Account</h1>
+        <p class="text-muted text-sm mb-8">
+          Already a member?
+          <a href="login.html" class="text-amber hover:text-rust font-semibold transition-colors">Sign in</a>
+        </p>
+
+        <!-- Error Banner -->
+        <div id="auth-error" class="hidden bg-rust/10 border border-rust/20 text-rust rounded-xl px-4 py-3 text-sm mb-5"></div>
+
+        <form id="register-form" class="space-y-4" onsubmit="handleRegister(event)">
+
+          <!-- Name Row -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">First Name</label>
+              <input type="text" name="first_name" required placeholder="Margaret"
+                class="w-full bg-white border border-parchment rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-amber transition-colors" />
+            </div>
+            <div>
+              <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Last Name</label>
+              <input type="text" name="last_name" required placeholder="Holloway"
+                class="w-full bg-white border border-parchment rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-amber transition-colors" />
+            </div>
+          </div>
+
+          <!-- Username -->
+          <div>
+            <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Username</label>
+            <div class="relative">
+              <span class="absolute left-4 top-1/2 -translate-y-1/2 text-muted text-sm select-none">@</span>
+              <input type="text" name="username" id="username-input" required placeholder="margaret_h"
+                class="w-full bg-white border border-parchment rounded-xl pl-8 pr-4 py-3.5 text-sm focus:outline-none focus:border-amber transition-colors"
+                oninput="checkUsername(this.value)" />
+              <span id="username-status" class="absolute right-4 top-1/2 -translate-y-1/2 hidden"></span>
+            </div>
+            <p id="username-hint" class="text-xs text-muted mt-1 hidden"></p>
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Email Address</label>
+            <input type="email" name="email" required placeholder="margaret@example.com"
+              class="w-full bg-white border border-parchment rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-amber transition-colors" />
+          </div>
+
+          <!-- Password -->
+          <div>
+            <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Password</label>
+            <div class="relative">
+              <input type="password" name="password" id="password-input" required placeholder="At least 8 characters"
+                class="w-full bg-white border border-parchment rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-amber transition-colors pr-12"
+                oninput="updateStrength(this.value)" />
+              <button type="button" onclick="togglePassword('password-input')"
+                class="absolute right-4 top-1/2 -translate-y-1/2 text-muted hover:text-brown transition-colors">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+              </button>
+            </div>
+            <!-- Strength Meter -->
+            <div id="strength-bar-wrap" class="hidden mt-2">
+              <div class="flex gap-1 mb-1">
+                <div id="s1" class="h-1 flex-1 rounded-full bg-parchment transition-colors duration-300"></div>
+                <div id="s2" class="h-1 flex-1 rounded-full bg-parchment transition-colors duration-300"></div>
+                <div id="s3" class="h-1 flex-1 rounded-full bg-parchment transition-colors duration-300"></div>
+                <div id="s4" class="h-1 flex-1 rounded-full bg-parchment transition-colors duration-300"></div>
+              </div>
+              <p id="strength-label" class="text-xs text-muted"></p>
+            </div>
+          </div>
+
+          <!-- Confirm Password -->
+          <div>
+            <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Confirm Password</label>
+            <div class="relative">
+              <input type="password" name="confirm_password" id="confirm-input" required placeholder="Repeat your password"
+                class="w-full bg-white border border-parchment rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-amber transition-colors pr-12"
+                oninput="checkMatch()" />
+              <button type="button" onclick="togglePassword('confirm-input')"
+                class="absolute right-4 top-1/2 -translate-y-1/2 text-muted hover:text-brown transition-colors">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+              </button>
+            </div>
+            <p id="match-hint" class="text-xs mt-1 hidden"></p>
+          </div>
+
+          <!-- Shipping Address (optional) -->
+          <div>
+            <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">
+              Shipping Address
+              <span class="text-muted/60 ml-1 normal-case tracking-normal">(optional — you can add this later)</span>
+            </label>
+            <textarea name="shipping_address" rows="2" placeholder="12 Portobello Road, London, W11 1ET"
+              class="w-full bg-white border border-parchment rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber transition-colors resize-none"></textarea>
+          </div>
+
+          <!-- Terms -->
+          <label class="flex items-start gap-3 cursor-pointer group">
+            <input type="checkbox" id="terms-check" required
+              class="accent-amber mt-0.5 shrink-0 cursor-pointer" />
+            <span class="text-xs text-muted leading-relaxed">
+              I agree to Vintique's
+              <a href="#" class="text-amber hover:text-rust transition-colors">Terms of Service</a>
+              and
+              <a href="#" class="text-amber hover:text-rust transition-colors">Privacy Policy</a>.
+              I understand my data will be handled with care and never sold.
+            </span>
+          </label>
+
+          <!-- Submit -->
+          <button type="submit" id="register-btn"
+            class="w-full bg-amber hover:bg-rust text-cream font-sans font-semibold py-4 rounded-xl transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 cursor-pointer">
+            Create My Account
+          </button>
+
+        </form>
+
+        <!-- Divider -->
+        <div class="flex items-center gap-3 my-6">
+          <div class="flex-1 h-px bg-parchment"></div>
+          <span class="text-xs text-muted font-sans whitespace-nowrap">already have an account?</span>
+          <div class="flex-1 h-px bg-parchment"></div>
+        </div>
+
+        <a href="login.html"
+          class="w-full flex items-center justify-center gap-2 border border-parchment hover:border-amber text-brown hover:text-amber font-sans font-semibold text-sm py-3.5 rounded-xl transition-all duration-300">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+          </svg>
+          Sign In Instead
+        </a>
+
+        <p class="text-xs text-muted text-center mt-6">
+          Your information is encrypted and secure. We never share your data with third parties.
+        </p>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+  <script>
+
+    // ── Password toggle ───────────────────────────────────────────────────────
+    function togglePassword(id) {
+      const input = document.getElementById(id);
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    // ── Password strength meter ───────────────────────────────────────────────
+    function updateStrength(val) {
+      const wrap = document.getElementById('strength-bar-wrap');
+      const label = document.getElementById('strength-label');
+      const bars = ['s1','s2','s3','s4'].map(id => document.getElementById(id));
+
+      if (!val) { wrap.classList.add('hidden'); return; }
+      wrap.classList.remove('hidden');
+
+      let score = 0;
+      if (val.length >= 8)          score++;
+      if (/[A-Z]/.test(val))        score++;
+      if (/[0-9]/.test(val))        score++;
+      if (/[^A-Za-z0-9]/.test(val)) score++;
+
+      const levels = [
+        { color: 'bg-rust',  text: 'Weak',      textColor: 'text-rust' },
+        { color: 'bg-amber', text: 'Fair',       textColor: 'text-amber' },
+        { color: 'bg-amber', text: 'Good',       textColor: 'text-amber' },
+        { color: 'bg-sage',  text: 'Strong ✓',  textColor: 'text-sage' },
+      ];
+
+      const level = levels[score - 1] || levels[0];
+
+      bars.forEach((bar, i) => {
+        bar.className = `h-1 flex-1 rounded-full transition-colors duration-300 ${i < score ? level.color : 'bg-parchment'}`;
+      });
+
+      label.textContent = level.text;
+      label.className = `text-xs mt-0.5 ${level.textColor}`;
+    }
+
+    // ── Confirm password match ────────────────────────────────────────────────
+    function checkMatch() {
+      const pw   = document.getElementById('password-input').value;
+      const conf = document.getElementById('confirm-input').value;
+      const hint = document.getElementById('match-hint');
+      const input = document.getElementById('confirm-input');
+
+      if (!conf) { hint.classList.add('hidden'); return; }
+
+      if (pw === conf) {
+        hint.textContent = '✓ Passwords match';
+        hint.className = 'text-xs mt-1 text-sage';
+      } else {
+        hint.textContent = '✗ Passwords do not match';
+        hint.className = 'text-xs mt-1 text-rust';
+      }
+      hint.classList.remove('hidden');
+    }
+
+    // ── Username availability (debounced mock) ────────────────────────────────
+    let usernameTimer;
+    function checkUsername(val) {
+      const status = document.getElementById('username-status');
+      const hint   = document.getElementById('username-hint');
+      clearTimeout(usernameTimer);
+
+      if (val.length < 3) {
+        status.classList.add('hidden');
+        hint.classList.add('hidden');
+        return;
+      }
+
+      // Show loading spinner
+      status.innerHTML = `<svg class="w-4 h-4 text-muted animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>`;
+      status.classList.remove('hidden');
+      hint.classList.add('hidden');
+
+      usernameTimer = setTimeout(() => {
+        // Simulated check — replace with real API call: GET /auth/check-username?username=val
+        const taken = ['admin', 'margaret_h', 'vintique'].includes(val.toLowerCase());
+
+        if (taken) {
+          status.innerHTML = `<svg class="w-4 h-4 text-rust" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>`;
+          hint.textContent = 'That username is already taken.';
+          hint.className = 'text-xs text-rust mt-1';
+        } else {
+          status.innerHTML = `<svg class="w-4 h-4 text-sage" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>`;
+          hint.textContent = `@${val} is available!`;
+          hint.className = 'text-xs text-sage mt-1';
+        }
+        hint.classList.remove('hidden');
+      }, 600);
+    }
+
+    // ── Form submission ───────────────────────────────────────────────────────
+    async function handleRegister(e) {
+      e.preventDefault();
+      const btn   = document.getElementById('register-btn');
+      const errEl = document.getElementById('auth-error');
+      const form  = e.target;
+
+      // Client-side validation
+      const pw   = form.password.value;
+      const conf = form.confirm_password.value;
+      if (pw !== conf) {
+        errEl.textContent = 'Passwords do not match.';
+        errEl.classList.remove('hidden');
+        return;
+      }
+      if (pw.length < 8) {
+        errEl.textContent = 'Password must be at least 8 characters.';
+        errEl.classList.remove('hidden');
+        return;
+      }
+
+      btn.textContent = 'Creating account…';
+      btn.disabled = true;
+      errEl.classList.add('hidden');
+
+      const payload = {
+        username:         form.username.value,
+        email:            form.email.value,
+        password:         pw,
+        shipping_address: form.shipping_address.value || null,
+      };
+
+      try {
+        await register(payload);
+        // Auto-login after successful registration
+        await login(payload.email, payload.password);
+        window.location.href = '/index.html';
+      } catch (err) {
+        errEl.textContent = err.message || 'Registration failed. Please try again.';
+        errEl.classList.remove('hidden');
+        btn.textContent = 'Create My Account';
+        btn.disabled = false;
+      }
+    }
+
+    // Redirect if already logged in
+    if (typeof isLoggedIn === 'function' && isLoggedIn()) {
+      window.location.href = '/index.html';
+    }
+  </script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 from typing import Optional
 from datetime import datetime
 from decimal import Decimal
@@ -9,7 +9,8 @@ class OrderCreate(BaseModel):
     product_id: int = Field(..., gt=0, description="Valid product ID required")
     quantity: int = Field(..., gt=0, le=100, description="Quantity must be positive and less than 100")
     
-    @validator('product_id')
+    @field_validator('product_id')
+    @classmethod
     def validate_product_id(cls, v):
         """Validate product ID."""
         if v <= 0:

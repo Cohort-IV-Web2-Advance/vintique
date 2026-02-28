@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, Field, validator
+from pydantic import BaseModel, EmailStr, Field, field_validator
 from typing import Optional
 from datetime import datetime
 from decimal import Decimal
@@ -7,11 +7,12 @@ import re
 
 class UserCreate(BaseModel):
     email: EmailStr = Field(..., description="Valid email address required")
-    username: str = Field(..., min_length=3, max_length=50, regex="^[a-zA-Z0-9_]+$", description="Username must be 3-50 characters, alphanumeric and underscore only")
+    username: str = Field(..., min_length=3, max_length=50, pattern="^[a-zA-Z0-9_]+$", description="Username must be 3-50 characters, alphanumeric and underscore only")
     password: str = Field(..., min_length=8, max_length=128, description="Password must be 8-128 characters")
     shipping_address: Optional[str] = Field(None, max_length=500, description="Shipping address (optional, max 500 characters)")
     
-    @validator('password')
+    @field_validator('password')
+    @classmethod
     def validate_password(cls, v):
         """Strong password validation."""
         if len(v) < 8:
@@ -26,7 +27,8 @@ class UserCreate(BaseModel):
             raise ValueError('Password must contain at least one special character')
         return v
     
-    @validator('shipping_address')
+    @field_validator('shipping_address')
+    @classmethod
     def validate_shipping_address(cls, v):
         """Validate shipping address if provided."""
         if v and not v.strip():
@@ -38,7 +40,8 @@ class UserLogin(BaseModel):
     email: EmailStr = Field(..., description="Valid email address required")
     password: str = Field(..., min_length=1, max_length=128, description="Password required")
     
-    @validator('password')
+    @field_validator('password')
+    @classmethod
     def validate_password(cls, v):
         """Basic password validation for login."""
         if not v or not v.strip():
@@ -94,7 +97,7 @@ class FundAccountResponse(BaseModel):
 class AccountTransactionRequest(BaseModel):
     """Schema for account transactions (withdraw/deposit)."""
     amount: Decimal = Field(..., gt=0, description="Amount must be greater than 0")
-    transaction_type: str = Field(..., regex="^(deposit|withdraw)$", description="Must be 'deposit' or 'withdraw'")
+    transaction_type: str = Field(..., pattern="^(deposit|withdraw)$", description="Must be 'deposit' or 'withdraw'")
     
     class Config:
         from_attributes = True

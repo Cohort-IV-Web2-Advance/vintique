@@ -1,5 +1,5 @@
 from pydantic_settings import BaseSettings
-from typing import Optional
+from typing import Optional, List
 import os
 import sys
 
@@ -26,6 +26,9 @@ class Settings(BaseSettings):
     
     # Environment
     environment: str = "development"
+    
+    # CORS
+    cors_origins: List[str] = ["http://localhost:3000", "http://127.0.0.1:3000"]
     
     # Gunicorn
     gunicorn_workers: int = 3

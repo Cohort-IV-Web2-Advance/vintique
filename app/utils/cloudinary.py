@@ -1,6 +1,8 @@
 import cloudinary
 import cloudinary.uploader
 from app.config import settings
+import re
+from typing import Optional
 
 # Configure Cloudinary
 cloudinary.config(
@@ -8,6 +10,42 @@ cloudinary.config(
     api_key=settings.cloudinary_api_key,
     api_secret=settings.cloudinary_api_secret
 )
+
+# Allowed file types and max size (5MB)
+ALLOWED_MIME_TYPES = {"image/jpeg", "image/jpg", "image/png", "image/webp"}
+ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
+MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB in bytes
+
+
+def validate_image_file(image_file) -> None:
+    """
+    Validate uploaded image file for type, size, and format.
+    
+    Args:
+        image_file: Uploaded file object
+        
+    Raises:
+        ValueError: If file validation fails
+    """
+    if not image_file or not hasattr(image_file, 'filename'):
+        raise ValueError("No file provided")
+    
+    # Check file extension
+    filename = image_file.filename.lower()
+    if not any(filename.endswith(ext) for ext in ALLOWED_EXTENSIONS):
+        raise ValueError(f"Invalid file type. Allowed types: {', '.join(ALLOWED_EXTENSIONS)}")
+    
+    # Check MIME type
+    if hasattr(image_file, 'content_type') and image_file.content_type not in ALLOWED_MIME_TYPES:
+        raise ValueError(f"Invalid MIME type. Allowed types: {', '.join(ALLOWED_MIME_TYPES)}")
+    
+    # Check file size
+    if hasattr(image_file, 'size') and image_file.size > MAX_FILE_SIZE:
+        raise ValueError(f"File too large. Maximum size: 5MB")
+    
+    # Reset file pointer if it was read
+    if hasattr(image_file, 'seek'):
+        image_file.seek(0)
 
 
 def upload_image(image_file) -> dict:
@@ -19,22 +57,40 @@ def upload_image(image_file) -> dict:
         
     Returns:
         dict: Cloudinary upload result containing secure_url and other metadata
+        
+    Raises:
+        ValueError: If file validation fails
+        Exception: If upload fails
     """
     try:
+        # Validate file before upload
+        validate_image_file(image_file)
+        
         # Read file content
         file_content = image_file.file.read()
         
-        # Upload to Cloudinary
+        # Double-check file size
+        if len(file_content) > MAX_FILE_SIZE:
+            raise ValueError(f"File too large. Maximum size: 5MB")
+        
+        # Upload to Cloudinary with validation
         result = cloudinary.uploader.upload(
             file_content,
             folder="vintique/products",
             resource_type="image",
             allowed_formats=["jpg", "jpeg", "png", "webp"],
             quality="auto",
-            fetch_format="auto"
+            fetch_format="auto",
+            format="auto",  # Let Cloudinary determine format
+            transformation=[
+                {"quality": "auto"},
+                {"fetch_format": "auto"}
+            ]
         )
         
         return result
+    except ValueError as ve:
+        raise ValueError(f"Validation error: {str(ve)}")
     except Exception as e:
         raise Exception(f"Failed to upload image: {str(e)}")
 
@@ -49,9 +105,20 @@ def update_image(image_file, public_id: str = None) -> dict:
         
     Returns:
         dict: Cloudinary upload result
+        
+    Raises:
+        ValueError: If file validation fails
+        Exception: If upload fails
     """
     try:
+        # Validate file before upload
+        validate_image_file(image_file)
+        
         file_content = image_file.file.read()
+        
+        # Double-check file size
+        if len(file_content) > MAX_FILE_SIZE:
+            raise ValueError(f"File too large. Maximum size: 5MB")
         
         upload_options = {
             "file_content": file_content,
@@ -59,7 +126,8 @@ def update_image(image_file, public_id: str = None) -> dict:
             "resource_type": "image",
             "allowed_formats": ["jpg", "jpeg", "png", "webp"],
             "quality": "auto",
-            "fetch_format": "auto"
+            "fetch_format": "auto",
+            "format": "auto"
         }
         
         # If public_id is provided, overwrite the existing image
@@ -69,6 +137,8 @@ def update_image(image_file, public_id: str = None) -> dict:
         
         result = cloudinary.uploader.upload(**upload_options)
         return result
+    except ValueError as ve:
+        raise ValueError(f"Validation error: {str(ve)}")
     except Exception as e:
         raise Exception(f"Failed to update image: {str(e)}")
 
@@ -82,8 +152,14 @@ def delete_image(image_url: str) -> bool:
         
     Returns:
         bool: True if deletion was successful
+        
+    Raises:
+        Exception: If deletion fails
     """
     try:
+        if not image_url:
+            return True  # Nothing to delete
+        
         # Extract public_id from the URL
         # Cloudinary URL format: https://res.cloudinary.com/cloud_name/image/upload/v1234567890/folder/public_id.format
         parts = image_url.split('/')

@@ -74,10 +74,15 @@ services:
     environment:
       PMA_HOST: db
       PMA_USER: root
-      PMA_PASSWORD: root_password
+      PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       PMA_PORT: 3306
+      PMA_ABSOLUTE_URI: http://localhost:8080/
+      HIDE_PHP_VERSION: true
+      MAX_EXECUTION_TIME: 600
+      MEMORY_LIMIT: 512M
+      UPLOAD_LIMIT: 64M
     ports:
-      - "8080:80"
+      - "127.0.0.1:8080:80"
     depends_on:
       db:
         condition: service_healthy
@@ -89,6 +94,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+      start_period: 40s
 
 volumes:
   mysql_data:

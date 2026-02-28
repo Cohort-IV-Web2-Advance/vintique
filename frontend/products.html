@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop — Vintique</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body class="bg-cream font-sans text-darkbrown container mx-auto">
+
+  <!-- NAVBAR (same pattern) -->
+  <nav class="sticky top-0 z-50 bg-cream/95 backdrop-blur-sm border-b border-parchment shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between py-2">
+      <a href="index.html" class="flex items-center gap-2">
+         <img src="/image/836230a2-2ca2-471b-b559-c79b56e9cd14.jpeg" alt="logo" class="h-16 rounded-full">
+        <span class="text-2xl font-serif font-bold text-brown">Vintique</span>
+      </a>
+      <div class="hidden md:flex items-center gap-6">
+        <a href="index.html" class="text-sm text-brown hover:text-amber transition-colors">Home</a>
+        <a href="products.html" class="text-sm text-amber font-semibold border-b-2 border-amber pb-0.5">Shop</a>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="login.html" id="auth-link" class="hidden md:block text-sm px-6 py-1 border border-[brown] text-brown hover:text-amber transition-colors">Sign In</a>
+        <a href="cart.html" class="relative p-2 text-brown hover:text-amber transition-colors">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6" stroke-width="1.8"/><path stroke-linecap="round" stroke-linejoin="round" d="M16 10a4 4 0 01-8 0"/></svg>
+          <span id="cart-count" class="absolute -top-0.5 -right-0.5 flex bg-rust text-white text-[10px] font-bold rounded-full w-4 h-4 items-center justify-center">0</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="bg-parchment/60 border-b border-parchment py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <p class="text-amber text-xs tracking-[0.3em] uppercase font-sans mb-2">Your</p>
+      <h1 class="font-serif text-4xl text-brown">Best Collections</h1>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="flex flex-col lg:flex-row gap-10">
+
+
+      <!-- ── PRODUCT GRID ── -->
+      <div class="flex-1">
+        <!-- Active Filters -->
+        <div id="active-filters" class="flex flex-wrap gap-2 mb-6"></div>
+
+        <!-- Grid -->
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+          <!-- Skeleton placeholders -->
+          <div class="skeleton h-80 rounded-xl"></div>
+          <div class="skeleton h-80 rounded-xl"></div>
+          <div class="skeleton h-80 rounded-xl"></div>
+          <div class="skeleton h-80 rounded-xl"></div>
+          <div class="skeleton h-80 rounded-xl"></div>
+          <div class="skeleton h-80 rounded-xl"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+   <!-- ── FOOTER ── -->
+  <footer class="bg-darkbrown text-cream/70 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+        <div class="col-span-2 md:col-span-1">
+          <p class="font-serif text-2xl text-cream font-bold mb-1">Vintique</p>
+          <p class="text-xs tracking-widest text-amber uppercase mb-4">Est. 2026</p>
+          <p class="text-sm leading-relaxed text-cream/50">Curated vintage treasures, authenticated by experts. Making the past available to all.</p>
+        </div>
+        <div>
+          <p class="text-cream text-sm font-sans font-semibold mb-4 tracking-wide">Shop</p>
+          <ul class="space-y-2">
+            <li><a href="products.html" class="text-sm hover:text-amber transition-colors">All Products</a></li>
+            <li><a href="#" class="text-sm hover:text-amber transition-colors">Jewelry</a></li>
+            <li><a href="#" class="text-sm hover:text-amber transition-colors">Clothing</a></li>
+            <li><a href="#" class="text-sm hover:text-amber transition-colors">Home Décor</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="text-cream text-sm font-sans font-semibold mb-4 tracking-wide">Account</p>
+          <ul class="space-y-2">
+            <li><a href="login.html" class="text-sm hover:text-amber transition-colors">Sign In</a></li>
+            <li><a href="register.html" class="text-sm hover:text-amber transition-colors">Register</a></li>
+            <li><a href="orders.html" class="text-sm hover:text-amber transition-colors">My Orders</a></li>
+            <li><a href="cart.html" class="text-sm hover:text-amber transition-colors">Cart</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="text-cream text-sm font-sans font-semibold mb-4 tracking-wide">Help</p>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-sm hover:text-amber transition-colors">Authenticity</a></li>
+            <li><a href="#" class="text-sm hover:text-amber transition-colors">Shipping</a></li>
+            <li><a href="#" class="text-sm hover:text-amber transition-colors">Returns</a></li>
+            <li><a href="#" class="text-sm hover:text-amber transition-colors">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="border-t border-cream/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p class="text-xs text-cream/40">© 2026 Vintique. All rights reserved.</p>
+        <p class="text-xs text-cream/40">Powered by sustainable vintage commerce.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 hidden">
+    <div class="bg-brown text-cream px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 text-sm font-sans">
+      <span class="text-amber">✓</span><span id="toast-msg"></span>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+  <script src="/js/products.js"></script>
+</body>
+</html>

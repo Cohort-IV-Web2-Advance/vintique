@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About Us — Vintique</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="/src/style.css" />
+</head>
+
+<body class="bg-cream font-sans text-darkbrown container mx-auto">
+
+    <!-- ── NAVBAR ── -->
+    <nav id="navbar"
+        class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-cream/95 backdrop-blur-sm border-b border-parchment">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <a href="index.html" class="flex items-center gap-2">
+                    <img src="/image/836230a2-2ca2-471b-b559-c79b56e9cd14.jpeg" alt="logo" class="h-16 rounded-full">
+                    <span class="text-2xl font-serif font-bold text-brown tracking-wide">Vintique</span>
+                </a>
+
+                <!-- Desktop Nav -->
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="index.html"
+                        class="text-sm font-sans tracking-wide text-brown hover:text-amber transition-colors">Home</a>
+                    <a href="products.html"
+                        class="text-sm font-sans tracking-wide text-brown hover:text-amber transition-colors">Shop</a>
+                    <a href="#"
+                        class="text-sm font-sans tracking-wide text-amber border-b border-amber pb-0.5">About</a>
+                    <a href="team.html"
+                        class="text-sm font-sans tracking-wide text-brown hover:text-amber transition-colors">Meet Our
+                        Team</a>
+                </div>
+
+                <!-- Right Actions -->
+                <div class="flex items-center gap-3">
+                    <a href="login.html"
+                        class="hidden md:block text-sm font-sans text-brown border px-4 py-1 border-brown hover:text-amber transition-colors">Sign
+                        In</a>
+
+                    <!-- Cart -->
+                    <a href="cart.html" class="relative p-2 text-brown hover:text-amber transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                            <line x1="3" y1="6" x2="21" y2="6" stroke-linecap="round" stroke-width="1.8" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 10a4 4 0 01-8 0" />
+                        </svg>
+                        <span id="cart-count"
+                            class="absolute -top-0.5 -right-0.5 bg-rust text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">0</span>
+                    </a>
+                    <!-- Mobile Menu -->
+                    <button onclick="toggleMenu()" class="md:hidden p-2 text-brown">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-cream border-t border-parchment">
+            <div class="px-4 py-4 flex flex-col gap-3">
+                <a href="index.html" class="text-sm text-brown hover:text-amber py-1">Home</a>
+                <a href="products.html" class="text-sm text-brown hover:text-amber py-1">Shop</a>
+                <a href="about.html" class="text-sm text-amber font-semibold py-1">About</a>
+                <a href="#contact" class="text-sm text-brown hover:text-amber py-1">Contact</a>
+                <a href="login.html" class="text-sm text-brown hover:text-amber py-1">Sign In</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ── INTRO ── -->
+    <section class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+            <div class="reveal">
+                <p class="text-amber text-xs tracking-[0.3em] uppercase font-sans mb-4">Who We Are</p>
+                <h2 class="font-serif text-4xl lg:text-5xl text-brown leading-tight mb-6">
+                    More Than a<br />Vintage Shop
+                </h2>
+                <p class="text-muted leading-relaxed mb-5">
+                    Vintique is a modern e-commerce platform dedicated to
+                    bringing timeless fashion back to life. We specialize in carefully curated classic vintage shirts
+                    that combine elegance, character, and authenticity.
+                </p>
+                <p class="text-muted leading-relaxed mb-8">
+                    Vintique was proudly developed by a team of Web2 Advanced Students from Blockfuse Labs, combining
+                    innovative web technologies with a passion for digital commerce. This project represents not only
+                    our technical expertise but also our commitment to building scalable, user-friendly, and secure
+                    online platforms.
+                </p>
+                <div class="flex flex-wrap gap-3">
+                    <a href="products.html"
+                        class="inline-flex items-center gap-2 bg-amber hover:bg-rust text-cream font-sans font-semibold text-sm px-6 py-3.5 rounded-xl transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
+                        Shop the Collection
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                    </a>
+                    <a href="#our-mission"
+                        class="inline-flex items-center gap-2 border border-brown/30 text-brown hover:border-amber hover:text-amber font-sans text-sm px-6 py-3.5 rounded-xl transition-all duration-300">
+                        Our Mission
+                    </a>
+                </div>
+            </div>
+
+            <div class="reveal grid grid-cols-2 gap-4">
+                <div class="rounded-2xl overflow-hidden aspect-3/4 h-full">
+                    <img src="https://imgs.search.brave.com/Tu5F0JBN7qA5L70f5TGZ7jfOWPKyYid-3p65z8n94S4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/Y2hpc2VsZWQtbWFn/YXppbmUuY29tL3dw/LWNvbnRlbnQvdXBs/b2Fkcy8yMDI0LzAx/L3ZpbnRhZ2Utc2hp/cnRzLW1lbi5wbmc"
+                        alt="Vintage finds" class="w-full h-full object-cover" />
+                </div>
+                <div class="flex flex-col gap-4 mt-8">
+                    <div class="rounded-2xl overflow-hidden aspect-square">
+                        <img src="https://plus.unsplash.com/premium_photo-1731170990911-e53fb3c49b34?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDR8fHxlbnwwfHx8fHw%3D"
+                            alt="Jewelry" class="w-full h-full object-cover" />
+                    </div>
+                    <div class="rounded-2xl overflow-hidden aspect-square">
+                        <img src="https://plus.unsplash.com/premium_photo-1679920026560-000496ff9e8b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDc0fHx8ZW58MHx8fHx8"
+                            alt="Vintage bag" class="w-full h-full object-cover" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── STATS ── -->
+    <section class="bg-brown py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+                <div class="reveal">
+                    <p class="font-serif text-5xl text-amber font-bold mb-2" data-target="1200">0</p>
+                    <p class="text-cream/50 text-xs font-sans tracking-widest uppercase">Curated Pieces</p>
+                </div>
+                <div class="reveal" style="transition-delay:0.1s">
+                    <p class="font-serif text-5xl text-amber font-bold mb-2" data-target="40">0</p>
+                    <p class="text-cream/50 text-xs font-sans tracking-widest uppercase">Countries Served</p>
+                </div>
+                <div class="reveal" style="transition-delay:0.2s">
+                    <p class="font-serif text-5xl text-amber font-bold mb-2" data-target="30">0</p>
+                    <p class="text-cream/50 text-xs font-sans tracking-widest uppercase">Years of Expertise</p>
+                </div>
+                <div class="reveal" style="transition-delay:0.3s">
+                    <p class="font-serif text-5xl text-amber font-bold mb-2" data-target="98">0</p>
+                    <p class="text-cream/50 text-xs font-sans tracking-widest uppercase">% Authenticated</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── OUR MISSION ── -->
+    <section id="our-mission" class="py-24 bg-parchment/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+                <p class="text-amber text-xs tracking-[0.3em] uppercase font-sans mb-4">Our Mission</p>
+                <h2 class="font-serif text-4xl lg:text-5xl text-brown leading-tight mb-5">
+                    Beauty Deserves<br />a Second Life
+                </h2>
+                <p class="text-muted leading-relaxed">
+                    We believe the most sustainable object is the one already made. By giving vintage pieces a second
+                    life, we reduce waste, honour craftsmanship, and keep history alive.
+                </p>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+
+                <div class="value-card bg-white rounded-2xl p-7 reveal">
+                    <div class="w-12 h-12 bg-amber/10 rounded-xl flex items-center justify-center mb-5">
+                        <svg class="w-6 h-6 text-amber" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                            stroke-width="1.6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-serif text-xl text-brown mb-3">Authenticity First</h3>
+                    <p class="text-muted text-sm leading-relaxed">Every item is inspected by our team of experts before
+                        listing. We test, research provenance, and document each piece with a full authenticity
+                        certificate.</p>
+                </div>
+
+                <div class="value-card bg-white rounded-2xl p-7 reveal" style="transition-delay:0.1s">
+                    <div class="w-12 h-12 bg-amber/10 rounded-xl flex items-center justify-center mb-5">
+                        <svg class="w-6 h-6 text-amber" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                            stroke-width="1.6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-serif text-xl text-brown mb-3">Sustainable Commerce</h3>
+                    <p class="text-muted text-sm leading-relaxed">Choosing vintage is choosing the planet. Every
+                        purchase extends the life of a beautiful object and reduces demand for new production — good for
+                        collectors and the earth alike.</p>
+                </div>
+
+                <div class="value-card bg-white rounded-2xl p-7 reveal" style="transition-delay:0.2s">
+                    <div class="w-12 h-12 bg-amber/10 rounded-xl flex items-center justify-center mb-5">
+                        <svg class="w-6 h-6 text-amber" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                            stroke-width="1.6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-serif text-xl text-brown mb-3">Community of Collectors</h3>
+                    <p class="text-muted text-sm leading-relaxed">We've built more than a marketplace — a community of
+                        12,000+ passionate collectors who share knowledge, recommendations, and a love for things that
+                        endure.</p>
+                </div>
+
+                <div class="value-card bg-white rounded-2xl p-7 reveal" style="transition-delay:0.05s">
+                    <div class="w-12 h-12 bg-amber/10 rounded-xl flex items-center justify-center mb-5">
+                        <svg class="w-6 h-6 text-amber" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                            stroke-width="1.6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
+                    </div>
+                    <h3 class="font-serif text-xl text-brown mb-3">Expert Restoration</h3>
+                    <p class="text-muted text-sm leading-relaxed">Our in-house conservators carefully clean, stabilise,
+                        and when needed, restore pieces to wearable or displayable condition — without erasing their
+                        beautiful history.</p>
+                </div>
+
+                <div class="value-card bg-white rounded-2xl p-7 reveal" style="transition-delay:0.15s">
+                    <div class="w-12 h-12 bg-amber/10 rounded-xl flex items-center justify-center mb-5">
+                        <svg class="w-6 h-6 text-amber" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                            stroke-width="1.6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-serif text-xl text-brown mb-3">Fair & Transparent Pricing</h3>
+                    <p class="text-muted text-sm leading-relaxed">No auction anxiety. Every piece is priced fairly based
+                        on condition, rarity, and provenance — with detailed descriptions so you always know exactly
+                        what you're buying.</p>
+                </div>
+
+                <div class="value-card bg-white rounded-2xl p-7 reveal" style="transition-delay:0.25s">
+                    <div class="w-12 h-12 bg-amber/10 rounded-xl flex items-center justify-center mb-5">
+                        <svg class="w-6 h-6 text-amber" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                            stroke-width="1.6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-serif text-xl text-brown mb-3">Loved, Not Just Listed</h3>
+                    <p class="text-muted text-sm leading-relaxed">We only list items we genuinely believe in. If a piece
+                        doesn't meet our standards of quality, beauty, or authenticity, it doesn't make it onto Vintique
+                        — full stop.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ── CTA BANNER ── -->
+    <section class="relative py-24 overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="https://plus.unsplash.com/premium_photo-1732137392607-caaf3221bd73?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDEzMHx8fGVufDB8fHx8fA%3D%3D"
+                alt="Collection" class="w-full h-full object-cover" />
+            <div class="absolute bg-linear-gradient-t  from-darkbrown/80 via-darkbrown to-brown"></div>
+        </div>
+        <div class="relative z-10 text-center max-w-2xl mx-auto px-4 reveal">
+            <p class="text-amber text-xs tracking-[0.3em] uppercase font-sans mb-4">Ready to Explore?</p>
+            <h2 class="font-serif text-4xl lg:text-5xl text-cream mb-6">Find Your Next<br />Favourite Thing</h2>
+            <p class="text-cream text-sm leading-relaxed mb-10">
+                Browse over 1,200 authenticated vintage pieces. Each one waiting for someone who will love it as much as
+                we do.
+            </p>
+            <a href="products.html"
+                class="inline-flex items-center gap-2 bg-amber hover:bg-rust text-cream font-sans font-semibold px-10 py-4 rounded-xl transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5">
+                Shop the Collection
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- ── FOOTER ── -->
+    <footer class="bg-darkbrown text-cream/70 py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+                <div class="col-span-2 md:col-span-1">
+                    <p class="font-serif text-2xl text-cream font-bold mb-1">Vintique</p>
+                     <p class="text-xs tracking-widest text-amber uppercase mb-4">Est. 2026</p>
+                    <p class="text-sm leading-relaxed text-cream/50">Curated vintage treasures, authenticated by
+                        experts.</p>
+                </div>
+                <div>
+                    <p class="text-cream text-sm font-sans font-semibold mb-4">Shop</p>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="products.html" class="hover:text-amber transition-colors">All Products</a></li>
+                        <li><a href="#" class="hover:text-amber transition-colors">Jewelry</a></li>
+                        <li><a href="#" class="hover:text-amber transition-colors">Clothing</a></li>
+                        <li><a href="#" class="hover:text-amber transition-colors">Home Décor</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <p class="text-cream text-sm font-sans font-semibold mb-4">Company</p>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="about.html" class="text-amber">About Us</a></li>
+                        <li><a href="#contact" class="hover:text-amber transition-colors">Contact</a></li>
+                        <li><a href="#" class="hover:text-amber transition-colors">Press</a></li>
+                        <li><a href="#" class="hover:text-amber transition-colors">Careers</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <p class="text-cream text-sm font-sans font-semibold mb-4">Help</p>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-amber transition-colors">Authenticity</a></li>
+                        <li><a href="#" class="hover:text-amber transition-colors">Shipping</a></li>
+                        <li><a href="#" class="hover:text-amber transition-colors">Returns</a></li>
+                        <li><a href="login.html" class="hover:text-amber transition-colors">My Account</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-cream/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <p class="text-xs text-cream/40">© 2026 Vintique. All rights reserved.</p>
+                <p class="text-xs text-cream/40">Preserving the beauty of the past, for the future.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/js/app.js"></script>
+    <script>
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('shadow-md', window.scrollY > 30);
+        });
+
+        // ── Scroll reveal ────────────────────────────────────────────────────────
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12 });
+
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // ── Animated counters ────────────────────────────────────────────────────
+        function animateCounter(el, target, suffix = '') {
+            let current = 0;
+            const step = Math.ceil(target / 60);
+            const timer = setInterval(() => {
+                current = Math.min(current + step, target);
+                el.textContent = current.toLocaleString() + suffix;
+                if (current >= target) clearInterval(timer);
+            }, 24);
+        }
+
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const target = parseInt(el.dataset.target);
+                    animateCounter(el, target);
+                    counterObserver.unobserve(el);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('[data-target]').forEach(el => counterObserver.observe(el));
+
+        // ── Contact form ─────────────────────────────────────────────────────────
+        function handleContact(e) {
+            e.preventDefault();
+            const btn = document.getElementById('contact-btn');
+            const success = document.getElementById('contact-success');
+            btn.textContent = 'Sending…';
+            btn.disabled = true;
+            setTimeout(() => {
+                btn.classList.add('hidden');
+                success.classList.remove('hidden');
+                e.target.reset();
+            }, 1000);
+        }
+
+    </script>
+</body>
+
+</html>

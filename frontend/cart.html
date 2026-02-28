@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cart & Checkout — Vintique</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body class="bg-cream font-sans text-darkbrown">
+
+  <!-- NAVBAR -->
+  <nav class="sticky top-0 z-50 bg-cream/95 backdrop-blur-sm border-b border-parchment shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between py-2">
+         <img src="/image/836230a2-2ca2-471b-b559-c79b56e9cd14.jpeg" alt="logo" class="h-16 rounded-full">
+      <a href="index.html" class="font-serif text-2xl font-bold text-brown">Vintique</a>
+      <div class="flex items-center gap-4">
+        <a href="products.html" class="text-sm text-brown hover:text-amber transition-colors hidden md:block">← Continue Shopping</a>
+        <a href="cart.html" class="relative p-2 text-amber">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6" stroke-width="1.8"/><path stroke-linecap="round" stroke-linejoin="round" d="M16 10a4 4 0 01-8 0"/></svg>
+          <span id="cart-count" class="absolute -top-0.5 -right-0.5 bg-rust text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">0</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- STEPS -->
+  <div class="bg-parchment/50 border-b border-parchment py-4">
+    <div class="max-w-3xl mx-auto px-4 flex items-center justify-center gap-0">
+      <div class="flex items-center gap-2" id="step-cart-indicator">
+        <div class="w-8 h-8 rounded-full bg-amber text-cream flex items-center justify-center text-sm font-bold">1</div>
+        <span class="text-sm font-sans text-brown font-semibold">Cart</span>
+      </div>
+      <div class="w-12 h-px bg-parchment mx-3"></div>
+      <div class="flex items-center gap-2" id="step-shipping-indicator">
+        <div id="step2-circle" class="w-8 h-8 rounded-full bg-parchment text-muted flex items-center justify-center text-sm font-bold border border-muted/30">2</div>
+        <span id="step2-label" class="text-sm font-sans text-muted">Shipping</span>
+      </div>
+      <div class="w-12 h-px bg-parchment mx-3"></div>
+      <div class="flex items-center gap-2">
+        <div id="step3-circle" class="w-8 h-8 rounded-full bg-parchment text-muted flex items-center justify-center text-sm font-bold border border-muted/30">3</div>
+        <span class="text-sm font-sans text-muted">Confirm</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+    <!-- ── STEP 1: CART ── -->
+    <div id="step-cart">
+      <h1 class="font-serif text-4xl text-brown mb-8">Your Cart</h1>
+
+      <!-- Empty Cart -->
+      <div id="empty-cart" class="hidden text-center py-24">
+        <p class="font-serif text-5xl text-parchment mb-4">🛒</p>
+        <p class="font-serif text-3xl text-muted mb-3">Your cart is empty</p>
+        <p class="text-sm text-muted mb-6">Discover something beautiful in our collection.</p>
+        <a href="products.html" class="inline-block bg-amber hover:bg-rust text-cream font-sans font-semibold text-sm px-8 py-3 rounded-xl transition-colors">
+          Browse the Collection
+        </a>
+      </div>
+
+      <!-- Cart Items + Summary -->
+      <div id="cart-content" class="grid lg:grid-cols-3 gap-8">
+        <!-- Items -->
+        <div class="lg:col-span-2 space-y-4" id="cart-items-list">
+          <!-- JS populates -->
+        </div>
+
+        <!-- Order Summary -->
+        <div class="lg:col-span-1">
+          <div class="bg-white rounded-2xl p-6 sticky top-24">
+            <h2 class="font-serif text-xl text-brown mb-5">Order Summary</h2>
+
+            <div class="space-y-3 mb-5">
+              <div class="flex justify-between text-sm">
+                <span class="text-muted">Subtotal</span>
+                <span class="text-brown font-semibold" id="summary-subtotal">—</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-muted">Shipping</span>
+                <span class="text-sage font-semibold">Free</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-muted">Tax (est.)</span>
+                <span class="text-brown font-semibold" id="summary-tax">—</span>
+              </div>
+            </div>
+
+            <div class="h-px bg-parchment mb-4"></div>
+
+            <div class="flex justify-between mb-6">
+              <span class="font-serif text-lg text-brown">Total</span>
+              <span class="font-serif text-xl text-amber font-bold" id="summary-total">—</span>
+            </div>
+
+            <!-- Promo Code -->
+            <div class="flex gap-2 mb-5">
+              <input type="text" placeholder="Promo code" id="promo-input"
+                class="flex-1 bg-cream border border-parchment rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber transition-colors" />
+              <button onclick="applyPromo()" class="bg-parchment hover:bg-amber hover:text-cream text-brown text-xs font-semibold px-4 rounded-lg transition-colors">Apply</button>
+            </div>
+
+            <button onclick="goToShipping()"
+              class="w-full bg-amber hover:bg-rust text-cream font-sans font-semibold py-4 rounded-xl transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
+              Proceed to Checkout →
+            </button>
+
+            <p class="text-xs text-muted text-center mt-4 flex items-center justify-center gap-1">
+              <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+              Secure checkout
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── STEP 2: SHIPPING ── -->
+    <div id="step-shipping" class="hidden max-w-2xl mx-auto">
+      <button onclick="backToCart()" class="flex items-center gap-2 text-sm text-muted hover:text-amber mb-6 transition-colors">
+        ← Back to Cart
+      </button>
+      <h1 class="font-serif text-4xl text-brown mb-8">Shipping Details</h1>
+
+      <form id="shipping-form" class="space-y-5">
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">First Name *</label>
+            <input name="first_name" type="text" required placeholder="Margaret"
+              class="w-full bg-white border border-parchment rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber transition-colors" />
+          </div>
+          <div>
+            <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Last Name *</label>
+            <input name="last_name" type="text" required placeholder="Holloway"
+              class="w-full bg-white border border-parchment rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber transition-colors" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Email Address *</label>
+          <input name="email" type="email" required placeholder="margaret@example.com"
+            class="w-full bg-white border border-parchment rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber transition-colors" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Street Address *</label>
+          <input name="address" type="text" required placeholder="12 Portobello Road"
+            class="w-full bg-white border border-parchment rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber transition-colors" />
+        </div>
+
+        <div class="grid sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">City *</label>
+            <input name="city" type="text" required placeholder="London"
+              class="w-full bg-white border border-parchment rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber transition-colors" />
+          </div>
+          <div>
+            <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Postcode *</label>
+            <input name="postcode" type="text" required placeholder="W11 1ET"
+              class="w-full bg-white border border-parchment rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber transition-colors" />
+          </div>
+          <div>
+            <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Country *</label>
+            <select name="country" required
+              class="w-full bg-white border border-parchment rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber transition-colors">
+              <option value="">Select…</option>
+              <option value="GB">United Kingdom</option>
+              <option value="US">United States</option>
+              <option value="FR">France</option>
+              <option value="DE">Germany</option>
+              <option value="NG">Nigeria</option>
+              <option value="CA">Canada</option>
+              <option value="AU">Australia</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Shipping Method -->
+        <div>
+          <label class="block text-xs font-sans tracking-wide text-muted mb-3">Shipping Method</label>
+          <div class="space-y-3">
+            <label class="flex items-center gap-3 border border-parchment rounded-xl p-4 cursor-pointer hover:border-amber transition-colors has-:checked:border-amber has-:checked:bg-amber/5">
+              <input type="radio" name="shipping_method" value="standard" checked class="accent-amber" />
+              <div class="flex-1">
+                <p class="text-sm font-semibold text-brown">Standard Shipping</p>
+                <p class="text-xs text-muted">5–7 business days</p>
+              </div>
+              <span class="text-sm font-sans text-sage font-semibold">Free</span>
+            </label>
+            <label class="flex items-center gap-3 border border-parchment rounded-xl p-4 cursor-pointer hover:border-amber transition-colors has-:checked:border-amber has-:checked:bg-amber/5">
+              <input type="radio" name="shipping_method" value="express" class="accent-amber" />
+              <div class="flex-1">
+                <p class="text-sm font-semibold text-brown">Express Shipping</p>
+                <p class="text-xs text-muted">1–3 business days</p>
+              </div>
+              <span class="text-sm font-sans text-brown font-semibold">$12.99</span>
+            </label>
+          </div>
+        </div>
+
+        <button type="button" onclick="goToConfirm()"
+          class="w-full bg-amber hover:bg-rust text-cream font-sans font-semibold py-4 rounded-xl transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 mt-2">
+          Review Order →
+        </button>
+      </form>
+    </div>
+
+    <!-- ── STEP 3: CONFIRM ── -->
+    <div id="step-confirm" class="hidden max-w-2xl mx-auto">
+      <button onclick="backToShipping()" class="flex items-center gap-2 text-sm text-muted hover:text-amber mb-6 transition-colors">
+        ← Back to Shipping
+      </button>
+      <h1 class="font-serif text-4xl text-brown mb-8">Review & Confirm</h1>
+
+      <div class="bg-white rounded-2xl p-6 mb-6">
+        <h3 class="font-serif text-lg text-brown mb-4">Items</h3>
+        <div id="confirm-items" class="space-y-3 mb-4"></div>
+        <div class="h-px bg-parchment my-4"></div>
+        <div class="flex justify-between">
+          <span class="font-sans text-sm text-muted">Total</span>
+          <span class="font-serif text-xl text-amber font-bold" id="confirm-total"></span>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl p-6 mb-6">
+        <h3 class="font-serif text-lg text-brown mb-4">Shipping To</h3>
+        <div id="confirm-address" class="text-sm text-muted leading-relaxed"></div>
+      </div>
+
+      <!-- Payment placeholder -->
+      <div class="bg-white rounded-2xl p-6 mb-6">
+        <h3 class="font-serif text-lg text-brown mb-4">Payment</h3>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Card Number</label>
+            <input type="text" placeholder="4242 4242 4242 4242" maxlength="19"
+              class="w-full bg-cream border border-parchment rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber transition-colors font-mono" />
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Expiry</label>
+              <input type="text" placeholder="MM / YY" maxlength="7"
+                class="w-full bg-cream border border-parchment rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber transition-colors font-mono" />
+            </div>
+            <div>
+              <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">CVC</label>
+              <input type="text" placeholder="•••" maxlength="4"
+                class="w-full bg-cream border border-parchment rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber transition-colors font-mono" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button onclick="placeOrder()" id="place-order-btn"
+        class="w-full bg-amber hover:bg-rust text-cream font-sans font-semibold py-4 rounded-xl transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
+        Place Order
+      </button>
+      <p class="text-xs text-muted text-center mt-3">By placing your order you agree to our Terms & Privacy Policy.</p>
+    </div>
+
+    <!-- ── SUCCESS ── -->
+    <div id="step-success" class="hidden text-center py-20 max-w-md mx-auto fade-in">
+      <div class="w-20 h-20 bg-sage/20 rounded-full flex items-center justify-center mx-auto mb-6">
+        <svg class="w-10 h-10 text-sage" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <p class="font-serif text-4xl text-brown mb-3">Order Placed!</p>
+      <p class="text-muted text-sm leading-relaxed mb-8">Thank you for your purchase. You'll receive a confirmation email shortly with tracking details.</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="orders.html" class="bg-amber hover:bg-rust text-cream font-sans font-semibold text-sm px-8 py-3 rounded-xl transition-colors">
+          View My Orders
+        </a>
+        <a href="products.html" class="border border-brown text-brown hover:bg-brown hover:text-cream font-sans font-semibold text-sm px-8 py-3 rounded-xl transition-colors">
+          Continue Shopping
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 hidden">
+    <div class="bg-brown text-cream px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 text-sm font-sans">
+      <span class="text-amber">✓</span><span id="toast-msg"></span>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+  <script src="/js/cart.js"></script>
+</body>
+</html>

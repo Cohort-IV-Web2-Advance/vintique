@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Vintique</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body class="bg-cream font-sans text-darkbrown">
+
+  <div class="flex min-h-screen">
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="w-60 bg-darkbrown text-cream  flex-col fixed inset-y-0 left-0 z-40 hidden lg:flex">
+      <div class="p-6 border-b border-cream/10">
+        <p class="font-serif text-2xl font-bold">Vintique</p>
+        <p class="text-amber text-xs tracking-widest uppercase mt-0.5">Admin Panel</p>
+      </div>
+
+      <nav class="flex-1 p-4 space-y-1">
+        <button onclick="showTab('dashboard')" class="admin-nav w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors bg-cream/10 text-cream">
+          📊 Dashboard
+        </button>
+        <button onclick="showTab('products')" class="admin-nav w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
+          🏷️ Products
+        </button>
+        <button onclick="showTab('orders')" class="admin-nav w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
+          📦 Orders
+        </button>
+        <button onclick="showTab('users')" class="admin-nav w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
+          👥 Users
+        </button>
+        <button onclick="showTab('add-product')" class="admin-nav w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
+          ➕ Add Product
+        </button>
+      </nav>
+
+      <div class="p-4 border-t border-cream/10">
+        <button onclick="logout()" class="w-full text-left px-4 py-2.5 text-sm  border-[brown] text-cream/50 hover:text-rust transition-colors">
+          ← Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- ── MAIN ── -->
+    <div class="flex-1 lg:ml-60">
+
+      <!-- Top Bar -->
+      <header class="bg-white border-b border-parchment px-6 py-4 flex items-center justify-between sticky top-0 z-30">
+        <h2 id="page-title" class="font-serif text-2xl text-brown">Dashboard</h2>
+        <div class="flex items-center gap-3">
+          <span id="admin-name" class="text-sm text-muted"></span>
+          <a href="index.html" class="text-xs text-amber hover:text-rust transition-colors">View Site →</a>
+        </div>
+      </header>
+
+      <main class="p-6">
+
+        <!-- ── DASHBOARD TAB ── -->
+        <div id="tab-dashboard" class="fade-in">
+          <!-- Stats -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white rounded-2xl p-5">
+              <p class="text-xs font-sans text-muted tracking-wide mb-2">Total Revenue</p>
+              <p class="font-serif text-3xl text-amber">$24,580</p>
+              <p class="text-xs text-sage mt-1">↑ 12% this month</p>
+            </div>
+            <div class="bg-white rounded-2xl p-5">
+              <p class="text-xs font-sans text-muted tracking-wide mb-2">Total Orders</p>
+              <p class="font-serif text-3xl text-brown">184</p>
+              <p class="text-xs text-sage mt-1">↑ 8 this week</p>
+            </div>
+            <div class="bg-white rounded-2xl p-5">
+              <p class="text-xs font-sans text-muted tracking-wide mb-2">Products Listed</p>
+              <p class="font-serif text-3xl text-brown">1,204</p>
+              <p class="text-xs text-muted mt-1">18 low stock</p>
+            </div>
+            <div class="bg-white rounded-2xl p-5">
+              <p class="text-xs font-sans text-muted tracking-wide mb-2">Registered Users</p>
+              <p class="font-serif text-3xl text-brown">3,421</p>
+              <p class="text-xs text-sage mt-1">↑ 47 this week</p>
+            </div>
+          </div>
+
+          <!-- Recent Orders Table (preview) -->
+          <div class="bg-white rounded-2xl p-6">
+            <h3 class="font-serif text-xl text-brown mb-5">Recent Orders</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="border-b border-parchment text-left">
+                    <th class="pb-3 font-sans text-xs text-muted tracking-wide font-semibold">ORDER #</th>
+                    <th class="pb-3 font-sans text-xs text-muted tracking-wide font-semibold">PRODUCT</th>
+                    <th class="pb-3 font-sans text-xs text-muted tracking-wide font-semibold">AMOUNT</th>
+                    <th class="pb-3 font-sans text-xs text-muted tracking-wide font-semibold">STATUS</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboard-orders" class="divide-y divide-parchment/60">
+                  <tr><td colspan="4" class="py-4 text-center text-muted text-xs">Loading…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── PRODUCTS TAB ── -->
+        <div id="tab-products" class="hidden fade-in">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="font-serif text-xl text-brown">All Products</h3>
+            <button onclick="showTab('add-product')" class="bg-amber hover:bg-rust text-cream text-xs font-semibold px-4 py-2.5 rounded-xl transition-colors">
+              + Add Product
+            </button>
+          </div>
+          <div class="bg-white rounded-2xl overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead class="bg-parchment/40">
+                  <tr class="text-left">
+                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">PRODUCT</th>
+                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">PRICE</th>
+                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">STOCK</th>
+                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">ACTIONS</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-products" class="divide-y divide-parchment/40">
+                  <tr><td colspan="4" class="px-5 py-8 text-center text-muted text-xs">Loading products…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── ORDERS TAB ── -->
+        <div id="tab-orders" class="hidden fade-in">
+          <h3 class="font-serif text-xl text-brown mb-6">All Orders</h3>
+          <div class="bg-white rounded-2xl overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead class="bg-parchment/40">
+                  <tr class="text-left">
+                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">ORDER #</th>
+                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">USER</th>
+                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">PRODUCT</th>
+                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">AMOUNT</th>
+                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">STATUS</th>
+                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">DATE</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-orders" class="divide-y divide-parchment/40">
+                  <tr><td colspan="6" class="px-5 py-8 text-center text-muted text-xs">Loading orders…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── USERS TAB ── -->
+        <div id="tab-users" class="hidden fade-in">
+          <h3 class="font-serif text-xl text-brown mb-6">Registered Users</h3>
+          <div class="bg-white rounded-2xl overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead class="bg-parchment/40">
+                  <tr class="text-left">
+                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">USER</th>
+                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">EMAIL</th>
+                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">ROLE</th>
+                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">JOINED</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-users" class="divide-y divide-parchment/40">
+                  <tr><td colspan="4" class="px-5 py-8 text-center text-muted text-xs">Loading users…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── ADD PRODUCT TAB ── -->
+        <div id="tab-add-product" class="hidden fade-in max-w-2xl">
+          <h3 class="font-serif text-xl text-brown mb-6">Add New Product</h3>
+
+          <div id="product-error" class="hidden bg-rust/10 border border-rust/20 text-rust rounded-xl px-4 py-3 text-sm mb-5"></div>
+          <div id="product-success" class="hidden bg-sage/10 border border-sage/20 text-sage rounded-xl px-4 py-3 text-sm mb-5"></div>
+
+          <form id="product-form" class="bg-white rounded-2xl p-6 space-y-4" onsubmit="submitProduct(event)">
+            <div>
+              <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Product Name *</label>
+              <input name="name" type="text" required placeholder="Victorian Cameo Brooch"
+                class="w-full bg-cream border border-parchment rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber transition-colors" />
+            </div>
+
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Price (USD) *</label>
+                <input name="price" type="number" step="0.01" min="0" required placeholder="89.99"
+                  class="w-full bg-cream border border-parchment rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber transition-colors" />
+              </div>
+              <div>
+                <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Stock Quantity *</label>
+                <input name="stock_quantity" type="number" min="0" required placeholder="5"
+                  class="w-full bg-cream border border-parchment rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber transition-colors" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Description *</label>
+              <textarea name="description" rows="4" required placeholder="Describe the item, its era, condition, and any special features…"
+                class="w-full bg-cream border border-parchment rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber transition-colors resize-none"></textarea>
+            </div>
+
+            <!-- Image Upload -->
+            <div>
+              <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Product Image *</label>
+              <div id="drop-zone"
+                class="border-2 border-dashed border-parchment rounded-xl p-8 text-center cursor-pointer hover:border-amber transition-colors"
+                onclick="document.getElementById('image-input').click()"
+                ondragover="event.preventDefault(); this.classList.add('border-amber')"
+                ondragleave="this.classList.remove('border-amber')"
+                ondrop="handleDrop(event)">
+                <input type="file" id="image-input" name="image" accept="image/*" class="hidden"
+                  onchange="previewImage(this)" />
+                <div id="upload-placeholder">
+                  <p class="text-4xl mb-3">🖼</p>
+                  <p class="text-sm font-sans text-muted">Drop image here or <span class="text-amber font-semibold">browse</span></p>
+                  <p class="text-xs text-muted mt-1">JPG, PNG, WebP — max 5MB. Uploads to Cloudinary.</p>
+                </div>
+                <img id="image-preview" class="hidden max-h-40 mx-auto rounded-lg object-cover" />
+              </div>
+            </div>
+
+            <button type="submit" id="submit-btn"
+              class="w-full bg-amber hover:bg-rust text-cream font-sans font-semibold py-4 rounded-xl transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
+              Upload & Publish Product
+            </button>
+          </form>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Delete Confirm Modal -->
+  <div id="delete-modal" class="fixed inset-0 bg-darkbrown/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
+      <h3 class="font-serif text-xl text-brown mb-2">Delete Product?</h3>
+      <p class="text-sm text-muted mb-5">This will permanently remove the product and its Cloudinary image. This cannot be undone.</p>
+      <div class="flex gap-3">
+        <button onclick="confirmDelete()" class="flex-1 bg-rust hover:bg-rust/80 text-cream font-sans font-semibold py-3 rounded-xl transition-colors">
+          Delete
+        </button>
+        <button onclick="cancelDelete()" class="flex-1 border border-parchment text-brown hover:bg-parchment font-sans font-semibold py-3 rounded-xl transition-colors">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 hidden">
+    <div class="bg-brown text-cream px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 text-sm font-sans">
+      <span class="text-amber">✓</span><span id="toast-msg"></span>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

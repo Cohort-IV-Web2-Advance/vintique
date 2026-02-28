@@ -100,7 +100,7 @@
 
       try {
         await login(form.email.value, form.password.value);
-        const redirect = sessionStorage.getItem('vintique_redirect') || '../index.html';
+        const redirect = sessionStorage.getItem('vintique_redirect') || 'index.html';
         sessionStorage.removeItem('vintique_redirect');
         window.location.href = redirect;
       } catch (err) {
@@ -117,7 +117,7 @@
     }
 
     // Redirect if already logged in
-    if (isLoggedIn()) window.location.href = '../index.html';
+    if (isLoggedIn()) window.location.href = 'index.html';
   </script>
 </body>
 </html>

@@ -196,10 +196,6 @@
 //   _toastTimer = setTimeout(() => el.classList.add('hidden'), 3000);
 // }
 
-// // ── NAVBAR HELPERS ────────────────────────────────────────────────────────────
-// function toggleSearch() {
-//   document.getElementById('search-bar')?.classList.toggle('hidden');
-// }
 
 // function toggleMobileMenu() {
 //   document.getElementById('mobile-menu')?.classList.toggle('hidden');
@@ -212,10 +208,10 @@
 //   const user = getUser();
 //   if (user) {
 //     link.textContent = user.username;
-//     link.href = isAdmin() ? 'admin.html' : '/orders.html';
+//     link.href = isAdmin() ? 'admin.html' : 'orders.html';
 //   } else {
 //     link.textContent = 'Sign In';
-//     link.href = '/pages/login.html';
+//     link.href = 'login.html';
 //   }
 // }
 
@@ -236,7 +232,7 @@
 //   card.className = 'product-card bg-white rounded-xl overflow-hidden fade-in';
 //   card.style.animationDelay = `${delay * 0.07}s`;
 //   card.innerHTML = `
-//     <a href="/pages/product.html?id=${p.id}" class="img-zoom block aspect-[4/3]">
+//     <a href="product.html?id=${p.id}" class="img-zoom block aspect-4/3">
 //       <img src="${p.image_url || 'https://images.unsplash.com/photo-1558171813-a08ccd5e6b95?w=600&q=80'}"
 //         alt="${p.name}" class="w-full h-full object-cover" loading="lazy"
 //         onerror="this.src='https://images.unsplash.com/photo-1558171813-a08ccd5e6b95?w=400&q=60'" />

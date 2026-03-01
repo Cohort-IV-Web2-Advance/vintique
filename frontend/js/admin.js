@@ -1,27 +1,5 @@
 // /* ── ADMIN.JS — Admin panel: products, orders, users, inventory ───────────── */
 
-// const MOCK_ADMIN_ORDERS = [
-//   { id: 1001, user: { username: 'eleanor_m' }, product: { name: 'Victorian Cameo Brooch' }, amount: 89.99, order_status: 'delivered', created_at: '2025-11-12T10:30:00Z' },
-//   { id: 1002, user: { username: 'james_t' }, product: { name: 'Art Deco Vanity Mirror' }, amount: 145.00, order_status: 'shipped', created_at: '2025-12-01T14:00:00Z' },
-//   { id: 1003, user: { username: 'simone_a' }, product: { name: '1950s Leather Satchel' }, amount: 210.00, order_status: 'pending', created_at: '2025-12-15T09:15:00Z' },
-//   { id: 1004, user: { username: 'eleanor_m' }, product: { name: 'Royal Typewriter 1948' }, amount: 395.00, order_status: 'processing', created_at: '2025-12-20T11:00:00Z' },
-// ];
-
-// const MOCK_ADMIN_USERS = [
-//   { id: 1, username: 'eleanor_m', email: 'eleanor@example.com', is_admin: false, created_at: '2024-03-15T00:00:00Z' },
-//   { id: 2, username: 'james_t', email: 'james@example.com', is_admin: false, created_at: '2024-06-20T00:00:00Z' },
-//   { id: 3, username: 'simone_a', email: 'simone@example.com', is_admin: false, created_at: '2024-09-01T00:00:00Z' },
-//   { id: 4, username: 'admin', email: 'admin@vintique.com', is_admin: true, created_at: '2024-01-01T00:00:00Z' },
-// ];
-
-// const MOCK_ADMIN_PRODUCTS = [
-//   { id: 1, name: "Victorian Cameo Brooch", price: 89.99, stock_quantity: 5, image_url: "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?w=80&q=60" },
-//   { id: 2, name: "Art Deco Vanity Mirror", price: 145.00, stock_quantity: 2, image_url: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=80&q=60" },
-//   { id: 3, name: "1950s Leather Satchel", price: 210.00, stock_quantity: 3, image_url: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=80&q=60" },
-//   { id: 4, name: "Royal Typewriter 1948", price: 395.00, stock_quantity: 1, image_url: "https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?w=80&q=60" },
-//   { id: 5, name: "Silk Kimono Robe 1920s", price: 265.00, stock_quantity: 0, image_url: "https://images.unsplash.com/photo-1558171813-a08ccd5e6b95?w=80&q=60" },
-// ];
-
 // const STATUS_COLORS = {
 //   pending: 'bg-amber/10 text-amber',
 //   processing: 'bg-blue-50 text-blue-600',

@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vintique — Curated Vintage Finds</title>
-  <link rel="stylesheet" href="/frontend/src/output.css">
+  <link rel="stylesheet" href="./src/output.css">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;600;700&display=swap"
@@ -20,8 +20,8 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
       <div class="flex items-center justify-between h-16">
         <!-- Logo -->
-        <a href="index.html" class="flex items-center gap-2">
-          <img src="/image/836230a2-2ca2-471b-b559-c79b56e9cd14.jpeg" alt="logo" class="h-16 rounded-full">
+        <a href="/frontend/index.html" class="flex items-center gap-2">
+          <img src="/frontend/public/image/836230a2-2ca2-471b-b559-c79b56e9cd14.jpeg" alt="logo" class="h-16 rounded-full">
           <span class="text-2xl font-serif font-bold text-brown tracking-wide">Vintique</span>
         </a>
 
@@ -29,22 +29,22 @@
         <div class="hidden md:flex items-center gap-8">
           <a href="#"
             class="text-sm font-sans tracking-wide text-brown hover:text-amber transition-colors border-b-2 border-amber">Home</a>
-          <a href="products.html"
+          <a href="/frontend/products.html"
             class="text-sm font-sans tracking-wide text-brown hover:text-amber transition-colors">Shop</a>
-          <a href="about.html"
+          <a href="/frontend/about.html"
             class="text-sm font-sans tracking-wide text-brown hover:text-amber transition-colors">About Us</a>
-          <a href="team.html" class="text-sm font-sans tracking-wide text-brown hover:text-amber transition-colors">Meet
+          <a href="/frontend/team.html" class="text-sm font-sans tracking-wide text-brown hover:text-amber transition-colors">Meet
             Our Team</a>
         </div>
 
         <!-- Right Actions -->
         <div class="flex items-center gap-4">
-          <a href="login.html" id="auth-link"
+          <a href="/frontend/login.html" id="auth-link"
             class="hidden border px-6 py-1 border-[brown] md:block text-sm font-sans text-brown hover:text-amber transition-colors">Sign
             In</a>
 
           <!-- Cart -->
-          <a href="cart.html" class="relative p-2 text-brown hover:text-amber transition-colors">
+          <a href="/frontend/cart.html" class="relative p-2 text-brown hover:text-amber transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
               stroke="currentColor" stroke-width="1.8">
               <path stroke-linecap="round" stroke-linejoin="round" d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
@@ -71,13 +71,13 @@
       style="max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.3s ease, opacity 0.3s ease;"
       class="md:hidden bg-cream border-t border-parchment">
       <div class="px-4 py-4 flex flex-col gap-3">
-        <a href="index.html" class="text-sm text-amber py-1">Home</a>
-        <a href="products.html" class="text-sm text-brown hover:text-amber py-1">Shop All</a>
-        <a href="about.html" class="text-sm font-sans tracking-wide text-brown hover:text-amber transition-colors">About
+        <a href="/frontend/index.html" class="text-sm text-amber py-1">Home</a>
+        <a href="/frontend/products.html" class="text-sm text-brown hover:text-amber py-1">Shop All</a>
+        <a href="/frontend/about.html" class="text-sm font-sans tracking-wide text-brown hover:text-amber transition-colors">About
           Us</a>
-        <a href="team.html" class="text-sm font-sans tracking-wide text-brown hover:text-amber transition-colors">Meet
+        <a href="/frontend/team.html" class="text-sm font-sans tracking-wide text-brown hover:text-amber transition-colors">Meet
           Our Team</a>
-        <a href="login.html" class="text-sm text-brown hover:text-amber py-1">Sign In</a>
+        <a href="/frontend/login.html" class="text-sm text-brown hover:text-amber py-1">Sign In</a>
       </div>
     </div>
   </nav>
@@ -100,11 +100,11 @@
           <em class="text-amber">Tells a Story</em>
         </h1>
         <p class="text-cream/80 font-sans text-lg leading-relaxed mb-10 max-w-md">
-          Discover hand-curated vintage treasures from the 1900s–1980s. Each item lovingly restored and authenticated by
+          Discover hand-curated vintage treasures from the 1900s–2020s. Each item lovingly restored and authenticated by
           our experts.
         </p>
         <div class="flex flex-wrap gap-4">
-          <a href="products.html"
+          <a href="/frontend/products.html"
             class="inline-flex items-center gap-2 bg-amber hover:bg-rust text-cream font-sans text-sm font-semibold px-8 py-4 rounded-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5">
             Shop the Collection
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -128,7 +128,7 @@
         <p class="text-amber text-xs tracking-[0.3em] uppercase font-sans mb-3">New Arrivals</p>
         <h2 class="font-serif text-4xl text-brown">Recently Sourced</h2>
       </div>
-      <a href="products.html"
+      <a href="/frontend/products.html"
         class="hidden md:flex items-center gap-2 text-sm font-sans text-amber hover:text-rust transition-colors">
         View All
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -143,27 +143,6 @@
       <div class="skeleton h-80 rounded-xl"></div>
       <div class="skeleton h-80 rounded-xl"></div>
       <div class="skeleton h-80 rounded-xl"></div>
-    </div>
-
-    <div class="mt-10 rounded-2xl border border-parchment bg-white/60 backdrop-blur-sm px-8 py-12 text-center">
-      <div class="w-14 h-14 mx-auto mb-5 rounded-full bg-amber/10 flex items-center justify-center">
-        <svg class="w-7 h-7 text-amber" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      </div>
-      <p class="text-amber text-xs tracking-[0.3em] uppercase font-sans mb-2">Coming Soon</p>
-      <h3 class="font-serif text-2xl text-brown mb-3">Products Are on Their Way</h3>
-      <p class="text-muted text-sm max-w-sm mx-auto leading-relaxed">
-        Our curators are sourcing the finest vintage pieces. Check back soon — something beautiful is coming.
-      </p>
-      <a href="products.html"
-        class="inline-flex items-center gap-2 mt-7 bg-amber hover:bg-rust text-cream font-sans font-semibold text-sm px-7 py-3 rounded-xl transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
-        Browse All Products
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-        </svg>
-      </a>
     </div>
   </div>
 </section>
@@ -297,14 +276,14 @@
       <h2 class="font-serif text-4xl text-brown mb-4">New Arrivals, First</h2>
       <p class="text-muted text-sm leading-relaxed mb-8">Join 12,000+ collectors who get first access to new vintage
         finds, expert care tips, and exclusive member discounts.</p>
-      <!-- <form class="flex flex-col sm:flex-row gap-3" onsubmit="handleNewsletter(event)">
+      <form class="flex flex-col sm:flex-row gap-3" onsubmit="handleNewsletter(event)">
         <input type="email" placeholder="your@email.com" required
           class="flex-1 bg-white border border-parchment rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-amber transition-colors" />
         <button type="submit"
           class="bg-amber hover:bg-rust text-cream font-sans font-semibold text-sm px-6 py-3 rounded-lg transition-colors whitespace-nowrap">
           Join the List
         </button>
-      </form> -->
+      </form>
       <p id="newsletter-msg" class="text-sage text-xs mt-3 hidden">✓ You're on the list! Watch your inbox.</p>
     </div>
   </section>
@@ -322,7 +301,7 @@
         <div>
           <p class="text-cream text-sm font-sans font-semibold mb-4 tracking-wide">Shop</p>
           <ul class="space-y-2">
-            <li><a href="products.html" class="text-sm hover:text-amber transition-colors">All Products</a></li>
+            <li><a href="/frontend/products.html" class="text-sm hover:text-amber transition-colors">All Products</a></li>
             <li><a href="#" class="text-sm hover:text-amber transition-colors">Jewelry</a></li>
             <li><a href="#" class="text-sm hover:text-amber transition-colors">Clothing</a></li>
             <li><a href="#" class="text-sm hover:text-amber transition-colors">Home Décor</a></li>
@@ -331,10 +310,10 @@
         <div>
           <p class="text-cream text-sm font-sans font-semibold mb-4 tracking-wide">Account</p>
           <ul class="space-y-2">
-            <li><a href="login.html" class="text-sm hover:text-amber transition-colors">Sign In</a></li>
-            <li><a href="register.html" class="text-sm hover:text-amber transition-colors">Register</a></li>
-            <li><a href="orders.html" class="text-sm hover:text-amber transition-colors">My Orders</a></li>
-            <li><a href="cart.html" class="text-sm hover:text-amber transition-colors">Cart</a></li>
+            <li><a href="/frontend/login.html" class="text-sm hover:text-amber transition-colors">Sign In</a></li>
+            <li><a href="/frontend/register.html" class="text-sm hover:text-amber transition-colors">Register</a></li>
+            <li><a href="/frontend/orders.html" class="text-sm hover:text-amber transition-colors">My Orders</a></li>
+            <li><a href="/frontend/cart.html" class="text-sm hover:text-amber transition-colors">Cart</a></li>
           </ul>
         </div>
         <div>
@@ -363,10 +342,13 @@
     </div>
   </div>
 
-  <script src="/js/app.js"></script>
-  <script src="/js/home.js"></script>
+  <script src="./js/app.js"></script>
+  <script src="./js/home.js"></script>
 
   <script>
+      window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('shadow-md', window.scrollY > 30);
+    });
     function toggleMobileMenu() {
       const menu = document.getElementById('mobile-menu');
       const btn = document.querySelector('[onclick="toggleMobileMenu()"]');

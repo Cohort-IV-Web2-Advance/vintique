@@ -3,7 +3,7 @@
 'use strict';
 
 // ── API BASE ────────────────────────────────────────────────────────────────
-const API_BASE = "https://";
+const API_BASE = "https://vintique.onrender.com";
 
 // ── API HELPER ──────────────────────────────────────────────────────────────
 async function apiFetch(endpoint, options = {}) {
@@ -40,56 +40,30 @@ function clearAuth() {
   localStorage.removeItem('vintique_token');
   localStorage.removeItem('vintique_user');
 }
-const API_URL = "https://vintique.onrender.com";
 
-// REGISTER USER
 async function register(userData) {
-
-  const res = await fetch(`${API_URL}/auth/register`, {
+  const res = await fetch(`${API_BASE}/auth/register`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(userData)
   });
-
   const data = await res.json();
-
-  if (!res.ok) {
-    throw new Error(data.message || "Registration failed");
-  }
-
+  if (!res.ok) throw new Error(data.message || "Registration failed");
   return data;
 }
 
-
-// LOGIN USER (for auto-login after register)
 async function login(email, password) {
-
-  const res = await fetch(`${API_URL}/auth/login`, {
+  const res = await fetch(`${API_BASE}/auth/login`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password })
   });
-
   const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Login failed");
 
-  if (!res.ok) {
-    throw new Error(data.message || "Login failed");
-  }
-
-  // save token
-  localStorage.setItem("token", data.token);
-
+  // save token consistently
+  setAuth(data.token, data.user || {});
   return data;
-}
-
-
-// CHECK LOGIN
-function isLoggedIn() {
-  return !!localStorage.getItem("token");
 }
 
 function logout() {
@@ -115,36 +89,26 @@ const cart = {
   add(product, qty = 1) {
     const items = this.items;
     const idx = items.findIndex(i => i.id === product.id);
-    if (idx > -1) {
-      items[idx].qty = Math.min(items[idx].qty + qty, product.stock_quantity || 99);
-    } else {
-      items.push({ ...product, qty });
-    }
+    if (idx > -1) items[idx].qty = Math.min(items[idx].qty + qty, product.stock_quantity || 99);
+    else items.push({ ...product, qty });
+
     this._save(items);
     showToast(`"${product.name}" added to cart!`);
 
-    // Sync to API if logged in
     if (isLoggedIn()) {
-      apiFetch('/cart/add', {
-        method: 'POST',
-        body: JSON.stringify({ product_id: product.id, quantity: qty })
-      }).catch(() => {});
+      apiFetch('/cart/add', { method: 'POST', body: JSON.stringify({ product_id: product.id, quantity: qty }) })
+        .catch(() => {});
     }
   },
 
-  remove(productId) {
-    this._save(this.items.filter(i => i.id !== productId));
-  },
+  remove(productId) { this._save(this.items.filter(i => i.id !== productId)); },
 
   updateQty(productId, qty) {
     const items = this.items.map(i => i.id === productId ? { ...i, qty: Math.max(1, qty) } : i);
     this._save(items);
-
     if (isLoggedIn()) {
-      apiFetch('/cart/update-qty', {
-        method: 'PATCH',
-        body: JSON.stringify({ product_id: productId, quantity: qty })
-      }).catch(() => {});
+      apiFetch('/cart/update-qty', { method: 'PATCH', body: JSON.stringify({ product_id: productId, quantity: qty }) })
+        .catch(() => {});
     }
   },
 
@@ -153,13 +117,8 @@ const cart = {
     this._updateUI();
   },
 
-  get total() {
-    return this.items.reduce((s, i) => s + i.price * i.qty, 0);
-  },
-
-  get count() {
-    return this.items.reduce((s, i) => s + i.qty, 0);
-  },
+  get total() { return this.items.reduce((s, i) => s + i.price * i.qty, 0); },
+  get count() { return this.items.reduce((s, i) => s + i.qty, 0); },
 
   _updateUI() {
     const badge = document.getElementById('cart-count');
@@ -170,7 +129,7 @@ const cart = {
   }
 };
 
-// ── PRODUCTS API ─────────────────────────────────────────────────────────────
+// ── PRODUCTS API ─────────────────────────────────────────────────────────
 const productsAPI = {
   getAll(params = {}) {
     const q = new URLSearchParams(params).toString();
@@ -195,7 +154,7 @@ const adminAPI = {
     return fetch(`${API_BASE}/inventory/product`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${getToken()}` },
-      body: formData, // multipart with image
+      body: formData
     }).then(r => r.json());
   },
 
@@ -203,13 +162,11 @@ const adminAPI = {
     return fetch(`${API_BASE}/inventory/product/${id}`, {
       method: 'PUT',
       headers: { Authorization: `Bearer ${getToken()}` },
-      body: formData,
+      body: formData
     }).then(r => r.json());
   },
 
-  deleteProduct(id) {
-    return apiFetch(`/inventory/product/${id}`, { method: 'DELETE' });
-  },
+  deleteProduct(id) { return apiFetch(`/inventory/product/${id}`, { method: 'DELETE' }); },
 };
 
 // ── TOAST ────────────────────────────────────────────────────────────────────
@@ -227,7 +184,6 @@ function showToast(msg, type = 'success') {
   clearTimeout(_toastTimer);
   _toastTimer = setTimeout(() => el.classList.add('hidden'), 3000);
 }
-
 
 // ── NAVBAR AUTH STATE ─────────────────────────────────────────────────────────
 function updateNavAuth() {
@@ -266,7 +222,7 @@ function buildProductCard(p, delay = 0) {
         onerror="this.src='https://images.unsplash.com/photo-1558171813-a08ccd5e6b95?w=400&q=60'" />
     </a>
     <div class="p-4">
-      <p class="text-muted text-[11px] font-sans tracking-widest uppercase mb-1">${p.category || 'Vintage'}</p>
+      <p class="text-muted text-[11px] font-sans tracking-widest uppercase mb-1">${p.category || 'Vintique'}</p>
       <h3 class="font-serif text-base text-brown font-semibold leading-tight line-clamp-2 mb-1">
         <a href="/pages/product.html?id=${p.id}" class="hover:text-amber transition-colors">${p.name}</a>
       </h3>
@@ -295,4 +251,5 @@ document.addEventListener('DOMContentLoaded', () => {
     const nav = document.getElementById('navbar');
     if (nav) nav.classList.toggle('shadow-md', window.scrollY > 30);
   });
+  
 });

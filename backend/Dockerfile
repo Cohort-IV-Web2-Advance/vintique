@@ -54,6 +54,9 @@ WORKDIR /app
 # Copy application code
 COPY --chown=appuser:appuser . .
 
+# Make start script executable
+RUN chmod +x /app/start.sh
+
 # Create necessary directories and set permissions
 RUN mkdir -p /app/logs /app/uploads && \
     chown -R appuser:appuser /app
@@ -69,4 +72,4 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
 EXPOSE 8000
 
 # Default command
-CMD ["gunicorn", "app.main:app", "-c", "gunicorn.conf.py"]
+CMD ["./start.sh"]

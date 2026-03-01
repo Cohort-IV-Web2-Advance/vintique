@@ -34,7 +34,7 @@ if settings.environment == "development":
     ]
 else:
     origins = [
-        "https://your-vercel-app.vercel.app",  # replace with real frontend domain later
+        "https://vintique.onrender.com",
     ]
 
 app.add_middleware(

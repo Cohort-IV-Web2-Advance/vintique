@@ -8,7 +8,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;600;700&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="/frontend/src/output.css" />
+  <link rel="stylesheet" href="./src/output.css" />
 </head>
 
 <body class="bg-cream font-sans text-darkbrown">
@@ -16,16 +16,17 @@
   <!-- NAVBAR -->
   <nav class="sticky top-0 z-50 bg-cream/95 backdrop-blur-sm border-b border-parchment shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between py-2">
-         <img src="/image/836230a2-2ca2-471b-b559-c79b56e9cd14.jpeg" alt="logo" class="h-16 rounded-full">
-      <a href="index.html" class="font-serif text-2xl font-bold text-brown">Vintique</a>
+      <a href="/frontend/index.html" class="font-serif text-2xl font-bold text-brown flex items-center">
+         <img src="./public/image/836230a2-2ca2-471b-b559-c79b56e9cd14.jpeg" alt="logo" class="h-16 rounded-full">
+        Vintique</a>
 
       <div class="hidden md:flex items-center gap-6">
-        <a href="index.html" class="text-sm text-brown hover:text-amber transition-colors">Home</a>
-        <a href="products.html" class="text-sm text-amber font-semibold border-b-2 border-amber pb-0.5">Shop</a>
+        <a href="/frontend/index.html" class="text-sm text-brown hover:text-amber transition-colors">Home</a>
+        <a href="/frontend/products.html" class="text-sm text-amber font-semibold border-b-2 border-amber pb-0.5">Shop</a>
       </div>
 
       <div class="flex items-center gap-4">
-        <a href="cart.html" class="relative p-2 text-brown hover:text-amber transition-colors">
+        <a href="/frontend/cart.html" class="relative p-2 text-brown hover:text-amber transition-colors">
           <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
             <line x1="3" y1="6" x2="21" y2="6" stroke-width="1.8" />
@@ -58,7 +59,7 @@
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
     <div class="flex items-end justify-between mb-8">
       <h2 class="font-serif text-3xl text-brown">You May Also Like</h2>
-      <a href="products.html" class="text-sm text-amber hover:text-rust font-sans transition-colors">View All →</a>
+      <a href="/frontend/products.html" class="text-sm text-amber hover:text-rust font-sans transition-colors">View All →</a>
     </div>
     <div id="related-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       <div class="skeleton h-72 rounded-xl"></div>
@@ -113,8 +114,8 @@
     </div>
   </footer>
  
-  <script src="../js/app.js"></script>
-  <script src="../js/product.js"></script>
+  <script src="./js/app.js"></script>
+  <script src="./js/product.js"></script>
 </body>
 
 </html>

@@ -14,7 +14,7 @@ cloudinary.config(
 # Allowed file types and max size (5MB)
 ALLOWED_MIME_TYPES = {"image/jpeg", "image/jpg", "image/png", "image/webp"}
 ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
-MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB in bytes
+MAX_FILE_SIZE = 10 * 1024 * 1024  # 5MB in bytes
 
 
 def validate_image_file(image_file) -> None:

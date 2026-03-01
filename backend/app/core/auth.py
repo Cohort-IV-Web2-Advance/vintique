@@ -1,14 +1,14 @@
 from datetime import datetime, timedelta
 from typing import Optional
 from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models.user import User
 from app.config import settings
-from app.core.security import oauth2_scheme
+from app.core.security import security
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
@@ -35,7 +35,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
 
 
 async def get_current_user(
-    token: str = Depends(oauth2_scheme), 
+    credentials: HTTPAuthorizationCredentials = Depends(security), 
     db: Session = Depends(get_db)
 ) -> User:
     credentials_exception = HTTPException(
@@ -44,6 +44,7 @@ async def get_current_user(
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
+        token = credentials.credentials
         payload = jwt.decode(token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm])
         user_id: int = payload.get("sub")
         if user_id is None:

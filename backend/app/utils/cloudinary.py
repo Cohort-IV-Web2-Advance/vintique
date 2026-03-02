@@ -14,7 +14,7 @@ cloudinary.config(
 # Allowed file types and max size (5MB)
 ALLOWED_MIME_TYPES = {"image/jpeg", "image/jpg", "image/png", "image/webp"}
 ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
-MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB in bytes
+MAX_FILE_SIZE = 10 * 1024 * 1024  # 5MB in bytes
 
 
 def validate_image_file(image_file) -> None:
@@ -71,7 +71,7 @@ def upload_image(image_file) -> dict:
         
         # Double-check file size
         if len(file_content) > MAX_FILE_SIZE:
-            raise ValueError(f"File too large. Maximum size: 5MB")
+            raise ValueError(f"File too large. Maximum size: 10MB")
         
         # Upload to Cloudinary with validation
         result = cloudinary.uploader.upload(
@@ -118,7 +118,7 @@ def update_image(image_file, public_id: str = None) -> dict:
         
         # Double-check file size
         if len(file_content) > MAX_FILE_SIZE:
-            raise ValueError(f"File too large. Maximum size: 5MB")
+            raise ValueError(f"File too large. Maximum size: 10MB")
         
         upload_options = {
             "file_content": file_content,

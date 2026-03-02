@@ -25,11 +25,24 @@ app = FastAPI(
 )
 
 # Add CORS middleware
+# Configure CORS properly for development and production
+
+if settings.environment == "development":
+    origins = [
+        "http://localhost:5500",
+        "http://127.0.0.1:5500",
+        "https://vintique-one.vercel.app",
+    ]
+else:
+    origins = [
+        "https://vintique.onrender.com",
+    ]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins if hasattr(settings, 'cors_origins') else ["*"],
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_methods=["*"],
     allow_headers=["*"],
     expose_headers=["X-Process-Time"],
 )

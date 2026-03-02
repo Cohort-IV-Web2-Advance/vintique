@@ -80,21 +80,13 @@ function changeQty(id, newQty) {
   renderCart();
 }
 
-function applyPromo() {
-  const code = document.getElementById('promo-input')?.value.trim().toUpperCase();
-  if (code === 'VINTIQUE10') {
-    showToast('10% discount applied!');
-  } else {
-    showToast('Invalid promo code.', 'error');
-  }
-}
 
 // ── STEP NAVIGATION ───────────────────────────────────────────────────────────
 function goToShipping() {
   if (cart.items.length === 0) { showToast('Your cart is empty!', 'error'); return; }
   if (!isLoggedIn()) {
     sessionStorage.setItem('vintique_redirect', '/frontend/cart.html');
-    window.location.href = '/frontend/login.html';
+    window.location.href = 'login.html';
     return;
   }
   showStep('shipping');

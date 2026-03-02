@@ -85,72 +85,92 @@ function logout() {
   window.location.href = 'login.html';
 }
 
-// ── CART (localStorage mirror + API sync) ───────────────────────────────────
+// ── CART (localStorage + API sync) ─────────────────────────────────────────
 const cart = {
   _key: 'vintique_cart',
 
   get items() {
-    try { return JSON.parse(localStorage.getItem(this._key)) || []; }
-    catch { return []; }
+    try {
+      return JSON.parse(localStorage.getItem(this._key)) || [];
+    } catch {
+      return [];
+    }
   },
 
-  async _save(items) {
-    // Always update UI
+  _save(items) {
     localStorage.setItem(this._key, JSON.stringify(items));
     this._updateUI();
-
-    // If logged in, sync with server
-    if (isLoggedIn()) {
-      try {
-        // send the entire cart to the server (replace)
-        await apiFetch('/cart/sync', { method: 'POST', body: JSON.stringify({ items }) });
-      } catch (e) {
-        console.error('Failed to sync cart with server:', e.message);
-      }
-    }
   },
 
   async add(product, qty = 1) {
     const items = this.items;
+
     const idx = items.findIndex(i => i.id === product.id);
-    if (idx > -1) items[idx].qty = Math.min(items[idx].qty + qty, product.stock_quantity || 99);
-    else items.push({ ...product, qty });
 
-    await this._save(items);
-    showToast(`"${product.name}" added to cart!`);
+    if (idx > -1) {
+      items[idx].qty = Math.min(items[idx].qty + qty, product.stock_quantity || 99);
+    } else {
+      items.push({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image_url: product.image_url,
+        qty
+      });
+    }
 
-    // For logged in users, you could also add individually
+    this._save(items);
+    showToast(`"${product.name}" added to cart`);
+
     if (isLoggedIn()) {
       try {
-        await apiFetch('/cart/add', { method: 'POST', body: JSON.stringify({ product_id: product.id, quantity: qty }) });
+        await apiFetch('/cart/add', {
+          method: 'POST',
+          body: JSON.stringify({
+            product_id: product.id,
+            quantity: qty
+          })
+        });
       } catch (e) {
-        console.error('Failed to add item to server cart:', e.message);
+        console.error("Cart add failed:", e.message);
       }
     }
   },
 
   async remove(productId) {
     const items = this.items.filter(i => i.id !== productId);
-    await this._save(items);
+    this._save(items);
 
     if (isLoggedIn()) {
       try {
-        await apiFetch('/cart/remove', { method: 'POST', body: JSON.stringify({ product_id: productId }) });
+        await apiFetch('/cart/remove', {
+          method: 'POST',
+          body: JSON.stringify({ product_id: productId })
+        });
       } catch (e) {
-        console.error('Failed to remove item from server cart:', e.message);
+        console.error("Remove failed:", e.message);
       }
     }
   },
 
   async updateQty(productId, qty) {
-    const items = this.items.map(i => i.id === productId ? { ...i, qty: Math.max(1, qty) } : i);
-    await this._save(items);
+    const items = this.items.map(i =>
+      i.id === productId ? { ...i, qty: Math.max(1, qty) } : i
+    );
+
+    this._save(items);
 
     if (isLoggedIn()) {
       try {
-        await apiFetch('/cart/update-qty', { method: 'PATCH', body: JSON.stringify({ product_id: productId, quantity: qty }) });
+        await apiFetch('/cart/update-qty', {
+          method: 'PATCH',
+          body: JSON.stringify({
+            product_id: productId,
+            quantity: qty
+          })
+        });
       } catch (e) {
-        console.error('Failed to update item quantity on server:', e.message);
+        console.error("Update qty failed:", e.message);
       }
     }
   },
@@ -160,32 +180,49 @@ const cart = {
     this._updateUI();
 
     if (isLoggedIn()) {
-      try { await apiFetch('/cart/clear', { method: 'POST' }); }
-      catch (e) { console.error('Failed to clear server cart:', e.message); }
+      try {
+        await apiFetch('/cart/clear', { method: 'POST' });
+      } catch (e) {
+        console.error("Clear failed:", e.message);
+      }
     }
   },
 
-  get total() { return this.items.reduce((s, i) => s + i.price * i.qty, 0); },
-  get count() { return this.items.reduce((s, i) => s + i.qty, 0); },
+  get total() {
+    return this.items.reduce((sum, item) => sum + item.price * item.qty, 0);
+  },
+
+  get count() {
+    return this.items.reduce((sum, item) => sum + item.qty, 0);
+  },
 
   _updateUI() {
-    const badge = document.getElementById('cart-count');
+    const badge = document.getElementById("cart-count");
     if (!badge) return;
-    const n = this.count;
-    badge.textContent = n;
-    badge.classList.toggle('hidden', n === 0);
+
+    const count = this.count;
+
+    badge.textContent = count;
+    badge.classList.toggle("hidden", count === 0);
   },
 
   async fetchServerCart() {
     if (!isLoggedIn()) return;
+
     try {
-      const serverItems = await apiFetch('/cart'); // assume GET /cart returns user cart
-      if (serverItems) {
-        localStorage.setItem(this._key, JSON.stringify(serverItems));
-        this._updateUI();
-      }
+      const serverItems = await apiFetch('/cart');
+
+      const items = serverItems.map(i => ({
+        id: i.product_id,
+        name: i.product.name,
+        price: i.product.price,
+        image_url: i.product.image_url,
+        qty: i.quantity
+      }));
+
+      this._save(items);
     } catch (e) {
-      console.error('Failed to fetch server cart:', e.message);
+      console.error("Fetch cart failed:", e.message);
     }
   }
 };
@@ -202,7 +239,7 @@ const productsAPI = {
 // ── ORDERS API ───────────────────────────────────────────────────────────────
 const ordersAPI = {
   checkout(payload) { return apiFetch('/checkout', { method: 'POST', body: JSON.stringify(payload) }); },
-  history()         { return apiFetch('/orders/history'); },
+  history(){ return apiFetch('/orders/history'); },
 };
 
 // ── ADMIN API ─────────────────────────────────────────────────────────────────
@@ -230,7 +267,7 @@ const adminAPI = {
   deleteProduct(id) { return apiFetch(`/inventory/product/${id}`, { method: 'DELETE' }); },
 };
 
-// ── TOAST ────────────────────────────────────────────────────────────────────
+// ── TOAST ──────
 let _toastTimer;
 function showToast(msg, type = 'success') {
   const el = document.getElementById('toast');
@@ -329,6 +366,11 @@ function buildProductCard(p, delay = 0) {
 // ── INIT ──────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   cart._updateUI();
+
+  if (isLoggedIn()) {
+    cart.fetchServerCart();
+  }
+
   updateNavAuth();
 
   // Navbar scroll effect

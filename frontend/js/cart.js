@@ -80,14 +80,6 @@ function changeQty(id, newQty) {
   renderCart();
 }
 
-function applyPromo() {
-  const code = document.getElementById('promo-input')?.value.trim().toUpperCase();
-  if (code === 'VINTIQUE10') {
-    showToast('10% discount applied!');
-  } else {
-    showToast('Invalid promo code.', 'error');
-  }
-}
 
 // ── STEP NAVIGATION ───────────────────────────────────────────────────────────
 function goToShipping() {

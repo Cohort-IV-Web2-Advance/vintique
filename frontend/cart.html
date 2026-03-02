@@ -96,13 +96,6 @@
               <span class="font-serif text-xl text-amber font-bold" id="summary-total">—</span>
             </div>
 
-            <!-- Promo Code -->
-            <div class="flex gap-2 mb-5">
-              <input type="text" placeholder="Promo code" id="promo-input"
-                class="flex-1 bg-cream border border-parchment rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber transition-colors" />
-              <button onclick="applyPromo()" class="bg-parchment hover:bg-amber hover:text-cream text-brown text-xs font-semibold px-4 rounded-lg transition-colors">Apply</button>
-            </div>
-
             <button onclick="goToShipping()"
               class="w-full bg-amber hover:bg-rust text-cream font-sans font-semibold py-4 rounded-xl transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
               Proceed to Checkout →
@@ -127,15 +120,11 @@
       <form id="shipping-form" class="space-y-5">
         <div class="grid sm:grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">First Name *</label>
-            <input name="first_name" type="text" required placeholder="Margaret"
+            <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Username *</label>
+            <input name="username" type="text" required placeholder="Margaret"
               class="w-full bg-white border border-parchment rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber transition-colors" />
           </div>
-          <div>
-            <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Last Name *</label>
-            <input name="last_name" type="text" required placeholder="Holloway"
-              class="w-full bg-white border border-parchment rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber transition-colors" />
-          </div>
+        
         </div>
 
         <div>

@@ -5,7 +5,7 @@ let selectedQty = 1;
 
 async function initProductDetail() {
   const id = parseInt(new URLSearchParams(window.location.search).get('id'));
-  if (!id) { window.location.href = '/frontend/products.html'; return; }
+  if (!id) { window.location.href = 'cart.html'; return; }
 
   try {
     currentProduct = await productsAPI.getOne(id);
@@ -97,13 +97,13 @@ function renderDetail(p) {
       </div>
 
       <!-- Buy Now -->
-      <a href="/frontend/cart.html" onclick="cart.add(${JSON.stringify(p).replace(/"/g, '&quot;')}, selectedQty)"
+      <a href='cart.html' onclick="cart.add(${JSON.stringify(p).replace(/"/g, '&quot;')}, selectedQty)"
         class="w-full block text-center border-2 border-brown text-brown hover:bg-brown hover:text-cream font-sans font-semibold text-sm py-3 rounded-xl transition-all duration-300">
         Buy Now
       </a>
       ` : `
       <div class="bg-parchment/60 text-muted text-center py-4 rounded-xl font-sans text-sm">
-        This item is currently sold out. <a href="/frontend/products.html" class="text-amber hover:underline">Browse similar pieces</a>.
+        This item is currently sold out. <a href='products.html' class="text-amber hover:underline">Browse similar pieces</a>.
       </div>
       `}
 

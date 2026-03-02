@@ -241,7 +241,7 @@
 
 // // ── INIT ──────────────────────────────────────────────────────────────────────
 // document.addEventListener('DOMContentLoaded', () => {
-//   if (!isLoggedIn()) { window.location.href = 'login.html'; return; }
+//   if (!isLoggedIn()) { window.location.href = './login.html'; return; }
 //   // Optionally enforce admin-only:
 //   // if (!isAdmin()) { window.location.href = '../index.html'; return; }
 

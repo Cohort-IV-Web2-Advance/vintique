@@ -13,7 +13,7 @@ async function apiFetch(endpoint, options = {}) {
 
   try {
     const res = await fetch(`${API_BASE}${endpoint}`, { ...options, headers });
-    if (res.status === 401) { clearAuth(); window.location.href = 'login.html'; return null; }
+    if (res.status === 401) { clearAuth(); window.location.href = '/frontend/login.html'; return null; }
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
       throw new Error(err.detail || `HTTP ${res.status}`);
@@ -26,10 +26,10 @@ async function apiFetch(endpoint, options = {}) {
 }
 
 // ── AUTH ────────────────────────────────────────────────────────────────────
-function getToken()    { return localStorage.getItem('vintique_token'); }
-function getUser()     { try { return JSON.parse(localStorage.getItem('vintique_user')); } catch { return null; } }
-function isLoggedIn()  { return !!getToken(); }
-function isAdmin()     { const u = getUser(); return u?.is_admin === true; }
+function getToken(){ return localStorage.getItem('vintique_token'); }
+function getUser(){ try { return JSON.parse(localStorage.getItem('vintique_user')); } catch { return null; } }
+function isLoggedIn(){ return !!getToken(); }
+function isAdmin(){ const u = getUser(); return u?.is_admin === true; }
 
 function setAuth(token, user) {
   localStorage.setItem('vintique_token', token);
@@ -47,8 +47,16 @@ async function register(userData) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(userData)
   });
+
   const data = await res.json();
+
   if (!res.ok) throw new Error(data.message || "Registration failed");
+
+  // save token if backend returns it
+  if (data.token) {
+    setAuth(data.token, data.user || {});
+  }
+
   return data;
 }
 
@@ -58,11 +66,16 @@ async function login(email, password) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password })
   });
+
   const data = await res.json();
+  console.log("LOGIN RESPONSE:", data);
+
   if (!res.ok) throw new Error(data.message || "Login failed");
 
-  // save token consistently
-  setAuth(data.token, data.user || {});
+  // Fix: use the correct token property from backend
+  const token = data.token || data.accessToken; 
+  setAuth(token, data.user || {});
+
   return data;
 }
 
@@ -81,40 +94,75 @@ const cart = {
     catch { return []; }
   },
 
-  _save(items) {
+  async _save(items) {
+    // Always update UI
     localStorage.setItem(this._key, JSON.stringify(items));
     this._updateUI();
+
+    // If logged in, sync with server
+    if (isLoggedIn()) {
+      try {
+        // send the entire cart to the server (replace)
+        await apiFetch('/cart/sync', { method: 'POST', body: JSON.stringify({ items }) });
+      } catch (e) {
+        console.error('Failed to sync cart with server:', e.message);
+      }
+    }
   },
 
-  add(product, qty = 1) {
+  async add(product, qty = 1) {
     const items = this.items;
     const idx = items.findIndex(i => i.id === product.id);
     if (idx > -1) items[idx].qty = Math.min(items[idx].qty + qty, product.stock_quantity || 99);
     else items.push({ ...product, qty });
 
-    this._save(items);
+    await this._save(items);
     showToast(`"${product.name}" added to cart!`);
 
+    // For logged in users, you could also add individually
     if (isLoggedIn()) {
-      apiFetch('/cart/add', { method: 'POST', body: JSON.stringify({ product_id: product.id, quantity: qty }) })
-        .catch(() => {});
+      try {
+        await apiFetch('/cart/add', { method: 'POST', body: JSON.stringify({ product_id: product.id, quantity: qty }) });
+      } catch (e) {
+        console.error('Failed to add item to server cart:', e.message);
+      }
     }
   },
 
-  remove(productId) { this._save(this.items.filter(i => i.id !== productId)); },
+  async remove(productId) {
+    const items = this.items.filter(i => i.id !== productId);
+    await this._save(items);
 
-  updateQty(productId, qty) {
+    if (isLoggedIn()) {
+      try {
+        await apiFetch('/cart/remove', { method: 'POST', body: JSON.stringify({ product_id: productId }) });
+      } catch (e) {
+        console.error('Failed to remove item from server cart:', e.message);
+      }
+    }
+  },
+
+  async updateQty(productId, qty) {
     const items = this.items.map(i => i.id === productId ? { ...i, qty: Math.max(1, qty) } : i);
-    this._save(items);
+    await this._save(items);
+
     if (isLoggedIn()) {
-      apiFetch('/cart/update-qty', { method: 'PATCH', body: JSON.stringify({ product_id: productId, quantity: qty }) })
-        .catch(() => {});
+      try {
+        await apiFetch('/cart/update-qty', { method: 'PATCH', body: JSON.stringify({ product_id: productId, quantity: qty }) });
+      } catch (e) {
+        console.error('Failed to update item quantity on server:', e.message);
+      }
     }
   },
 
-  clear() {
+  async clear() {
     localStorage.removeItem(this._key);
     this._updateUI();
+
+    if (isLoggedIn()) {
+      try { await apiFetch('/cart/clear', { method: 'POST' }); }
+      catch (e) { console.error('Failed to clear server cart:', e.message); }
+    }
   },
 
   get total() { return this.items.reduce((s, i) => s + i.price * i.qty, 0); },
@@ -126,6 +174,19 @@ const cart = {
     const n = this.count;
     badge.textContent = n;
     badge.classList.toggle('hidden', n === 0);
+  },
+
+  async fetchServerCart() {
+    if (!isLoggedIn()) return;
+    try {
+      const serverItems = await apiFetch('/cart'); // assume GET /cart returns user cart
+      if (serverItems) {
+        localStorage.setItem(this._key, JSON.stringify(serverItems));
+        this._updateUI();
+      }
+    } catch (e) {
+      console.error('Failed to fetch server cart:', e.message);
+    }
   }
 };
 
@@ -186,16 +247,40 @@ function showToast(msg, type = 'success') {
 }
 
 // ── NAVBAR AUTH STATE ─────────────────────────────────────────────────────────
+
+function getUserSafe() {
+  const token = getToken();
+  const user = getUser();
+  return token && user && Object.keys(user).length ? user : null;
+}
+
+function isLoggedIn() {
+  return !!getToken() && !!getUserSafe();
+}
+
 function updateNavAuth() {
   const link = document.getElementById('auth-link');
   if (!link) return;
-  const user = getUser();
+
+  const user = getUserSafe();
   if (user) {
-    link.textContent = user.username;
+    link.textContent = isAdmin() ? 'Admin' : 'Orders';
     link.href = isAdmin() ? 'admin.html' : 'orders.html';
   } else {
     link.textContent = 'Sign In';
     link.href = 'login.html';
+  }
+}
+
+const mobileAuthLink = document.getElementById('mobile-auth');
+if (mobileAuthLink) {
+  const user = getUserSafe();
+  if (user) {
+    mobileAuthLink.textContent = 'Orders';
+    mobileAuthLink.href = 'orders.html';
+  } else {
+    mobileAuthLink.textContent = 'Sign In';
+    mobileAuthLink.href = 'login.html';
   }
 }
 
@@ -224,7 +309,7 @@ function buildProductCard(p, delay = 0) {
     <div class="p-4">
       <p class="text-muted text-[11px] font-sans tracking-widest uppercase mb-1">${p.category || 'Vintique'}</p>
       <h3 class="font-serif text-base text-brown font-semibold leading-tight line-clamp-2 mb-1">
-        <a href="/pages/product.html?id=${p.id}" class="hover:text-amber transition-colors">${p.name}</a>
+        <a href="/fontend/product.html?id=${p.id}" class="hover:text-amber transition-colors">${p.name}</a>
       </h3>
       <p class="text-muted text-xs line-clamp-2 mb-3">${p.description || ''}</p>
       <div class="flex items-center justify-between">

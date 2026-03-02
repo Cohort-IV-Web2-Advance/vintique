@@ -138,7 +138,7 @@
               <p id="strength-label" class="text-xs text-muted"></p>
             </div>
           </div>
-    
+
           <!-- Shipping Address (optional) -->
           <div>
             <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">
@@ -288,8 +288,11 @@
       const payload = {
         username: form.username.value,
         email: form.email.value,
-        password: pw
+        password: pw,
+        shipping_address: form.shipping_address.value
       };
+
+      console.log(payload)
 
       try {
         await register(payload);

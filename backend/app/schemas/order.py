@@ -1,13 +1,14 @@
 from pydantic import BaseModel, Field, field_validator
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 from decimal import Decimal
 import re
 
 
-class OrderCreate(BaseModel):
+class OrderItem(BaseModel):
     product_id: int = Field(..., gt=0, description="Valid product ID required")
     quantity: int = Field(..., gt=0, le=100, description="Quantity must be positive and less than 100")
+    unit_price: Decimal = Field(..., gt=0, description="Unit price (will be recalculated from DB)")
     
     @field_validator('product_id')
     @classmethod
@@ -18,6 +19,11 @@ class OrderCreate(BaseModel):
         return v
 
 
+class OrderCreate(BaseModel):
+    items: List[OrderItem]
+    shipping_address: str = Field(..., min_length=1, max_length=500, description="Shipping address")
+
+
 class OrderResponse(BaseModel):
     id: int
     product_id: int
@@ -26,6 +32,7 @@ class OrderResponse(BaseModel):
     quantity: int
     unit_price: Decimal
     order_status: str
+    shipping_address: Optional[str] = None
     created_at: datetime
     updated_at: datetime
 

@@ -11,7 +11,7 @@ from app.models.user import User
 order_router = APIRouter(prefix="/orders", tags=["orders"])
 
 
-@order_router.post("/checkout", response_model=OrderResponse, status_code=status.HTTP_201_CREATED)
+@order_router.post("/checkout", response_model=List[OrderResponse], status_code=status.HTTP_201_CREATED)
 def checkout(
     order_data: OrderCreate,
     db: Session = Depends(get_db),

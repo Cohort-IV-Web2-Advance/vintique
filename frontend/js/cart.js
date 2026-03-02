@@ -85,8 +85,8 @@ function changeQty(id, newQty) {
 function goToShipping() {
   if (cart.items.length === 0) { showToast('Your cart is empty!', 'error'); return; }
   if (!isLoggedIn()) {
-    sessionStorage.setItem('vintique_redirect', '/frontend/cart.html');
-    window.location.href = 'login.html';
+    sessionStorage.setItem('vintique_redirect', 'cart.html');
+    window.location.href = '/frontend/login.html';
     return;
   }
   showStep('shipping');

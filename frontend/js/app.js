@@ -13,7 +13,7 @@ async function apiFetch(endpoint, options = {}) {
 
   try {
     const res = await fetch(`${API_BASE}${endpoint}`, { ...options, headers });
-    if (res.status === 401) { clearAuth(); window.location.href = '/frontend/login.html'; return null; }
+    if (res.status === 401) { clearAuth(); window.location.href = 'login.html'; return null; }
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
       throw new Error(err.detail || `HTTP ${res.status}`);
@@ -346,7 +346,7 @@ function buildProductCard(p, delay = 0) {
     <div class="p-4">
       <p class="text-muted text-[11px] font-sans tracking-widest uppercase mb-1">${p.category || 'Vintique'}</p>
       <h3 class="font-serif text-base text-brown font-semibold leading-tight line-clamp-2 mb-1">
-        <a href="/fontend/product.html?id=${p.id}" class="hover:text-amber transition-colors">${p.name}</a>
+        <a href="product.html?id=${p.id}" class="hover:text-amber transition-colors">${p.name}</a>
       </h3>
       <p class="text-muted text-xs line-clamp-2 mb-3">${p.description || ''}</p>
       <div class="flex items-center justify-between">

@@ -26,7 +26,10 @@ async function apiFetch(endpoint, options = {}) {
 }
 
 // ── AUTH ────────────────────────────────────────────────────────────────────
-function getToken(){ return localStorage.getItem('vintique_token'); }
+function getToken() {
+  const token = localStorage.getItem('vintique_token');
+  return token && token !== 'undefined' ? token : null;
+}
 function getUser(){ try { return JSON.parse(localStorage.getItem('vintique_user')); } catch { return null; } }
 function isLoggedIn(){ return !!getToken(); }
 function isAdmin(){ const u = getUser(); return u?.is_admin === true; }
@@ -52,9 +55,8 @@ async function register(userData) {
 
   if (!res.ok) throw new Error(data.message || "Registration failed");
 
-  // save token if backend returns it
-  if (data.token) {
-    setAuth(data.token, data.user || {});
+  if (data.access_token) {
+    setAuth(data.access_token, data.user || {});
   }
 
   return data;
@@ -63,18 +65,25 @@ async function register(userData) {
 async function login(email, password) {
   const res = await fetch(`${API_BASE}/auth/login`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password })
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      email: email,
+      password: password
+    })
   });
 
   const data = await res.json();
-  console.log("LOGIN RESPONSE:", data);
+  // console.log("LOGIN RESPONSE:", data);
 
-  if (!res.ok) throw new Error(data.message || "Login failed");
+  if (!res.ok) throw new Error(data.detail || "Login failed");
 
-  // Fix: use the correct token property from backend
-  const token = data.token || data.accessToken; 
-  setAuth(token, data.user || {});
+  const token = data.access_token || data.token;
+
+  if (!token) throw new Error("No token returned");
+
+  setAuth(token, data.user || { email });
 
   return data;
 }
@@ -211,7 +220,6 @@ const cart = {
 
     try {
       const serverItems = await apiFetch('/cart');
-
       const items = serverItems.map(i => ({
         id: i.product_id,
         name: i.product.name,
@@ -238,7 +246,7 @@ const productsAPI = {
 
 // ── ORDERS API ───────────────────────────────────────────────────────────────
 const ordersAPI = {
-  checkout(payload) { return apiFetch('/checkout', { method: 'POST', body: JSON.stringify(payload) }); },
+  checkout(payload) { return apiFetch('/orders/checkout', { method: 'POST', body: JSON.stringify(payload) }); },
   history(){ return apiFetch('/orders/history'); },
 };
 
@@ -291,28 +299,24 @@ function getUserSafe() {
   return token && user && Object.keys(user).length ? user : null;
 }
 
-function isLoggedIn() {
-  return !!getToken() && !!getUserSafe();
-}
-
 function updateNavAuth() {
   const link = document.getElementById('auth-link');
   if (!link) return;
 
-  const user = getUserSafe();
-  if (user) {
-    link.textContent = isAdmin() ? 'Admin' : 'Orders';
-    link.href = isAdmin() ? 'admin.html' : 'orders.html';
+  if (isLoggedIn()) {
+    link.textContent = 'Orders';
+    link.href = 'orders.html';
   } else {
     link.textContent = 'Sign In';
     link.href = 'login.html';
   }
 }
 
-const mobileAuthLink = document.getElementById('mobile-auth');
-if (mobileAuthLink) {
-  const user = getUserSafe();
-  if (user) {
+function updateMobileAuthLink() {
+  const mobileAuthLink = document.getElementById('mobile-auth');
+  if (!mobileAuthLink) return;
+
+  if (isLoggedIn()) {
     mobileAuthLink.textContent = 'Orders';
     mobileAuthLink.href = 'orders.html';
   } else {
@@ -372,6 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   updateNavAuth();
+  updateMobileAuthLink();
 
   // Navbar scroll effect
   window.addEventListener('scroll', () => {

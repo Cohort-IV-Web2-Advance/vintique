@@ -39,7 +39,7 @@
 
                 <!-- Right Actions -->
                 <div class="flex items-center gap-3">
-                    <a href="login.html"
+                    <a href="login.html" id="auth-link"
                         class="hidden md:block text-sm font-sans text-brown border px-4 py-1 border-brown hover:text-amber transition-colors">Sign
                         In</a>
 
@@ -64,6 +64,7 @@
                 </div>
             </div>
         </div>
+
         <div id="mobile-menu"
             style="max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.3s ease, opacity 0.3s ease;"
             class="md:hidden bg-cream border-t border-parchment">
@@ -76,7 +77,7 @@
                 <a href="team.html"
                     class="text-sm font-sans tracking-wide text-brown hover:text-amber transition-colors">Meet
                     Our Team</a>
-                <a href="login.html" class="text-sm text-brown hover:text-amber py-1">Sign In</a>
+                <a href="login.html" id="mobile-auth" class="text-sm text-brown hover:text-amber py-1">Sign In</a>
             </div>
         </div>
     </nav>
@@ -332,7 +333,7 @@
         </div>
     </footer>
 
-    <script src="/js/app.js"></script>
+    <script src="./js/app.js"></script>
     <script>
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {

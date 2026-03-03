@@ -73,5 +73,51 @@
   </div>
 
   <script src="./js/app.js"></script>
+  <script>
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const orders = await ordersAPI.history();
+    console.log("ORDERS:", orders);
+
+    renderOrders(orders);
+  } catch (e) {
+    console.error("Failed to load orders:", e.message);
+  }
+});
+
+function renderOrders(orders) {
+  const list = document.getElementById("orders-list");
+  const empty = document.getElementById("orders-empty");
+
+  list.innerHTML = "";
+
+  if (!orders || orders.length === 0) {
+    empty.classList.remove("hidden");
+    return;
+  }
+
+  empty.classList.add("hidden");
+
+  orders.forEach(order => {
+    const div = document.createElement("div");
+    div.className = "bg-white rounded-2xl p-6 shadow-sm";
+
+    div.innerHTML = `
+      <div class="flex justify-between mb-3">
+        <div>
+          <p class="font-serif text-lg text-brown">Order #${order.id}</p>
+           <p class="text-xs text-muted">Date: ${formatDate(order.created_at)}</p>
+          <p class="text-xs text-muted">Quantity: ${(order.quantity)}</p>
+           <p class="text-xs text-muted uppercase">Shipping Address: ${order.shipping_address}</p>
+        </div>
+        <p class="text-sm font-semibold text-amber">Total Price: ${formatPrice(order.unit_price)}</p>
+      </div>
+      <p class="text-xs text-muted uppercase">Status: ${order.order_status}</p>
+    `;
+
+    list.appendChild(div);
+  });
+}
+</script>
 </body>
 </html>

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin — Vintique</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./src/styles.css" />
+  <link rel="stylesheet" href="src/output.css" />
 </head>
 <body class="bg-cream font-sans text-darkbrown">
 
@@ -19,22 +19,42 @@
       </div>
 
       <nav class="flex-1 p-4 space-y-1">
-        <button onclick="showTab('dashboard')" class="admin-nav w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors bg-cream/10 text-cream">
-          📊 Dashboard
-        </button>
-        <button onclick="showTab('products')" class="admin-nav w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
-          🏷️ Products
-        </button>
-        <button onclick="showTab('orders')" class="admin-nav w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
-          📦 Orders
-        </button>
-        <button onclick="showTab('users')" class="admin-nav w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
-          👥 Users
-        </button>
-        <button onclick="showTab('add-product')" class="admin-nav w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
-          ➕ Add Product
-        </button>
-      </nav>
+
+  <button onclick="showTab('dashboard')" 
+    class="admin-nav flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors bg-cream/10 text-cream">
+    <img src="public/image/dashboard-svgrepo-com(3).svg" alt="dashboard" class="w-6 h-6 ">
+    Dashboard
+  </button>
+
+  <button onclick="showTab('products')" 
+    class="admin-nav flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
+    
+    <img src="public/image/products-svgrepo-com.svg" alt="Products" class="w-6 h-6 ">
+    Products
+  </button>
+
+  <button onclick="showTab('orders')" 
+    class="admin-nav flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
+    
+    <img src="public/image/img.icons8.png" alt="" class="w-6 h-6 ">
+    Orders
+  </button>
+
+  <button onclick="showTab('users')" 
+    class="admin-nav flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
+    
+    <img src="public/image/users-svgrepo-com.svg" alt="Users" class="w-6 h-6">
+    Users
+  </button>
+
+  <button onclick="showTab('add-product')" 
+    class="admin-nav flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
+    
+    <img src="public/image/add-note-svgrepo-com.svg" alt="Add Product" class="w-6 h-6 ">
+    Add Product
+  </button>
+
+</nav>
 
       <div class="p-4 border-t border-cream/10">
         <button onclick="logout()" class="w-full text-left px-4 py-2.5 text-sm  border-[brown] text-cream/50 hover:text-rust transition-colors">

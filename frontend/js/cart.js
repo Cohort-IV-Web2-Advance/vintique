@@ -80,7 +80,6 @@ function changeQty(id, newQty) {
   renderCart();
 }
 
-
 // ── STEP NAVIGATION ───────────────────────────────────────────────────────────
 function goToShipping() {
   if (cart.items.length === 0) { showToast('Your cart is empty!', 'error'); return; }
@@ -132,7 +131,7 @@ function renderConfirmPage() {
   const addrEl = document.getElementById('confirm-address');
   if (addrEl && shippingData) {
     addrEl.innerHTML = `
-      <p>${shippingData.first_name} ${shippingData.last_name}</p>
+      <p>${shippingData.username}</p>
       <p>${shippingData.address}</p>
       <p>${shippingData.city}, ${shippingData.postcode}</p>
       <p>${shippingData.country}</p>

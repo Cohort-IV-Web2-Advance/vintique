@@ -32,14 +32,17 @@
         </div>
 
         <div class="flex items-center gap-3">
-          <a href="login.html"
-            class="hidden md:block text-sm text-brown hover:text-amber transition-colors duration-200 border border-brown px-4 py-1">Sign In</a>
+          <a href="login.html" id="auth-link"
+            class="hidden md:block text-sm text-brown hover:text-amber transition-colors duration-200 border border-brown px-4 py-1">Sign
+            In</a>
           <a href="cart.html" class="relative p-2 text-brown hover:text-amber transition-colors duration-200">
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
               <path stroke-linecap="round" stroke-linejoin="round" d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
               <line x1="3" y1="6" x2="21" y2="6" stroke-width="1.8" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M16 10a4 4 0 01-8 0" />
             </svg>
+            <span id="cart-count"
+              class="absolute -top-0.5 -right-0.5 bg-rust text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">0</span>
           </a>
           <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')"
             class="md:hidden p-2 text-brown">
@@ -57,7 +60,8 @@
         <a href="products.html" class="text-sm text-brown hover:text-amber py-1 transition-colors">Shop</a>
         <a href="about.html" class="text-sm text-brown hover:text-amber py-1 transition-colors">About</a>
         <a href="team.html" class="text-sm text-amber font-semibold py-1">Team</a>
-        <a href="login.html" class="text-sm text-brown hover:text-amber py-1 transition-colors">Sign In</a>
+        <a href="login.html" id="mobile-auth" class="text-sm text-brown hover:text-amber py-1 transition-colors">Sign
+          In</a>
       </div>
     </div>
   </nav>
@@ -65,8 +69,7 @@
   <!-- ── HERO ── -->
   <section class="relative pt-16 min-h-[52vh] flex items-end overflow-hidden">
     <div class="absolute inset-0 z-0">
-      <img src="./public/image/team1.jpeg" alt="Vintique team"
-        class="w-full h-full object-cover" />
+      <img src="./public/image/team1.jpeg" alt="Vintique team" class="w-full h-full object-cover" />
       <div class="absolute inset-0 bg-linear-to-t from-darkbrown/90 via-darkbrown/50 to-darkbrown/20"></div>
     </div>
     <div class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -81,7 +84,7 @@
     </div>
   </section>
 
- <!-- ── FULL TEAM  ── -->
+  <!-- ── FULL TEAM  ── -->
   <section class="py-20 bg-parchment/40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
@@ -133,7 +136,7 @@
       <div class="mb-20 pb-10">
         <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
 
-            <div class="group hover:-translate-y-1 transition-all duration-300 relative">
+          <div class="group hover:-translate-y-1 transition-all duration-300 relative">
             <div class="aspect-4/3 overflow-hidden">
               <img src="./public/image/miracle.jpeg" alt="Miracle"
                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
@@ -329,11 +332,11 @@
               <h4 class="font-['Playfair_Display',serif] text-lg text-brown">Valentine</h4>
             </div>
           </div>
-          
+
         </div>
       </div>
 
-        <!-- Row 6 — 8 new cards -->
+      <!-- Row 6 — 8 new cards -->
       <div class="mb-14 pb-10">
         <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
 
@@ -369,7 +372,7 @@
               <h4 class="font-['Playfair_Display',serif] text-lg text-brown">Favor</h4>
             </div>
           </div>
-             <div class="group hover:-translate-y-1 transition-all duration-300 relative">
+          <div class="group hover:-translate-y-1 transition-all duration-300 relative">
             <div class="aspect-4/3 overflow-hidden">
               <img src="./public/image/paul.jpeg" alt="Team Member"
                 class="w-full h-full object-center transition-transform duration-700 group-hover:scale-105" />
@@ -540,7 +543,7 @@
     </div>
   </footer>
 
-  <script src="/js/app.js"></script>
+  <script src="./js/app.js"></script>
   <script>
     window.addEventListener('scroll', () => {
       document.getElementById('navbar').classList.toggle('shadow-md', window.scrollY > 30);

@@ -26,6 +26,11 @@ class Settings(BaseSettings):
     
     # Environment
     environment: str = "development"
+
+    # Paystack  ← ADD THIS BLOCK
+    paystack_secret_key: str = ""
+    paystack_public_key: str = ""
+    frontend_url: str = "http://localhost:3000"
     
     # CORS
     cors_origins: List[str] = ["http://localhost:3000", "http://127.0.0.1:3000"]

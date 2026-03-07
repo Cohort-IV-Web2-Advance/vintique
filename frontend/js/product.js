@@ -58,7 +58,7 @@ function renderDetail(p) {
 
       <!-- Price & Stock -->
       <div class="flex items-baseline gap-4 mb-5">
-        <p class="font-serif text-3xl text-amber font-semibold">${formatPrice(p.price)}</p>
+        <p class="text-3xl text-amber font-semibold">${formatPrice(p.price)}</p>
         <span class="text-xs font-sans px-3 py-1 rounded-full ${inStock ? 'bg-sage/20 text-sage' : 'bg-rust/10 text-rust'}">
           ${inStock ? `${p.stock_quantity} in stock` : 'Out of Stock'}
         </span>

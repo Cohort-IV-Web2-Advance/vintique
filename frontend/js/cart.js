@@ -30,7 +30,7 @@ function renderCart() {
       <div class="flex-1 min-w-0">
         <div class="flex items-start justify-between gap-2">
           <div>
-            <p class="text-[10px] font-sans tracking-widest uppercase text-muted mb-0.5">${item.category || 'Vintage'}</p>
+            <p class="text-[10px] font-sans tracking-widest uppercase text-muted mb-0.5">${item.category || 'Vintique'}</p>
             <h3 class="font-serif text-base text-brown font-semibold leading-tight">${item.name}</h3>
           </div>
           <button onclick="removeItem(${item.id})" class="text-muted hover:text-rust transition-colors shrink-0 p-1">
@@ -49,7 +49,7 @@ function renderCart() {
             <button onclick="changeQty(${item.id}, ${item.qty + 1})"
               class="px-3 py-1.5 text-brown hover:bg-parchment transition-colors text-base leading-none">+</button>
           </div>
-          <p class="font-serif text-lg text-amber font-semibold">${formatPrice(item.price * item.qty)}</p>
+          <p class="text-lg text-amber font-semibold">${formatPrice(item.price * item.qty)}</p>
         </div>
       </div>
     </div>

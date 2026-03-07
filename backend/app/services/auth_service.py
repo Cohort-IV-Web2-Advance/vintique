@@ -64,5 +64,6 @@ class AuthService:
         return {
             "access_token": access_token,
             "token_type": "bearer",
-            "user": user
+            "user": user,
+            "admin_status": user.is_admin
         }

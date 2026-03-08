@@ -9,10 +9,10 @@ class Settings(BaseSettings):
     database_url: str = os.getenv("DATABASE_URL")
     
     # MySQL Environment Variables (for docker-compose)
-    mysql_root_password: str = os.getenv("MYSQL_ROOT_PASSWORD")
+    mysql_root_password: Optional[str] = os.getenv("MYSQL_ROOT_PASSWORD")
     mysql_database: str = os.getenv("MYSQL_DATABASE", "vintique_db")
     mysql_user: str = os.getenv("MYSQL_USER", "vintique_user")
-    mysql_password: str = os.getenv("MYSQL_PASSWORD")
+    mysql_password: Optional[str] = os.getenv("MYSQL_PASSWORD")
     
     # JWT
     jwt_secret_key: str = os.getenv("JWT_SECRET_KEY")

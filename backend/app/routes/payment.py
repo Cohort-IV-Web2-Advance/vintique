@@ -10,6 +10,7 @@ from app.database import get_db
 from app.config import settings
 from app.models.order import Transaction
 from app.services.order_service import OrderService
+from app.services.payment_service import verify_payment
 
 logger = logging.getLogger(__name__)
 
@@ -74,19 +75,56 @@ async def paystack_webhook(request: Request, db: Session = Depends(get_db)):
         # Deduct stock after payment confirmed
         order_service.deduct_stock(order_ids)
 
-        # Create transaction record
-        transaction = Transaction(
-            order_id=order_ids[0],
-            reference=reference,
-            status="success",
-            amount=amount_naira,
-            currency=data.get("currency", "NGN"),
-            channel=channel,
-            paid_at=paid_at
-        )
-        db.add(transaction)
-        db.commit()
+        # Find and update existing transaction record
+        transaction = db.query(Transaction).filter(
+            Transaction.reference == reference
+        ).first()
+
+        if transaction:
+            transaction.status = "success"
+            transaction.channel = channel
+            transaction.paid_at = paid_at
+            db.commit()
+        else:
+            # Fallback — create transaction if not found
+            logger.warning(f"No pending transaction found for reference {reference}, creating new one")
+            transaction = Transaction(
+                order_id=order_ids[0],
+                reference=reference,
+                status="success",
+                amount=amount_naira,
+                currency=data.get("currency", "NGN"),
+                channel=channel,
+                paid_at=paid_at
+            )
+            db.add(transaction)
+            db.commit()
 
         logger.info(f"Payment confirmed for orders {order_ids}, reference {reference}")
 
     return {"status": "ok"}
+
+
+@payment_router.get("/verify/{reference}")
+async def verify_payment_status(
+    reference: str,
+    db: Session = Depends(get_db)
+):
+    """
+    Verifies payment status by reference.
+    Called by frontend after user returns from Paystack payment page.
+    """
+    result = verify_payment(reference)
+
+    if not result["status"]:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=result["message"]
+        )
+
+    return {
+        "paid": result["paid"],
+        "amount": result["amount"],
+        "email": result["email"],
+        "message": result["message"]
+    }

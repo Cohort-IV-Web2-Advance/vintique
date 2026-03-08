@@ -47,7 +47,7 @@ def checkout(
             detail=f"Payment initialization failed: {payment['message']}"
         )
 
-        # Create transaction records after successful Paystack initialization
+    # Create transaction records after successful Paystack initialization
     for order in created_orders:
         transaction = Transaction(
             order_id=order.id,

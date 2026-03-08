@@ -5,20 +5,69 @@ from typing import List
 from app.database import get_db
 from app.schemas.order import OrderCreate, OrderResponse
 from app.services.order_service import OrderService
+from app.services.payment_service import initialize_payment
 from app.core.auth import get_current_user
 from app.models.user import User
+from app.models.order import Transaction
+
 
 order_router = APIRouter(prefix="/orders", tags=["orders"])
 
 
-@order_router.post("/checkout", response_model=List[OrderResponse], status_code=status.HTTP_201_CREATED)
+@order_router.post("/checkout", status_code=status.HTTP_201_CREATED)
 def checkout(
     order_data: OrderCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+    # Create orders
     order_service = OrderService(db)
-    return order_service.create_order(order_data, current_user.id)
+    created_orders = order_service.create_order(order_data, current_user.id)
+
+    # Calculate total amount across all orders
+    total_amount = sum(float(order.amount) for order in created_orders)
+
+    # Collect all order IDs for this checkout session
+    order_ids = [order.id for order in created_orders]
+
+    # Initialize Paystack payment session
+    payment = initialize_payment(
+        email=current_user.email,
+        amount_naira=total_amount,
+        order_ids=order_ids
+    )
+
+    # Handle Paystack initialization failure
+    if not payment["status"]:
+        # Rollback created orders if payment initialization fails
+        for order in created_orders:
+            order_service.update_order_status(order.id, "failed")
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=f"Payment initialization failed: {payment['message']}"
+        )
+
+    # Create transaction records after successful Paystack initialization
+    for order in created_orders:
+        transaction = Transaction(
+            order_id=order.id,
+            reference=payment["reference"],
+            status="pending",
+            amount=order.amount,
+            currency="NGN"
+        )
+        db.add(transaction)
+    db.commit()
+
+    # Return orders and payment details to frontend
+    return {
+        "orders": [OrderResponse.from_orm(order) for order in created_orders],
+        "payment": {
+            "authorization_url": payment["authorization_url"],
+            "reference": payment["reference"],
+            "total_amount": total_amount
+        }
+    }
 
 
 @order_router.get("/history", response_model=List[OrderResponse])

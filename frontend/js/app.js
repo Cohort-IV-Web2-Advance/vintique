@@ -110,8 +110,8 @@ async function login(email, password) {
   const token = data.access_token || data.token;
 
   if (!token) throw new Error("No token returned");
-
-  setAuth(token, data.user || { email });
+  const user = data.user || { email }
+  setAuth(token, user);
 
   return data;
 }
@@ -361,7 +361,7 @@ function handleNewsletter(e) {
 }
 
 // ── FORMAT HELPERS ────────────────────────────────────────────────────────────
-function formatPrice(n) { return `$${Number(n).toFixed(2)}`; }
+function formatPrice(n) { return `₦${Number(n).toFixed(2)}`; }
 function formatDate(s)  { return new Date(s).toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' }); }
 
 // ── PRODUCT CARD BUILDER ──────────────────────────────────────────────────────
@@ -382,7 +382,7 @@ function buildProductCard(p, delay = 0) {
       </h3>
       <p class="text-muted text-xs line-clamp-2 mb-3">${p.description || ''}</p>
       <div class="flex items-center justify-between">
-        <p class="font-serif text-lg text-amber font-semibold">${formatPrice(p.price)}</p>
+        <p class="text-lg text-amber font-semibold">${formatPrice(p.price)}</p>
         <button onclick="cart.add(${JSON.stringify(p).replace(/"/g, '&quot;')}, 1)"
           class="${p.stock_quantity > 0 ? 'bg-brown hover:bg-amber' : 'bg-muted cursor-not-allowed'} text-cream text-xs font-sans font-semibold px-3 py-2 rounded-lg transition-colors"
           ${p.stock_quantity <= 0 ? 'disabled' : ''}>

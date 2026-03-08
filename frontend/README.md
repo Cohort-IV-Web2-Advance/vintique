@@ -30,13 +30,13 @@ vintique/
 | Page | Route | Auth |
 |------|-------|------|
 | Landing | `index.html` | Public |
-| Shop | `pages/products.html` | Public |
-| Product Detail | `pages/product.html?id=X` | Public |
-| Cart & Checkout | `pages/cart.html` | Public (checkout requires auth) |
-| Login | `pages/login.html` | Guest only |
-| Register | `pages/register.html` | Guest only |
-| My Orders | `pages/orders.html` | Protected |
-| Admin | `pages/admin.html` | Admin only |
+| Shop | `products.html` | Public |
+| Product Detail | `product.html?id=X` | Public |
+| Cart & Checkout | `cart.html` | Public (checkout requires auth) |
+| Login | `login.html` | Guest only |
+| Register | `register.html` | Guest only |
+| My Orders | `orders.html` | Protected |
+| Admin | `admin.html` | Admin only |
 
 ## API Connection
 
@@ -79,4 +79,4 @@ The frontend auto-calls your API endpoints:
 
 ## Customization
 
-Colors are defined in each `<script>tailwind.config = {...}</script>` block. Update `app.js` `API_BASE` constant for deployment.
+Colors are defined in each block. Update `app.js` `API_BASE` constant for deployment.

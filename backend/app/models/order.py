@@ -29,7 +29,15 @@ class Transaction(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     order_id = Column(Integer, ForeignKey("orders.id"), nullable=False)
-    payment_id = Column(String(255), nullable=True)
+
+    # Paystack fields
+    reference = Column(String(255), nullable=False, index=True)
+    status = Column(String(50),nullable=False)
+    amount = Column(Numeric(10, 2), nullable=True)
+    currency = Column(String(10), default="NGN", nullable=False)
+    channel = Column(String(50), nullable=True)
+    paid_at = Column(DateTime(timezone=True), nullable=True)
+
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 

@@ -16,7 +16,7 @@ HEADERS = {
 }
 
 
-def initialize_payment(email: str, amount_naira: float, order_id: int) -> dict:
+def initialize_payment(email: str, amount_naira: float, order_ids: list) -> dict:
     """
     Opens a payment session with Paystack and returns a payment URL
     that the frontend redirects the user to.
@@ -24,9 +24,9 @@ def initialize_payment(email: str, amount_naira: float, order_id: int) -> dict:
     Args:
         email        -- the customer's email address
         amount_naira -- total order amount in Naira (e.g. 5000.00)
-        order_id     -- our internal Order ID stored in metadata so
-                        Benedict's webhook can match the payment back
-                        to the correct order
+        order_ids    -- list of Order IDs included in this payment session.
+                        Stored in metadata so the webhook handler can match
+                        the payment back to the correct orders.
 
     Returns a dict with:
         status            -- True if Paystack accepted the request
@@ -34,20 +34,17 @@ def initialize_payment(email: str, amount_naira: float, order_id: int) -> dict:
         reference         -- unique reference string for this payment
         message           -- description from Paystack
     """
-    # Paystack requires amounts in kobo (1 Naira = 100 kobo)
     amount_kobo = int(amount_naira * 100)
 
     payload = {
         "email": email,
         "amount": amount_kobo,
         "metadata": {
-            # This order_id travels with the payment all the way to
-            # the webhook so Benedict can identify which order was paid
-            "order_id": order_id,
+            # order_ids is a list — the webhook handler must iterate
+            # over all IDs to update each order status on payment confirmation
+            "order_ids": order_ids,
         },
-        # After payment, Paystack redirects the user back to this URL.
-        # Solex will build the /payment/callback page on the frontend.
-        "callback_url": f"{settings.frontend_url}/payment/callback",
+        "callback_url": settings.payment_callback_url
     }
 
     try:
@@ -55,9 +52,9 @@ def initialize_payment(email: str, amount_naira: float, order_id: int) -> dict:
             f"{PAYSTACK_BASE_URL}/transaction/initialize",
             json=payload,
             headers=HEADERS,
-            timeout=10,  # fail fast if Paystack is unreachable
+            timeout=10,
         )
-        response.raise_for_status()  # raises exception on 4xx/5xx responses
+        response.raise_for_status()
         data = response.json()
 
         return {

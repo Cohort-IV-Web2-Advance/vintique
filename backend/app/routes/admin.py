@@ -42,6 +42,42 @@ def get_all_products_admin(
     return product_service.get_all_products()
 
 
+@admin_router.patch("/users/{identifier}/make-admin", response_model=UserResponse)
+def make_user_admin(
+    identifier: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_admin_user)
+):
+   
+    
+    if current_user.id == identifier or current_user.username == User.username:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="You are already an admin"
+        )
+
+    user = db.query(User).filter(User.id == identifier).first() or db.query(User).filter(User.username == identifier).first()
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"User with ID {identifier} {user.username} not found"
+        )
+
+    if user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"User '{user.username}' is already an admin"
+        )
+
+    user.is_admin = True
+    db.commit()
+    db.refresh(user)
+
+    return user
+
+
+
 # Inventory Management Routes
 inventory_router = APIRouter(prefix="/inventory", tags=["inventory"])
 

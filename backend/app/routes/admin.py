@@ -53,60 +53,6 @@ def get_all_products_admin(
     return product_service.get_all_products()
 
 
-@admin_router.put("/users/demote", response_model=UserResponse)
-def demote_user_from_admin(
-    user_data: UserIdentifier,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_admin_user)
-):
-    """
-    Remove admin status from a user.
-    Accepts either user ID or username.
-    Only admins can perform this action.
-    cannot demote other admin only self
-    """
-    user_service = UserService(db)
-    
-    # Get target user by ID or username
-    if isinstance(user_data.user_id, int):
-        # Search by ID
-        target_user = user_service.get_user_by_id(user_data.user_id)
-        if not target_user:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"User with ID {user_data.user_id} not found"
-            )
-    else:
-        # Search by username
-        target_user = db.query(User).filter(User.username == user_data.user_id).first()
-        if not target_user:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"User with username '{user_data.user_id}' not found"
-            )
-    
-    # Prevent demoting other admins (but allow self-demote)
-    if not target_user.is_admin:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="User is not an admin"
-        )
-    
-    # Prevent demoting other admins (but allow self-demote)
-    if target_user.is_admin and target_user.id != current_user.id:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Cannot demote other admins"
-        )
-    
-    # Demote user from admin
-    target_user.is_admin = False
-    db.commit()
-    db.refresh(target_user)
-    
-    return target_user
-
-
 @admin_router.put("/users/account", response_model=dict)
 def manage_user_account(
     action_data: UserAccountAction,

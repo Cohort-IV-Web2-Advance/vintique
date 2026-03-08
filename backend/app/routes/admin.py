@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Union, Optional
+from pydantic import BaseModel
 
 from app.database import get_db
 from app.schemas.product import ProductCreate, ProductUpdate, ProductResponse
@@ -13,6 +14,16 @@ from app.core.auth import get_current_admin_user
 from app.models.user import User
 
 admin_router = APIRouter(prefix="/admin", tags=["admin"])
+
+
+class UserIdentifier(BaseModel):
+    user_id: Union[int, str]  # Can be ID (int) or username (str)
+
+
+class UserAccountAction(BaseModel):
+    user_id: Union[int, str]  # Can be ID (int) or username (str)
+    action: str  # Options: "delete", "suspend", "reactivate"
+    reason: Optional[str] = None  # Optional reason for the action
 
 
 @admin_router.get("/orders", response_model=List[OrderResponse])
@@ -211,3 +222,6 @@ def delete_product(
 ):
     product_service = ProductService(db)
     product_service.delete_product(product_id)
+
+
+    

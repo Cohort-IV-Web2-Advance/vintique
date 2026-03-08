@@ -45,21 +45,49 @@ function clearAuth() {
 }
 
 async function register(userData) {
-  const res = await fetch(`${API_BASE}/auth/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(userData)
-  });
+  // const res = await fetch(`${API_BASE}/auth/register`, {
+  //   method: "POST",
+  //   headers: { "Content-Type": "application/json" },
+  //   body: JSON.stringify(userData)
+  // });
 
-  const data = await res.json();
+  
+//   const data = await res.json();
 
-  if (!res.ok) throw new Error(data.message || "Registration failed");
+//   if (!res.ok) throw new Error(data.message || "Registration failed");
 
-  if (data.access_token) {
-    setAuth(data.access_token, data.user || {});
-  }
+//   if (data.access_token) {
+//     setAuth(data.access_token, data.user || {});
+//   }
 
-  return data;
+//   return data;
+const res = await fetch(`${API_BASE}/auth/register`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "Accept": "application/json"
+  },
+  body: JSON.stringify({
+    username: userData.username.trim(),
+    email: userData.email.trim(),
+    password: userData.password,
+    shipping_address: userData.shipping_address || ""
+  })
+});
+
+const data = await res.json().catch(() => ({}));
+
+console.log("REGISTER RESPONSE:", data);
+
+if (!res.ok) {
+  throw new Error(data.detail || data.message || "Registration failed");
+}
+
+if (data.access_token) {
+  setAuth(data.access_token, data.user || {});
+}
+
+return data;
 }
 
 async function login(email, password) {

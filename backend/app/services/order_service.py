@@ -3,7 +3,7 @@ from typing import List, Optional
 from fastapi import HTTPException, status
 from decimal import Decimal
 
-from app.models.order import Order, Transaction
+from app.models.order import Order  
 from app.models.product import Product
 from app.models.cart import Cart
 from app.schemas.order import OrderCreate
@@ -109,12 +109,4 @@ class OrderService:
         self.db.refresh(order)
         return order
 
-    def create_transaction(self, order_id: int, payment_id: str) -> Transaction:
-        transaction = Transaction(
-            order_id=order_id,
-            payment_id=payment_id
-        )
-        self.db.add(transaction)
-        self.db.commit()
-        self.db.refresh(transaction)
-        return transaction
+

@@ -77,9 +77,15 @@ class AuthService:
             data={"sub": str(user.id)}, expires_delta=access_token_expires
         )
 
+        # return {
+        #     "access_token": access_token,
+        #     "token_type": "bearer",
+        #     "user": user,
+        #     "admin_status": user.is_admin
+        # }
+
         return {
             "access_token": access_token,
             "token_type": "bearer",
             "user": user,
-            "admin_status": user.is_admin
         }

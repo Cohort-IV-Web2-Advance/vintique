@@ -8,7 +8,7 @@ class Order(Base):
     __tablename__ = "orders"
 
     id = Column(Integer, primary_key=True, index=True)
-    product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
+    product_id = Column(Integer, ForeignKey("products.id", ondelete="SET NULL"), nullable=True) # TODO: Add cascade delete or implement soft delete
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     amount = Column(Numeric(10, 2), nullable=False)
     quantity = Column(Integer, nullable=False)
@@ -19,7 +19,7 @@ class Order(Base):
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
     # Relationships
-    product = relationship("Product")
+    product = relationship("Product", passive_deletes=True)  # TODO: Add cascade delete or implement soft delete
     user = relationship("User", back_populates="orders")
     transactions = relationship("Transaction", back_populates="order", cascade="all, delete-orphan")
 

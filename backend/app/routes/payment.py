@@ -18,8 +18,6 @@ logger = logging.getLogger(__name__)
 payment_router = APIRouter(prefix="/payments", tags=["payments"])
 
 
-<<<<<<< HEAD
-=======
 def verify_paystack_signature(payload: bytes, signature: str) -> bool:
     expected = hmac.new(
         settings.paystack_secret_key.encode('utf-8'),
@@ -100,22 +98,18 @@ async def paystack_webhook(request: Request, db: Session = Depends(get_db)):
 
     return {"status": "ok"}
 
->>>>>>> feat/paystack-integration-dev
 
 @payment_router.get("/verify/{reference}")
 async def verify_payment_status(
     reference: str,
     db: Session = Depends(get_db)
 ):
-<<<<<<< HEAD
-=======
     """
     Verifies payment status by reference.
     Called by frontend after user returns from Paystack payment page.
     Confirms payment with Paystack AND cross-checks with our database.
     """
     # Step 1 — Confirm with Paystack
->>>>>>> feat/paystack-integration-dev
     result = verify_payment(reference)
 
     if not result["status"]:
@@ -124,8 +118,6 @@ async def verify_payment_status(
             detail=result["message"]
         )
 
-<<<<<<< HEAD
-=======
     # Step 2 — Cross check with our database
     transactions = db.query(Transaction).filter(
         Transaction.reference == reference
@@ -135,13 +127,10 @@ async def verify_payment_status(
     db_status = transactions[0].status if transactions else "not_found"
 
     # Step 3 — Return everything frontend needs
->>>>>>> feat/paystack-integration-dev
     return {
         "paid": result["paid"],
         "amount": result["amount"],
         "email": result["email"],
-<<<<<<< HEAD
-=======
         "reference": reference,
         "order_ids": order_ids,
         "db_status": db_status,
@@ -181,6 +170,5 @@ async def payment_callback(
         "reference": ref,
         "order_ids": order_ids,
         "db_status": db_status,
->>>>>>> feat/paystack-integration-dev
         "message": result["message"]
     }

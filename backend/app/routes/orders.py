@@ -8,6 +8,7 @@ from app.services.order_service import OrderService
 from app.services.payment_service import initialize_payment
 from app.core.auth import get_current_user
 from app.models.user import User
+from app.models.order import Transaction
 
 
 order_router = APIRouter(prefix="/orders", tags=["orders"])
@@ -45,6 +46,18 @@ def checkout(
             status_code=status.HTTP_502_BAD_GATEWAY,
             detail=f"Payment initialization failed: {payment['message']}"
         )
+
+        # Create transaction records after successful Paystack initialization
+    for order in created_orders:
+        transaction = Transaction(
+            order_id=order.id,
+            reference=payment["reference"],
+            status="pending",
+            amount=order.amount,
+            currency="NGN"
+        )
+        db.add(transaction)
+    db.commit()
 
     # Return orders and payment details to frontend
     return {

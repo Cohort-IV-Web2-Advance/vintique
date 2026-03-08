@@ -2,6 +2,7 @@ import hmac
 import hashlib
 import json
 import logging
+from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session
@@ -60,7 +61,8 @@ async def paystack_webhook(request: Request, db: Session = Depends(get_db)):
         order_ids = data.get("metadata", {}).get("order_ids", [])
         amount_naira = data.get("amount", 0) / 100
         channel = data.get("channel", "")
-        paid_at = data.get("paid_at")
+        paid_at_str = data.get("paid_at")
+        paid_at = datetime.strptime(paid_at_str, "%Y-%m-%dT%H:%M:%S.%fZ") if paid_at_str else None
 
         if not order_ids:
             logger.error(f"Webhook missing order_ids in metadata for reference {reference}")
@@ -68,14 +70,7 @@ async def paystack_webhook(request: Request, db: Session = Depends(get_db)):
 
         order_service = OrderService(db)
 
-        # Update each order status to paid
-        for order_id in order_ids:
-            order_service.update_order_status(order_id, "paid")
-
-        # Deduct stock after payment confirmed
-        order_service.deduct_stock(order_ids)
-
-        # Find and update existing transaction record
+        # Step 1 — Find and update transaction FIRST
         transaction = db.query(Transaction).filter(
             Transaction.reference == reference
         ).first()
@@ -99,6 +94,13 @@ async def paystack_webhook(request: Request, db: Session = Depends(get_db)):
             )
             db.add(transaction)
             db.commit()
+
+        # Step 2 — Only update orders to paid AFTER transaction is confirmed
+        for order_id in order_ids:
+            order_service.update_order_status(order_id, "paid")
+
+        # Step 3 — Deduct stock last
+        order_service.deduct_stock(order_ids)
 
         logger.info(f"Payment confirmed for orders {order_ids}, reference {reference}")
 

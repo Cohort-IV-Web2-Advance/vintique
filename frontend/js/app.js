@@ -75,7 +75,6 @@ async function login(email, password) {
   });
 
   const data = await res.json();
-  // console.log("LOGIN RESPONSE:", data);
 
   if (!res.ok) throw new Error(data.detail || "Login failed");
 
@@ -261,7 +260,13 @@ const adminAPI = {
       method: 'POST',
       headers: { Authorization: `Bearer ${getToken()}` },
       body: formData
-    }).then(r => r.json());
+    }).then(async r => {
+      if (!r.ok) {
+        const err = await r.json().catch(() => ({}));
+        throw new Error(err.detail || `HTTP ${r.status}`);
+      }
+      return r.json();
+    });
   },
 
   updateProduct(id, formData) {
@@ -269,10 +274,28 @@ const adminAPI = {
       method: 'PUT',
       headers: { Authorization: `Bearer ${getToken()}` },
       body: formData
-    }).then(r => r.json());
+    }).then(async r => {
+      if (!r.ok) {
+        const err = await r.json().catch(() => ({}));
+        throw new Error(err.detail || `HTTP ${r.status}`);
+      }
+      return r.json();
+    });
   },
 
-  deleteProduct(id) { return apiFetch(`/inventory/product/${id}`, { method: 'DELETE' }); },
+  // DELETE requests that have Content-Type: application/json with no body
+  deleteProduct(id) {
+    return fetch(`${API_BASE}/inventory/product/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${getToken()}` }
+    }).then(async r => {
+      if (!r.ok) {
+        const err = await r.json().catch(() => ({}));
+        throw new Error(err.detail || `HTTP ${r.status}`);
+      }
+      return r.status === 204 ? null : r.json();
+    });
+  },
 };
 
 // ── TOAST ──────

@@ -21,10 +21,9 @@ def register(user_data: UserCreate, db: Session = Depends(get_db)):
 def login(login_data: UserLogin, db: Session = Depends(get_db)):
     auth_service = AuthService(db)
     result = auth_service.login(login_data)
-    return result
-    # return {
-    #     "access_token": result["access_token"],
-    #     "token_type": result["token_type"],
-    #     "user": result["user"],
-    #     "admin_status": result["admin_status"]
-    # }
+    return {
+        "access_token": result["access_token"],
+        "token_type": result["token_type"],
+        "user": result["user"],
+        "admin_status": result["admin_status"]
+    }

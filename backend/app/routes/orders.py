@@ -7,6 +7,7 @@ from app.schemas.order import OrderCreate, OrderResponse
 from app.services.order_service import OrderService
 from app.core.auth import get_current_user
 from app.models.user import User
+from app.services.payment_service import verify_payment
 
 order_router = APIRouter(prefix="/orders", tags=["orders"])
 
@@ -74,3 +75,38 @@ def get_order(
         )
     
     return order
+
+@order_router.get("/verify-payment/{reference}")
+async def verify_payment_endpoint(
+    reference: str,
+    db: Session = Depends(get_db)
+):
+    """
+    Payment verification endpoint called by frontend after user returns from Paystack.
+    
+    Frontend calls: GET /orders/verify-payment/vintique_order_123_abc
+    """
+    try:
+        result = verify_payment(reference, db)
+        
+        return {
+            "success": result.get("status", False),
+            "paid": result.get("paid", False),
+            "message": result.get("message", ""),
+            "amount": result.get("amount", 0),
+            "email": result.get("email", ""),
+            "reference": reference,
+            "order_id": result.get("order_id"),
+            "order_status": result.get("order_status", "pending")
+        }
+        
+    except Exception as e:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Payment verification error for reference {reference}: {str(e)}")
+        
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Payment verification failed: {str(e)}"
+        )
+

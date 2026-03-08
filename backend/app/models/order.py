@@ -32,8 +32,8 @@ class Transaction(Base):
     payment_id = Column(String(255), nullable=True)
 
     # Paystack fields
-    reference = Column(String(255), unique=True, nullable=True)
-    status = Column(String(50), default="pending", nullable=False)
+    reference = Column(String(255), nullable=False, index=True)
+    status = Column(String(50),nullable=False)
     amount = Column(Numeric(10, 2), nullable=True)
     currency = Column(String(10), default="NGN", nullable=False)
     channel = Column(String(50), nullable=True)

@@ -73,7 +73,7 @@ async def paystack_webhook(request: Request, db: Session = Depends(get_db)):
         # Step 1 — Find and update transaction FIRST
         transaction = db.query(Transaction).filter(
             Transaction.reference == reference
-        ).first()
+        ).all()
 
         if transaction:
             transaction.status = "success"

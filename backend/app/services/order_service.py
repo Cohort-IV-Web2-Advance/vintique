@@ -60,9 +60,6 @@ class OrderService:
                 self.db.add(order)
                 self.db.flush()  # Get the order ID without committing
 
-                # Decrement product.stock_quantity for each item
-                product.stock_quantity -= item.quantity
-
                 # Remove each item from the user's cart if it exists
                 cart_item = self.db.query(Cart).filter(
                     Cart.product_id == item.product_id,
@@ -101,5 +98,21 @@ class OrderService:
         self.db.commit()
         self.db.refresh(order)
         return order
+
+    def deduct_stock(self, order_ids: list) -> None:
+        """
+        Deducts stock for all orders in a single database operation.
+        More efficient than looping individual queries.
+        """
+        orders = self.db.query(Order).filter(Order.id.in_(order_ids)).all()
+        
+        for order in orders:
+            self.db.query(Product).filter(
+                Product.id == order.product_id
+            ).update({
+                Product.stock_quantity: Product.stock_quantity - order.quantity
+            })
+        
+        self.db.commit()
 
 

@@ -60,13 +60,6 @@ class OrderService:
                 self.db.add(order)
                 self.db.flush()  # Get the order ID without committing
 
-                # Create one Transaction row per order
-                transaction = Transaction(
-                    order_id=order.id,
-                    payment_id=None  # Will be set when payment is processed
-                )
-                self.db.add(transaction)
-
                 # Decrement product.stock_quantity for each item
                 product.stock_quantity -= item.quantity
 

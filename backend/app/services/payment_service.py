@@ -44,7 +44,7 @@ def initialize_payment(email: str, amount_naira: float, order_ids: list) -> dict
             # over all IDs to update each order status on payment confirmation
             "order_ids": order_ids,
         },
-        "callback_url": f"{settings.frontend_url}/payment/callback",
+        "callback_url": settings.payment_callback_url
     }
 
     try:

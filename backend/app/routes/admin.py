@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Union, Optional
+from pydantic import BaseModel
 
 from app.database import get_db
 from app.schemas.product import ProductCreate, ProductUpdate, ProductResponse
@@ -13,6 +14,16 @@ from app.core.auth import get_current_admin_user
 from app.models.user import User
 
 admin_router = APIRouter(prefix="/admin", tags=["admin"])
+
+
+class UserIdentifier(BaseModel):
+    user_id: Union[int, str]  # Can be ID (int) or username (str)
+
+
+class UserAccountAction(BaseModel):
+    user_id: Union[int, str]  # Can be ID (int) or username (str)
+    action: str  # Options: "delete", "suspend", "reactivate"
+    reason: Optional[str] = None  # Optional reason for the action
 
 
 @admin_router.get("/orders", response_model=List[OrderResponse])
@@ -40,6 +51,42 @@ def get_all_products_admin(
 ):
     product_service = ProductService(db)
     return product_service.get_all_products()
+
+
+@admin_router.patch("/users/{identifier}/make-admin", response_model=UserResponse)
+def make_user_admin(
+    identifier: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_admin_user)
+):
+   
+    
+    if current_user.id == identifier or current_user.username == User.username:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="You are already an admin"
+        )
+
+    user = db.query(User).filter(User.id == identifier).first() or db.query(User).filter(User.username == identifier).first()
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"User with ID {identifier} {user.username} not found"
+        )
+
+    if user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"User '{user.username}' is already an admin"
+        )
+
+    user.is_admin = True
+    db.commit()
+    db.refresh(user)
+
+    return user
+
 
 
 # Inventory Management Routes
@@ -175,3 +222,6 @@ def delete_product(
 ):
     product_service = ProductService(db)
     product_service.delete_product(product_id)
+
+
+    

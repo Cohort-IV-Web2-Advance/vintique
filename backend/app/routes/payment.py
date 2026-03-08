@@ -19,10 +19,6 @@ payment_router = APIRouter(prefix="/payments", tags=["payments"])
 
 
 def verify_paystack_signature(payload: bytes, signature: str) -> bool:
-    """
-    Verifies the webhook request genuinely came from Paystack.
-    Uses HMAC-SHA512 signature check against the secret key.
-    """
     expected = hmac.new(
         settings.paystack_secret_key.encode('utf-8'),
         payload,
@@ -33,16 +29,9 @@ def verify_paystack_signature(payload: bytes, signature: str) -> bool:
 
 @payment_router.post("/webhook")
 async def paystack_webhook(request: Request, db: Session = Depends(get_db)):
-    """
-    Receives and processes payment events from Paystack.
-    This endpoint must remain public — no authentication required.
-    Paystack calls this directly after every payment attempt.
-    Always returns HTTP 200 so Paystack knows the event was received.
-    """
     payload = await request.body()
     signature = request.headers.get("x-paystack-signature", "")
 
-    # Verify request is genuinely from Paystack
     if not verify_paystack_signature(payload, signature):
         logger.warning("Webhook received with invalid signature")
         raise HTTPException(
@@ -70,32 +59,35 @@ async def paystack_webhook(request: Request, db: Session = Depends(get_db)):
 
         order_service = OrderService(db)
 
-        # Step 1 — Find and update transaction FIRST
-        transaction = db.query(Transaction).filter(
+        # Step 1 — Find ALL transactions with this reference and update them
+        transactions = db.query(Transaction).filter(
             Transaction.reference == reference
         ).all()
 
-        if transaction:
-            transaction.status = "success"
-            transaction.channel = channel
-            transaction.paid_at = paid_at
+        if transactions:
+            for transaction in transactions:
+                transaction.status = "success"
+                transaction.channel = channel
+                transaction.paid_at = paid_at
             db.commit()
+            logger.info(f"Updated {len(transactions)} transactions to success for reference {reference}")
         else:
-            # Fallback — create transaction if not found
+            # Fallback — only create if order actually exists
             logger.warning(f"No pending transaction found for reference {reference}, creating new one")
-            transaction = Transaction(
-                order_id=order_ids[0],
-                reference=reference,
-                status="success",
-                amount=amount_naira,
-                currency=data.get("currency", "NGN"),
-                channel=channel,
-                paid_at=paid_at
-            )
-            db.add(transaction)
+            for order_id in order_ids:
+                transaction = Transaction(
+                    order_id=order_id,
+                    reference=reference,
+                    status="success",
+                    amount=amount_naira,
+                    currency=data.get("currency", "NGN"),
+                    channel=channel,
+                    paid_at=paid_at
+                )
+                db.add(transaction)
             db.commit()
 
-        # Step 2 — Only update orders to paid AFTER transaction is confirmed
+        # Step 2 — Update orders to paid AFTER transaction confirmed
         for order_id in order_ids:
             order_service.update_order_status(order_id, "paid")
 
@@ -112,10 +104,6 @@ async def verify_payment_status(
     reference: str,
     db: Session = Depends(get_db)
 ):
-    """
-    Verifies payment status by reference.
-    Called by frontend after user returns from Paystack payment page.
-    """
     result = verify_payment(reference)
 
     if not result["status"]:

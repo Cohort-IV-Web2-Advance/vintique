@@ -3,7 +3,8 @@ from typing import List, Optional
 from fastapi import HTTPException, status
 from decimal import Decimal
 
-from app.models.order import Order, Transaction
+from app.models.order import Order
+from app.models.transaction import Transaction
 from app.models.product import Product
 from app.models.cart import Cart
 from app.schemas.order import OrderCreate

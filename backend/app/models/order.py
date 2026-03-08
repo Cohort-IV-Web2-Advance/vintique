@@ -24,14 +24,14 @@ class Order(Base):
     transactions = relationship("Transaction", back_populates="order", cascade="all, delete-orphan")
 
 
-class Transaction(Base):
-    __tablename__ = "transactions"
+# class Transaction(Base):
+#     __tablename__ = "transactions"
 
-    id = Column(Integer, primary_key=True, index=True)
-    order_id = Column(Integer, ForeignKey("orders.id"), nullable=False)
-    payment_id = Column(String(255), nullable=True)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+#     id = Column(Integer, primary_key=True, index=True)
+#     order_id = Column(Integer, ForeignKey("orders.id"), nullable=False)
+#     payment_id = Column(String(255), nullable=True)
+#     created_at = Column(DateTime(timezone=True), server_default=func.now())
+#     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
-    # Relationships
-    order = relationship("Order", back_populates="transactions")
+#     # Relationships
+#     order = relationship("Order", back_populates="transactions")

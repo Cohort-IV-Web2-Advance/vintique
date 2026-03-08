@@ -29,7 +29,6 @@ class Transaction(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     order_id = Column(Integer, ForeignKey("orders.id"), nullable=False)
-    payment_id = Column(String(255), nullable=True)
 
     # Paystack fields
     reference = Column(String(255), nullable=False, index=True)

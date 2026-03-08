@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Union, Optional
+from pydantic import BaseModel
 
 from app.database import get_db
 from app.schemas.product import ProductCreate, ProductUpdate, ProductResponse
@@ -13,6 +14,16 @@ from app.core.auth import get_current_admin_user
 from app.models.user import User
 
 admin_router = APIRouter(prefix="/admin", tags=["admin"])
+
+
+class UserIdentifier(BaseModel):
+    user_id: Union[int, str]  # Can be ID (int) or username (str)
+
+
+class UserAccountAction(BaseModel):
+    user_id: Union[int, str]  # Can be ID (int) or username (str)
+    action: str  # Options: "delete", "suspend", "reactivate"
+    reason: Optional[str] = None  # Optional reason for the action
 
 
 @admin_router.get("/orders", response_model=List[OrderResponse])
@@ -40,6 +51,175 @@ def get_all_products_admin(
 ):
     product_service = ProductService(db)
     return product_service.get_all_products()
+
+
+@admin_router.put("/users/demote", response_model=UserResponse)
+def demote_user_from_admin(
+    user_data: UserIdentifier,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_admin_user)
+):
+    """
+    Remove admin status from a user.
+    Accepts either user ID or username.
+    Only admins can perform this action.
+    cannot demote other admin only self
+    """
+    user_service = UserService(db)
+    
+    # Get target user by ID or username
+    if isinstance(user_data.user_id, int):
+        # Search by ID
+        target_user = user_service.get_user_by_id(user_data.user_id)
+        if not target_user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"User with ID {user_data.user_id} not found"
+            )
+    else:
+        # Search by username
+        target_user = db.query(User).filter(User.username == user_data.user_id).first()
+        if not target_user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"User with username '{user_data.user_id}' not found"
+            )
+    
+    # Prevent demoting other admins (but allow self-demote)
+    if not target_user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User is not an admin"
+        )
+    
+    # Prevent demoting other admins (but allow self-demote)
+    if target_user.is_admin and target_user.id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Cannot demote other admins"
+        )
+    
+    # Demote user from admin
+    target_user.is_admin = False
+    db.commit()
+    db.refresh(target_user)
+    
+    return target_user
+
+
+@admin_router.put("/users/account", response_model=dict)
+def manage_user_account(
+    action_data: UserAccountAction,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_admin_user)
+):
+    """
+    Manage user account status.
+    Accepts either user ID or username.
+    Actions: delete, suspend, reactivate.
+    Only admins can perform these actions.
+    """
+    user_service = UserService(db)
+    
+    # Get target user by ID or username
+    if isinstance(action_data.user_id, int):
+        # Search by ID
+        target_user = user_service.get_user_by_id(action_data.user_id)
+        if not target_user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"User with ID {action_data.user_id} not found"
+            )
+    else:
+        # Search by username
+        target_user = db.query(User).filter(User.username == action_data.user_id).first()
+        if not target_user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"User with username '{action_data.user_id}' not found"
+            )
+    
+    # Prevent admin from managing other admins (except self)
+    if target_user.is_admin and target_user.id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Cannot manage other admin accounts"
+        )
+    
+    # Prevent self-deletion/suspension
+    if target_user.id == current_user.id and action_data.action in ["delete", "suspend"]:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Cannot perform this action on your own account"
+        )
+    
+    # Perform the requested action
+    if action_data.action == "delete":
+        # Hard delete - actually remove user from database
+        # Store info for response before deletion
+        user_id = target_user.id
+        username = target_user.username
+        
+        # Delete user (this will cascade delete related records)
+        db.delete(target_user)
+        db.commit()
+        
+        return {
+            "message": "User account permanently deleted from database",
+            "user_id": user_id,
+            "username": username,
+            "action_performed": action_data.action,
+            "reason": action_data.reason
+        }
+        
+    elif action_data.action == "suspend":
+        # For now, just mark as suspended in username (since no is_active field)
+        target_user.username = f"suspended_user_{target_user.id}"
+        db.commit()
+        db.refresh(target_user)
+        
+        return {
+            "message": "User account suspended successfully",
+            "user_id": target_user.id,
+            "username": target_user.username,
+            "action_performed": action_data.action,
+            "reason": action_data.reason
+        }
+        
+    elif action_data.action == "reactivate":
+        # Check if user appears to be suspended
+        if "suspended_user_" in target_user.username:
+            # Restore original username (extract from before suspension)
+            original_username = target_user.username.replace("suspended_user_", "")
+            # Check if original username is available
+            existing_user = db.query(User).filter(User.username == original_username).first()
+            if existing_user and existing_user.id != target_user.id:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Cannot reactivate: original username already taken"
+                )
+            target_user.username = original_username
+            db.commit()
+            db.refresh(target_user)
+            
+            return {
+                "message": "User account reactivated successfully",
+                "user_id": target_user.id,
+                "username": target_user.username,
+                "action_performed": action_data.action,
+                "reason": action_data.reason
+            }
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="User account does not appear to be suspended"
+            )
+        
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid action: {action_data.action}. Valid actions: delete, suspend, reactivate"
+        )
 
 
 # Inventory Management Routes
@@ -175,3 +355,6 @@ def delete_product(
 ):
     product_service = ProductService(db)
     product_service.delete_product(product_id)
+
+
+    

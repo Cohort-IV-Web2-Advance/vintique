@@ -124,11 +124,7 @@ def upgrade() -> None:
     op.create_index(op.f('ix_guests_guest_id'), 'guests', ['guest_id'], unique=False)
     op.create_index(op.f('ix_guests_id'), 'guests', ['id'], unique=False)
     
-    # Create alembic version table
-    op.create_table('alembic_version',
-        sa.Column('version_num', sa.String(length=32), nullable=False),
-        sa.PrimaryKeyConstraint('version_num')
-    )
+  
     
     # ### end Alembic commands ###
 
@@ -154,5 +150,4 @@ def downgrade() -> None:
     op.drop_index(op.f('ix_users_email'), table_name='users')
     op.drop_table('users')
     sa.Enum(name='user_status').drop(op.get_bind())
-    op.drop_table('alembic_version')
     # ### end Alembic commands ###

@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File,
 from sqlalchemy.orm import Session
 from typing import List, Union, Optional
 from pydantic import BaseModel
+from enum import Enum
 
 from app.database import get_db
 from app.schemas.product import ProductCreate, ProductUpdate, ProductResponse
@@ -16,13 +17,18 @@ from app.models.user import User
 admin_router = APIRouter(prefix="/admin", tags=["admin"])
 
 
+class AccountActionEnum(str, Enum):
+    suspend = "suspend"
+    reactivate = "reactivate"
+
+
 class UserIdentifier(BaseModel):
     user_id: Union[int, str]  # Can be ID (int) or username (str)
 
 
 class UserAccountAction(BaseModel):
     user_id: Union[int, str]  # Can be ID (int) or username (str)
-    action: str  # Options: "delete", "suspend", "reactivate"
+    action: AccountActionEnum
     reason: Optional[str] = None  # Optional reason for the action
 
 
@@ -61,7 +67,7 @@ def make_user_admin(
 ):
    
     
-    if current_user.id == identifier or current_user.username == User.username:
+    if str(current_user.id) == identifier or current_user.username == identifier:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="You are already an admin"
@@ -72,7 +78,7 @@ def make_user_admin(
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"User with ID {identifier} {user.username} not found"
+            detail=f"User with identifier '{identifier}' not found"
         )
 
     if user.is_admin:
@@ -95,10 +101,10 @@ def manage_user_account(
     current_user: User = Depends(get_current_admin_user)
 ):
     """
-    Manage user accounts with actions: delete, suspend, reactivate
+    Manage user accounts with actions: suspend, reactivate
     
     Args:
-        action_data: Contains user_id (int or str), action (delete/suspend/reactivate), and optional reason
+        action_data: Contains user_id (int or str), action (suspend/reactivate), and optional reason
     
     Returns:
         dict: Success message with details of the action performed
@@ -135,20 +141,7 @@ def manage_user_account(
         )
     
     # Perform the requested action
-    if action_data.action == "delete":
-        # Soft delete by setting is_active to False
-        user.is_active = False
-        user.is_deleted = True
-        db.commit()
-        return {
-            "message": f"User '{user.username}' (ID: {user.id}) has been deleted successfully",
-            "action": "delete",
-            "user_id": user.id,
-            "username": user.username,
-            "reason": action_data.reason
-        }
-    
-    elif action_data.action == "suspend":
+    if action_data.action == AccountActionEnum.suspend:
         if user.is_suspended:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -166,16 +159,15 @@ def manage_user_account(
             "reason": action_data.reason
         }
     
-    elif action_data.action == "reactivate":
-        if not user.is_suspended and not (user.is_deleted or not user.is_active):
+    elif action_data.action == AccountActionEnum.reactivate:
+        if not user.is_suspended:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"User '{user.username}' is already active"
+                detail=f"User '{user.username}' is not suspended"
             )
         
         user.is_suspended = False
         user.is_active = True
-        user.is_deleted = False
         db.commit()
         return {
             "message": f"User '{user.username}' (ID: {user.id}) has been reactivated successfully",
@@ -188,7 +180,7 @@ def manage_user_account(
     else:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Invalid action '{action_data.action}'. Supported actions: delete, suspend, reactivate"
+            detail=f"Invalid action '{action_data.action}'. Supported actions: suspend, reactivate"
         )
 
 

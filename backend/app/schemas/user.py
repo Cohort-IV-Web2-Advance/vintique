@@ -55,6 +55,8 @@ class UserResponse(BaseModel):
     username: str
     shipping_address: Optional[str] = None
     is_admin: bool
+    is_suspended: bool
+    is_active: bool
     created_at: datetime
     updated_at: datetime
 

@@ -41,6 +41,8 @@
 
 
 #!/bin/sh
+
+echo "DB Host: $(python -c "import os; from urllib.parse import urlparse; u=urlparse(os.environ['DATABASE_URL'].replace('mysql+pymysql://','mysql://')); print(u.hostname, u.port)")"
 echo "Running database migrations..."
 
 # Wait for database to be ready

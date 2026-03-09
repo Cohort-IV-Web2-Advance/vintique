@@ -2026,7 +2026,7 @@
     &:hover {
       @media (hover: hover) {
         background-color: var(--color-amber);
-      } 
+      }
     }
   }
   .hover\:bg-brown {

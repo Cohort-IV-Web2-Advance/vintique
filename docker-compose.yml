@@ -30,13 +30,22 @@ services:
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
       - JWT_ALGORITHM=HS256
       - JWT_ACCESS_TOKEN_EXPIRE_MINUTES=30
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}   
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}             
+      - MYSQL_USER=${MYSQL_USER}                     
+      - MYSQL_DATABASE=${MYSQL_DATABASE}              
       - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
       - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
       - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+      - PAYSTACK_SECRET_KEY=${PAYSTACK_SECRET_KEY}
+      - PAYSTACK_PUBLIC_KEY=${PAYSTACK_PUBLIC_KEY}
+      - PAYMENT_CALLBACK_URL=${PAYMENT_CALLBACK_URL}
       - ENVIRONMENT=${ENVIRONMENT}
       - GUNICORN_WORKERS=${GUNICORN_WORKERS:-3}
       - GUNICORN_TIMEOUT=${GUNICORN_TIMEOUT:-120}
       - GUNICORN_KEEPALIVE=${GUNICORN_KEEPALIVE:-2}
+      - PAYSTACK_SECRET_KEY=${PAYSTACK_SECRET_KEY}
+      - PAYSTACK_PUBLIC_KEY=${PAYSTACK_PUBLIC_KEY}
     depends_on:
       db:
         condition: service_healthy
@@ -80,6 +89,7 @@ services:
       --slow-query-log=1
       --slow-query-log-file=/var/log/mysql/slow.log
       --long-query-time=2
+      --bind-address=0.0.0.0
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s

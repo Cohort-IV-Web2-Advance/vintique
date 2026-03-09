@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 import logging
 import time
 
-from app.routes import auth_router, product_router, cart_router, order_router, admin_router, health_router
+from app.routes import auth_router, product_router, cart_router, order_router, admin_router, health_router, payment_router
 from app.routes.admin import inventory_router
 from app.config import settings
 
@@ -73,6 +73,7 @@ app.include_router(order_router)
 app.include_router(admin_router)
 app.include_router(inventory_router)
 app.include_router(health_router)
+app.include_router(payment_router)
 
 @app.get("/")
 async def root():

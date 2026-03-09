@@ -9,10 +9,10 @@ class Settings(BaseSettings):
     database_url: str = os.getenv("DATABASE_URL")
     
     # MySQL Environment Variables (for docker-compose)
-    mysql_root_password: str = os.getenv("MYSQL_ROOT_PASSWORD")
+    mysql_root_password: Optional[str] = os.getenv("MYSQL_ROOT_PASSWORD")
     mysql_database: str = os.getenv("MYSQL_DATABASE", "vintique_db")
     mysql_user: str = os.getenv("MYSQL_USER", "vintique_user")
-    mysql_password: str = os.getenv("MYSQL_PASSWORD")
+    mysql_password: Optional[str] = os.getenv("MYSQL_PASSWORD")
     
     # JWT
     jwt_secret_key: str = os.getenv("JWT_SECRET_KEY")
@@ -26,6 +26,12 @@ class Settings(BaseSettings):
     
     # Environment
     environment: str = os.getenv("ENVIRONMENT", "development")
+
+    # Paystack  ← ADD THIS BLOCK
+    paystack_secret_key: str = os.getenv("PAYSTACK_SECRET_KEY")
+    paystack_public_key: str = os.getenv("PAYSTACK_PUBLIC_KEY")
+    payment_callback_url: str = os.getenv("PAYMENT_CALLBACK_URL")
+
     
     # CORS
     cors_origins: List[str] = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")

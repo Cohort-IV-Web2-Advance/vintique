@@ -64,7 +64,6 @@ def upgrade() -> None:
     op.alter_column('transactions', 'amount',
                existing_type=mysql.DECIMAL(precision=10, scale=2),
                nullable=True)
-    op.create_index(op.f('ix_transactions_reference'), 'transactions', ['reference'], unique=False)
     op.drop_constraint('transactions_ibfk_2', 'transactions', type_='foreignkey')
     op.drop_column('transactions', 'transaction_type')
     op.drop_column('transactions', 'user_id')
@@ -102,7 +101,6 @@ def downgrade() -> None:
     op.add_column('transactions', sa.Column('user_id', mysql.INTEGER(), autoincrement=False, nullable=False))
     op.add_column('transactions', sa.Column('transaction_type', mysql.VARCHAR(collation='utf8mb4_unicode_ci', length=50), nullable=False))
     op.create_foreign_key('transactions_ibfk_2', 'transactions', 'users', ['user_id'], ['id'])
-    op.drop_index(op.f('ix_transactions_reference'), table_name='transactions')
     op.alter_column('transactions', 'amount',
                existing_type=mysql.DECIMAL(precision=10, scale=2),
                nullable=False)

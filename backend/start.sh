@@ -10,12 +10,24 @@
 #!/bin/sh
 echo "Running database migrations..."
 
-# Check if alembic_version table exists (i.e. DB has been initialized before)
+# Check if alembic_version table exists
 TABLE_EXISTS=$(python -c "
-from app.db.session import engine
-from sqlalchemy import inspect
-inspector = inspect(engine)
-print('yes' if 'alembic_version' in inspector.get_table_names() else 'no')
+import os
+import pymysql
+from urllib.parse import urlparse
+
+url = urlparse(os.environ['DATABASE_URL'])
+conn = pymysql.connect(
+    host=url.hostname,
+    port=url.port or 3306,
+    user=url.username,
+    password=url.password,
+    database=url.path.lstrip('/')
+)
+cursor = conn.cursor()
+cursor.execute(\"SHOW TABLES LIKE 'alembic_version'\")
+print('yes' if cursor.fetchone() else 'no')
+conn.close()
 ")
 
 if [ "$TABLE_EXISTS" = "no" ]; then

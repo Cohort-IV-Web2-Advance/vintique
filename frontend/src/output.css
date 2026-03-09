@@ -1652,24 +1652,10 @@
       }
     }
   }
-  .hover\:bg-transparent {
-    &:hover {
-      @media (hover: hover) {
-        background-color: transparent;
-      }
-    }
-  }
   .hover\:bg-white {
     &:hover {
       @media (hover: hover) {
         background-color: var(--color-white);
-      }
-    }
-  }
-  .hover\:bg-none {
-    &:hover {
-      @media (hover: hover) {
-        background-image: none;
       }
     }
   }
@@ -1733,6 +1719,19 @@
     &:focus {
       --tw-outline-style: none;
       outline-style: none;
+    }
+  }
+  .has-checked\:border-amber {
+    &:has(*:checked) {
+      border-color: var(--color-amber);
+    }
+  }
+  .has-checked\:bg-amber\/5 {
+    &:has(*:checked) {
+      background-color: color-mix(in srgb, #C9843A 5%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        background-color: color-mix(in oklab, var(--color-amber) 5%, transparent);
+      }
     }
   }
   .has-\[\:checked\]\:border-amber {

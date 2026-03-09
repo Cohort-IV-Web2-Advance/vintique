@@ -356,7 +356,9 @@ function handleNewsletter(e) {
 }
 
 // ── FORMAT HELPERS ────────────────────────────────────────────────────────────
-function formatPrice(n) { return `₦${Number(n).toFixed(2)}`; }
+function formatPrice(n) {
+  return `₦${Number(n).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
 function formatDate(s)  { return new Date(s).toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' }); }
 
 // ── PRODUCT CARD BUILDER ──────────────────────────────────────────────────────

@@ -8,7 +8,8 @@ python-jose[cryptography]==3.4.0 #updated from 3.3.0 for high security vulnerabi
 passlib[bcrypt]==1.7.4
 python-multipart==0.0.22 #updated from 0.0.6 for high (DoS) security vulnerability
 cloudinary==1.36.0
-gunicorn==21.2.0
+# gunicorn==21.2.0
+gunicorn==25.1.0
 pydantic==2.5.0
 pydantic-settings==2.1.0
 python-dotenv==1.0.0

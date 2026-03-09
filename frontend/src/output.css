@@ -7,9 +7,6 @@
     --font-serif: "Playfair Display", Georgia, serif;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
-    --color-red-50: oklch(97.1% 0.013 17.38);
-    --color-red-500: oklch(63.7% 0.237 25.331);
-    --color-red-600: oklch(57.7% 0.245 27.325);
     --color-orange-50: oklch(98% 0.016 73.684);
     --color-orange-500: oklch(70.5% 0.213 47.604);
     --color-orange-600: oklch(64.6% 0.222 41.116);
@@ -19,9 +16,6 @@
     --color-green-700: oklch(52.7% 0.154 150.069);
     --color-blue-50: oklch(97% 0.014 254.604);
     --color-blue-600: oklch(54.6% 0.245 262.881);
-    --color-purple-50: oklch(97.7% 0.014 308.299);
-    --color-purple-500: oklch(62.7% 0.265 303.9);
-    --color-purple-700: oklch(49.6% 0.265 301.924);
     --color-white: #fff;
     --spacing: 0.25rem;
     --container-xs: 20rem;
@@ -63,7 +57,6 @@
     --font-weight-bold: 700;
     --tracking-normal: 0em;
     --tracking-wide: 0.025em;
-    --tracking-wider: 0.05em;
     --tracking-widest: 0.1em;
     --leading-tight: 1.25;
     --leading-relaxed: 1.625;

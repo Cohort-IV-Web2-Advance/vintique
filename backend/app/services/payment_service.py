@@ -1,0 +1,119 @@
+import requests
+import logging
+from app.config import settings
+
+# All Paystack API calls go to this base URL
+PAYSTACK_BASE_URL = "https://api.paystack.co"
+
+# Logger for this module so errors are traceable in your logs
+logger = logging.getLogger(__name__)
+
+# Authorization header built once and reused in every request.
+# The Secret Key tells Paystack this request is coming from our server.
+HEADERS = {
+    "Authorization": f"Bearer {settings.paystack_secret_key}",
+    "Content-Type": "application/json",
+}
+
+
+def initialize_payment(email: str, amount_naira: float, order_ids: list) -> dict:
+    """
+    Opens a payment session with Paystack and returns a payment URL
+    that the frontend redirects the user to.
+
+    Args:
+        email        -- the customer's email address
+        amount_naira -- total order amount in Naira (e.g. 5000.00)
+        order_ids    -- list of Order IDs included in this payment session.
+                        Stored in metadata so the webhook handler can match
+                        the payment back to the correct orders.
+
+    Returns a dict with:
+        status            -- True if Paystack accepted the request
+        authorization_url -- the hosted payment page URL to redirect user to
+        reference         -- unique reference string for this payment
+        message           -- description from Paystack
+    """
+    amount_kobo = int(amount_naira * 100)
+
+    payload = {
+        "email": email,
+        "amount": amount_kobo,
+        "metadata": {
+            # order_ids is a list — the webhook handler must iterate
+            # over all IDs to update each order status on payment confirmation
+            "order_ids": order_ids,
+        },
+        "callback_url": settings.payment_callback_url
+    }
+
+    try:
+        response = requests.post(
+            f"{PAYSTACK_BASE_URL}/transaction/initialize",
+            json=payload,
+            headers=HEADERS,
+            timeout=10,
+        )
+        response.raise_for_status()
+        data = response.json()
+
+        return {
+            "status": data.get("status", False),
+            "authorization_url": data["data"]["authorization_url"],
+            "reference": data["data"]["reference"],
+            "message": data.get("message", ""),
+        }
+
+    except requests.exceptions.Timeout:
+        logger.error("Paystack initialize: request timed out")
+        return {"status": False, "message": "Payment provider timed out. Please try again."}
+
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Paystack initialize error: {e}")
+        return {"status": False, "message": "Could not connect to payment provider."}
+
+
+def verify_payment(reference: str) -> dict:
+    """
+    Verifies a completed payment using its unique reference string.
+    Called by Solex's verification endpoint after the user returns
+    from Paystack's payment page.
+
+    Args:
+        reference -- the reference string from initialize_payment,
+                     passed back by Paystack in the redirect URL
+
+    Returns a dict with:
+        status  -- True if Paystack responded successfully
+        paid    -- True if the actual payment was successful
+        amount  -- amount charged in Naira (converted back from kobo)
+        email   -- customer email Paystack has on file
+        message -- description from Paystack
+    """
+    try:
+        response = requests.get(
+            f"{PAYSTACK_BASE_URL}/transaction/verify/{reference}",
+            headers=HEADERS,
+            timeout=10,
+        )
+        response.raise_for_status()
+        data = response.json()
+
+        transaction = data.get("data", {})
+        payment_status = transaction.get("status", "")
+
+        return {
+            "status": data.get("status", False),
+            "paid": payment_status == "success",
+            "amount": transaction.get("amount", 0) / 100,  # convert kobo back to Naira
+            "email": transaction.get("customer", {}).get("email", ""),
+            "message": data.get("message", ""),
+        }
+
+    except requests.exceptions.Timeout:
+        logger.error(f"Paystack verify: timed out for reference {reference}")
+        return {"status": False, "paid": False, "message": "Verification timed out."}
+
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Paystack verify error: {e}")
+        return {"status": False, "paid": False, "message": "Verification failed."}

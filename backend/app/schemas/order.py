@@ -43,7 +43,6 @@ class OrderResponse(BaseModel):
 class TransactionResponse(BaseModel):
     id: int
     order_id: int
-    payment_id: Optional[str] = None
     created_at: datetime
     updated_at: datetime
 

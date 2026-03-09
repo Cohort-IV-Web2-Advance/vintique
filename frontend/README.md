@@ -27,16 +27,16 @@ vintique/
 
 ## Pages
 
-| Page | Route | Auth |
-|------|-------|------|
-| Landing | `index.html` | Public |
-| Shop | `products.html` | Public |
-| Product Detail | `product.html?id=X` | Public |
-| Cart & Checkout | `cart.html` | Public (checkout requires auth) |
-| Login | `login.html` | Guest only |
-| Register | `register.html` | Guest only |
-| My Orders | `orders.html` | Protected |
-| Admin | `admin.html` | Admin only |
+| Route | Auth |
+|-------|------|
+| `index.html` |
+| `products.html` |
+| `product.html?id=X` |
+| `cart.html` |
+| `login.html` |
+| `register.html` |
+| `orders.html` |
+| `admin.html` | 
 
 ## API Connection
 

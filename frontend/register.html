@@ -267,45 +267,117 @@
     }
 
     // ── Form submission ───────────────────────────────────────────────────────
+    // async function handleRegister(e) {
+    //   e.preventDefault();
+    //   const btn = document.getElementById('register-btn');
+    //   const errEl = document.getElementById('auth-error');
+    //   const form = e.target;
+
+    //   // Client-side validation
+    //   const pw = form.password.value;
+    //   if (pw.length < 8) {
+    //     errEl.textContent = 'Password must be at least 8 characters.';
+    //     errEl.classList.remove('hidden');
+    //     return;
+    //   }
+
+    //   btn.textContent = 'Creating account…';
+    //   btn.disabled = true;
+    //   errEl.classList.add('hidden');
+
+    //   const payload = {
+    //     username: form.username.value,
+    //     email: form.email.value,
+    //     password: pw,
+    //     shipping_address: form.shipping_address.value
+    //   };
+
+    //   console.log(payload)
+
+    //   try {
+    //     await register(payload);
+    //     await login(payload.email, payload.password);
+    //     window.location.href = 'index.html';
+    //   } catch (err) {
+    //     errEl.textContent = err.message || 'Registration failed. Please try again.';
+    //     errEl.classList.remove('hidden');
+    //     btn.textContent = 'Create My Account';
+    //     btn.disabled = false;
+    //   }
+    // }
+
     async function handleRegister(e) {
-      e.preventDefault();
-      const btn = document.getElementById('register-btn');
-      const errEl = document.getElementById('auth-error');
-      const form = e.target;
+  e.preventDefault();
+  const btn = document.getElementById('register-btn');
+  const errEl = document.getElementById('auth-error');
+  const form = e.target;
 
-      // Client-side validation
-      const pw = form.password.value;
-      if (pw.length < 8) {
-        errEl.textContent = 'Password must be at least 8 characters.';
-        errEl.classList.remove('hidden');
-        return;
-      }
+  // Reset previous errors
+  errEl.classList.add('hidden');
+  errEl.textContent = '';
 
-      btn.textContent = 'Creating account…';
-      btn.disabled = true;
-      errEl.classList.add('hidden');
+  // 1️⃣ Username validation
+  // const username = form.username.value.trim();
+  // if (!username.startsWith("@")) {
+  //   errEl.textContent = "Username must start with @";
+  //   errEl.classList.remove("hidden");
+  //   return;
+  // }
+// 1️⃣ Username validation (optional @)
+let username = form.username.value.trim();
 
-      const payload = {
-        username: form.username.value,
-        email: form.email.value,
-        password: pw,
-        shipping_address: form.shipping_address.value
-      };
+// Remove leading @ if present
+if (username.startsWith("@")) {
+  username = username.slice(1);
+}
+// Optionally, check minimum length
+if (username.length < 3) {
+  errEl.textContent = "Username must be at least 3 characters.";
+  errEl.classList.remove("hidden");
+  return;
+}
+  // 2️⃣ Email validation
+  const email = form.email.value.trim();
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailPattern.test(email)) {
+    errEl.textContent = "Please enter a valid email address.";
+    errEl.classList.remove("hidden");
+    return;
+  }
 
-      console.log(payload)
+  // 3️⃣ Strong password validation
+  const pw = form.password.value;
+  const strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$/;
+  if (!strongPassword.test(pw)) {
+    errEl.textContent =
+      "Password must contain uppercase, lowercase, number, and special character (min 8 characters).";
+    errEl.classList.remove("hidden");
+    return;
+  }
 
-      try {
-        await register(payload);
-        await login(payload.email, payload.password);
-        window.location.href = 'index.html';
-      } catch (err) {
-        errEl.textContent = err.message || 'Registration failed. Please try again.';
-        errEl.classList.remove('hidden');
-        btn.textContent = 'Create My Account';
-        btn.disabled = false;
-      }
-    }
+  // ✅ All validations passed — prepare payload
+  btn.textContent = 'Creating account…';
+  btn.disabled = true;
 
+const payload = {
+  username: username, // cleaned username
+  email: email,
+  password: pw,
+  shipping_address: form.shipping_address.value.trim()
+};
+  console.log('Payload ready for submission:', payload);
+
+  try {
+    await register(payload);
+    await login(payload.email, payload.password);
+    window.location.href = 'index.html';
+  } catch (err) {
+    errEl.textContent = err.message || 'Registration failed. Please try again.';
+    errEl.classList.remove('hidden');
+    btn.textContent = 'Create My Account';
+    btn.disabled = false;
+  }
+}
     // Redirect if already logged in
     if (typeof isLoggedIn === 'function' && isLoggedIn()) {
       window.location.href = 'index.html';

@@ -44,24 +44,56 @@ function clearAuth() {
   localStorage.removeItem('vintique_user');
 }
 
+// async function register(userData) {
+//   const res = await fetch(`${API_BASE}/auth/register`, {
+//     method: "POST",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify(userData)
+//   });
+
+//   const data = await res.json();
+
+//   if (!res.ok) throw new Error(data.message || "Registration failed");
+
+//   if (data.access_token) {
+//     setAuth(data.access_token, data.user || {});
+//   }
+
+//   return data;
+// }
 async function register(userData) {
+  // Remove leading @ from username if present
+  if (userData.username && userData.username.startsWith("@")) {
+    userData.username = userData.username.slice(1);
+  }
+
   const res = await fetch(`${API_BASE}/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(userData)
   });
 
-  const data = await res.json();
+  let data;
+  try {
+    data = await res.json();
+  } catch {
+    data = {};
+  }
 
-  if (!res.ok) throw new Error(data.message || "Registration failed");
+  // Throw detailed error if registration fails
+  if (!res.ok) {
+    // Some servers send errors in 'message', 'detail', or 'errors'
+    const errMsg = data.message || data.detail || JSON.stringify(data) || "Registration failed";
+    throw new Error(errMsg);
+  }
 
+  // Save auth if token returned
   if (data.access_token) {
     setAuth(data.access_token, data.user || {});
   }
 
   return data;
 }
-
 async function login(email, password) {
   const res = await fetch(`${API_BASE}/auth/login`, {
     method: "POST",

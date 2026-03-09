@@ -44,24 +44,56 @@ function clearAuth() {
   localStorage.removeItem('vintique_user');
 }
 
+// async function register(userData) {
+//   const res = await fetch(`${API_BASE}/auth/register`, {
+//     method: "POST",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify(userData)
+//   });
+
+//   const data = await res.json();
+
+//   if (!res.ok) throw new Error(data.message || "Registration failed");
+
+//   if (data.access_token) {
+//     setAuth(data.access_token, data.user || {});
+//   }
+
+//   return data;
+// }
 async function register(userData) {
-  const res = await fetch(`${API_BASE}/auth/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(userData)
-  });
-
-  const data = await res.json();
-
-  if (!res.ok) throw new Error(data.message || "Registration failed");
-
-  if (data.access_token) {
-    setAuth(data.access_token, data.user || {});
-  }
-
-  return data;
+// Remove leading @ from username if present
+if (userData.username && userData.username.startsWith("@")) {
+userData.username = userData.username.slice(1);
 }
 
+const res = await fetch(`${API_BASE}/auth/register`, {
+method: "POST",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify(userData)
+});
+
+let data;
+try {
+data = await res.json();
+} catch {
+data = {};
+}
+
+// Throw detailed error if registration fails
+if (!res.ok) {
+// Some servers send errors in 'message', 'detail', or 'errors'
+const errMsg = data.message || data.detail || JSON.stringify(data) || "Registration failed";
+throw new Error(errMsg);
+}
+
+// Save auth if token returned
+if (data.access_token) {
+setAuth(data.access_token, data.user || {});
+}
+
+return data;
+}
 async function login(email, password) {
   const res = await fetch(`${API_BASE}/auth/login`, {
     method: "POST",
@@ -75,7 +107,6 @@ async function login(email, password) {
   });
 
   const data = await res.json();
-  // console.log("LOGIN RESPONSE:", data);
 
   if (!res.ok) throw new Error(data.detail || "Login failed");
 
@@ -261,7 +292,13 @@ const adminAPI = {
       method: 'POST',
       headers: { Authorization: `Bearer ${getToken()}` },
       body: formData
-    }).then(r => r.json());
+    }).then(async r => {
+      if (!r.ok) {
+        const err = await r.json().catch(() => ({}));
+        throw new Error(err.detail || `HTTP ${r.status}`);
+      }
+      return r.json();
+    });
   },
 
   updateProduct(id, formData) {
@@ -269,10 +306,28 @@ const adminAPI = {
       method: 'PUT',
       headers: { Authorization: `Bearer ${getToken()}` },
       body: formData
-    }).then(r => r.json());
+    }).then(async r => {
+      if (!r.ok) {
+        const err = await r.json().catch(() => ({}));
+        throw new Error(err.detail || `HTTP ${r.status}`);
+      }
+      return r.json();
+    });
   },
 
-  deleteProduct(id) { return apiFetch(`/inventory/product/${id}`, { method: 'DELETE' }); },
+  // DELETE requests that have Content-Type: application/json with no body
+  deleteProduct(id) {
+    return fetch(`${API_BASE}/inventory/product/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${getToken()}` }
+    }).then(async r => {
+      if (!r.ok) {
+        const err = await r.json().catch(() => ({}));
+        throw new Error(err.detail || `HTTP ${r.status}`);
+      }
+      return r.status === 204 ? null : r.json();
+    });
+  },
 };
 
 // ── TOAST ──────
@@ -333,7 +388,9 @@ function handleNewsletter(e) {
 }
 
 // ── FORMAT HELPERS ────────────────────────────────────────────────────────────
-function formatPrice(n) { return `₦${Number(n).toFixed(2)}`; }
+function formatPrice(n) {
+  return `₦${Number(n).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
 function formatDate(s)  { return new Date(s).toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' }); }
 
 // ── PRODUCT CARD BUILDER ──────────────────────────────────────────────────────

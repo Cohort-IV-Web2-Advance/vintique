@@ -39,6 +39,11 @@
 
         <!-- Right Actions -->
         <div class="flex items-center gap-4">
+          <a id="admin-link" href="admin.html"
+            class="hidden text-xs font-semibold text-white bg-darkbrown hover:text-rust hover:bg-white border border-amber/40 px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap">
+            Admin Panel
+          </a>
+
           <a href="login.html" id="auth-link"
             class="hidden border px-6 py-1 border-[brown] md:block text-sm font-sans text-brown hover:text-amber transition-colors">Sign
             In</a>
@@ -73,10 +78,10 @@
       <div class="px-4 py-4 flex flex-col gap-3">
         <a href="index.html" class="text-sm text-amber py-1">Home</a>
         <a href="products.html" class="text-sm text-brown hover:text-amber py-1">Shop All</a>
-        <a href="about.html" class="text-sm font-sans tracking-wide text-brown hover:text-amber transition-colors">About
-          Us</a>
-        <a href="team.html" class="text-sm font-sans tracking-wide text-brown hover:text-amber transition-colors">Meet
-          Our Team</a>
+        <a href="about.html" class="text-sm font-sans tracking-wide text-brown hover:text-amber transition-colors">About Us</a>
+        <a href="team.html" class="text-sm font-sans tracking-wide text-brown hover:text-amber transition-colors">Meet Our Team</a>
+        <!-- Mobile Admin link -->
+        <a id="mobile-admin-link" href="admin.html" class="hidden text-sm text-amber font-semibold py-1">⚙ Admin Panel</a>
         <a href="login.html" id="mobile-auth" class="text-sm text-brown hover:text-amber py-1">Sign In</a>
       </div>
     </div>
@@ -346,9 +351,10 @@
   <script src="./js/home.js"></script>
 
   <script>
-      window.addEventListener('scroll', () => {
+    window.addEventListener('scroll', () => {
       document.getElementById('navbar').classList.toggle('shadow-md', window.scrollY > 30);
     });
+
     function toggleMobileMenu() {
       const menu = document.getElementById('mobile-menu');
       const btn = document.querySelector('[onclick="toggleMobileMenu()"]');
@@ -370,6 +376,15 @@
     </svg>`;
       }
     }
+
+    // Show Admin Panel link if user is admin
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = getUser();
+      if (user?.is_admin) {
+        document.getElementById('admin-link')?.classList.remove('hidden');
+        document.getElementById('mobile-admin-link')?.classList.remove('hidden');
+      }
+    });
   </script>
 </body>
 

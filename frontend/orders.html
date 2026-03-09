@@ -17,14 +17,30 @@
         Vintique</a>
       <div class="flex items-center gap-4">
         <a href="products.html" class="text-sm text-brown hover:text-amber transition-colors hidden md:block">Shop</a>
-        <button onclick="logout()" class="text-sm text-muted hover:text-rust transition-colors hidden md:block">Sign Out</button>
+        <button onclick="logout()" class="text-sm text-muted hover:text-rust transition-colors hidden md:block">Log Out</button>
         <a href="cart.html" class="relative p-2 text-brown hover:text-amber transition-colors">
           <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6" stroke-width="1.8"/><path stroke-linecap="round" stroke-linejoin="round" d="M16 10a4 4 0 01-8 0"/></svg>
           <span id="cart-count" class="absolute -top-0.5 -right-0.5 bg-rust text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">0</span>
         </a>
+
+         <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-brown">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="1.8">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
       </div>
     </div>
   </nav>
+  <!-- Mobile Menu -->
+    <div id="mobile-menu"
+      style="max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.3s ease, opacity 0.3s ease;"
+      class="md:hidden bg-cream border-t border-parchment">
+      <div class="px-4 py-4 flex flex-col gap-3">
+        <a href="index.html" class="text-sm text-amber py-1">Shop</a>
+        <a href="register.html" id="mobile-auth" class="text-sm text-brown hover:text-amber py-1">Log Out</a>
+      </div>
+    </div>
 
   <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <!-- Header -->
@@ -74,6 +90,19 @@
 
   <script src="./js/app.js"></script>
   <script>
+
+function toggleMobileMenu() {
+  const menu = document.getElementById("mobile-menu");
+
+  if (menu.style.maxHeight && menu.style.maxHeight !== "0px") {
+    menu.style.maxHeight = "0";
+    menu.style.opacity = "0";
+  } else {
+    menu.style.maxHeight = "200px";
+    menu.style.opacity = "1";
+  }
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     const orders = await ordersAPI.history();

@@ -154,25 +154,159 @@
         <!-- ── ORDERS TAB ── -->
         <div id="tab-orders" class="hidden fade-in">
           <h3 class="font-serif text-xl text-brown mb-6">All Orders</h3>
-          <div class="bg-white rounded-2xl overflow-hidden">
-            <div class="overflow-x-auto">
-              <table class="w-full text-sm">
-                <thead class="bg-parchment/40">
-                  <tr class="text-left">
-                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">ORDER #</th>
-                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">USER</th>
-                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">PRODUCT</th>
-                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">AMOUNT</th>
-                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">STATUS</th>
-                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">DATE</th>
-                  </tr>
-                </thead>
-                <tbody id="admin-orders" class="divide-y divide-parchment/40">
-                  <tr><td colspan="6" class="px-5 py-8 text-center text-muted text-xs">Loading orders…</td></tr>
-                </tbody>
-              </table>
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white rounded-2xl p-5">
+              <p class="text-xs font-sans text-muted tracking-wide mb-2">Total Sales</p>
+              <p class="font-serif text-3xl text-amber">$24,580</p>
+              <p class="text-xs text-sage mt-1">↑ 12% this month</p>
+            </div>
+            <div class="bg-white rounded-2xl p-5">
+              <p class="text-xs font-sans text-muted tracking-wide mb-2">Total Orders</p>
+              <p class="font-serif text-3xl text-brown">184</p>
+              <p class="text-xs text-sage mt-1">↑ 8 this week</p>
+            </div>
+            <div class="bg-white rounded-2xl p-5">
+              <p class="text-xs font-sans text-muted tracking-wide mb-2">Products Listed</p>
+              <p class="font-serif text-3xl text-brown">1,204</p>
+              <p class="text-xs text-muted mt-1">18 low stock</p>
+            </div>
+            <div class="bg-white rounded-2xl p-5">
+              <p class="text-xs font-sans text-muted tracking-wide mb-2">Total Customers/p>
+              <p class="font-serif text-3xl text-brown">1,082</p>
+              <p class="text-xs text-sage mt-1">↑ 47 this week</p>
             </div>
           </div>
+
+        <div class="bg-white rounded-2xl overflow-hidden shadow-md">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-parchment/40">
+              <tr class="text-left">
+                <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">ORDER #</th>
+                <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">DATE</th>
+                <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">USER</th>
+                <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">PRODUCT</th>
+                <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">AMOUNT</th>
+                <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">STATUS</th>
+                <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">ACTION</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-parchment/40">
+              <tr class="hover:bg-parch-lt transition-colors">
+                <td class="px-5 py-4 font-semibold text-brown">ORD-000123</td>
+                <td class="px-5 py-4 text-muted">Apr 22, 2024</td>
+                <td class="px-5 py-4 text-brown">Wallex Smith</td>
+                <td class="px-5 py-4 text-muted">Victorian Vanity Mirror</td>
+                <td class="px-5 py-4 font-semibold text-brown">$120.00</td>
+                <td class="px-5 py-4">
+                  <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-green-50 text-green-700">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>Shipped
+                  </span>
+                </td>
+                <td class="px-5 py-4">
+                  <button class="bg-brown text-white text-parch-lt text-xs font-semibold px-4 py-2 rounded-lg hover:bg-brown-light transition-colors">View</button>
+                </td>
+              </tr>
+            
+              <tr class="hover:bg-parch-lt transition-colors">
+                <td class="px-5 py-4 font-semibold text-brown">ORD-000122</td>
+                <td class="px-5 py-4 text-muted">Apr 21, 2024</td>
+                <td class="px-5 py-4 text-brown">John week</td>
+                <td class="px-5 py-4 text-muted">Brass Candlestick Set</td>
+                <td class="px-5 py-4 font-semibold text-brown">$35.50</td>
+                <td class="px-5 py-4">
+                  <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-orange-50 text-orange-600">
+                    <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>Processing
+                  </span>
+                </td>
+                <td class="px-5 py-4">
+                  <button class="bg-brown text-white text-parch-lt text-xs font-semibold px-4 py-2 rounded-lg hover:bg-brown-light transition-colors">View</button>
+                </td>
+              </tr>
+            
+              <tr class="hover:bg-parch-lt transition-colors">
+                <td class="px-5 py-4 font-semibold text-brown">ORD-000123</td>
+                <td class="px-5 py-4 text-muted">Apr 22, 2024</td>
+                <td class="px-5 py-4 text-brown">John Doe</td>
+                <td class="px-5 py-4 text-muted">Victorian Vanity Mirror</td>
+                <td class="px-5 py-4 font-semibold text-brown">$120.00</td>
+                <td class="px-5 py-4">
+                  <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-green-50 text-green-700">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>Shipped
+                  </span>
+                </td>
+                <td class="px-5 py-4">
+                  <button class="bg-brown text-white text-parch-lt text-xs font-semibold px-4 py-2 rounded-lg hover:bg-brown-light transition-colors">View</button>
+                </td>
+              </tr>
+            
+              <tr class="hover:bg-parch-lt transition-colors">
+                <td class="px-5 py-4 font-semibold text-brown">ORD-000122</td>
+                <td class="px-5 py-4 text-muted">Apr 21, 2024</td>
+                <td class="px-5 py-4 text-brown">Alice mark</td>
+                <td class="px-5 py-4 text-muted">Brass Candlestick Set</td>
+                <td class="px-5 py-4 font-semibold text-brown">$35.50</td>
+                <td class="px-5 py-4">
+                  <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-orange-50 text-orange-600">
+                    <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>Processing
+                  </span>
+                </td>
+                <td class="px-5 py-4">
+                  <button class="bg-brown text-white text-parch-lt text-xs font-semibold px-4 py-2 rounded-lg hover:bg-brown-light transition-colors">View</button>
+                </td>
+              </tr>
+            
+              <tr class="hover:bg-parch-lt transition-colors">
+                <td class="px-5 py-4 font-semibold text-brown">ORD-000123</td>
+                <td class="px-5 py-4 text-muted">Apr 22, 2024</td>
+                <td class="px-5 py-4 text-brown">Bob dom</td>
+                <td class="px-5 py-4 text-muted">Victorian Vanity Mirror</td>
+                <td class="px-5 py-4 font-semibold text-brown">$120.00</td>
+                <td class="px-5 py-4">
+                  <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-green-50 text-green-700">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>Shipped
+                  </span>
+                </td>
+                <td class="px-5 py-4">
+                  <button class="bg-brown text-white text-parch-lt text-xs font-semibold px-4 py-2 rounded-lg hover:bg-brown-light transition-colors">View</button>
+                </td>
+              </tr>
+            
+              <tr class="hover:bg-parch-lt transition-colors">
+                <td class="px-5 py-4 font-semibold text-brown">ORD-000122</td>
+                <td class="px-5 py-4 text-muted">Apr 21, 2024</td>
+                <td class="px-5 py-4 text-brown">Jaden Smith</td>
+                <td class="px-5 py-4 text-muted">Brass Candlestick Set</td>
+                <td class="px-5 py-4 font-semibold text-brown">$35.50</td>
+                <td class="px-5 py-4">
+                  <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-orange-50 text-orange-600">
+                    <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>Processing
+                  </span>
+                </td>
+                <td class="px-5 py-4">
+                  <button class="bg-brown text-white text-parch-lt text-xs font-semibold px-4 py-2 rounded-lg hover:bg-brown-light transition-colors">View</button>
+                </td>
+              </tr>
+            
+              <tr class="hover:bg-parch-lt transition-colors">
+                <td class="px-5 py-4 font-semibold text-brown">ORD-000123</td>
+                <td class="px-5 py-4 text-muted">Apr 22, 2024</td>
+                <td class="px-5 py-4 text-brown">The rock</td>
+                <td class="px-5 py-4 text-muted">Victorian Vanity Mirror</td>
+                <td class="px-5 py-4 font-semibold text-brown">$120.00</td>
+                <td class="px-5 py-4">
+                  <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-green-50 text-green-700">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>Shipped
+                  </span>
+                </td>
+                <td class="px-5 py-4">
+                  <button class="bg-brown text-white text-parch-lt text-xs font-semibold px-4 py-2 rounded-lg hover:bg-brown-light transition-colors">View</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
         </div>
 
         <!-- ── USERS TAB ── -->

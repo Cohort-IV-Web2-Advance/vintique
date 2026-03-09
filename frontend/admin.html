@@ -11,100 +11,116 @@
 
   <div class="flex min-h-screen">
 
+    <!-- ── SIDEBAR OVERLAY (mobile) ── -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-darkbrown/50 z-30 hidden lg:hidden" onclick="closeSidebar()"></div>
+
     <!-- ── SIDEBAR ── -->
-    <aside class="w-60 bg-darkbrown text-cream  flex-col fixed inset-y-0 left-0 z-40 hidden lg:flex">
-      <div class="p-6 border-b border-cream/10">
-        <p class="font-serif text-2xl font-bold">Vintique</p>
-        <p class="text-amber text-xs tracking-widest uppercase mt-0.5">Admin Panel</p>
+    <aside id="sidebar" class="w-64 bg-darkbrown text-cream flex flex-col fixed inset-y-0 left-0 z-40 transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
+      <div class="p-6 border-b border-cream/10 flex items-center justify-between">
+        <div>
+          <p class="font-serif text-2xl font-bold">Vintique</p>
+          <p class="text-amber text-xs tracking-widest uppercase mt-0.5">Admin Panel</p>
+        </div>
+        <!-- Close button (mobile only) -->
+        <button onclick="closeSidebar()" class="lg:hidden text-cream/50 hover:text-cream transition-colors p-1">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
 
       <nav class="flex-1 p-4 space-y-1">
+        <button onclick="showTab('overview')" 
+          class="admin-nav flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors bg-cream/10 text-cream">
+          <img src="./public/image/dashboard-svgrepo-com(3).svg" alt="dashboard" class="w-6 h-6">
+          Overview
+        </button>
 
-  <button onclick="showTab('dashboard')" 
-    class="admin-nav flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors bg-cream/10 text-cream">
-    <img src="./public/image/dashboard-svgrepo-com(3).svg" alt="dashboard" class="w-6 h-6 ">
-    Dashboard
-  </button>
+        <button onclick="showTab('products')" 
+          class="admin-nav flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
+          <img src="./public/image/products-svgrepo-com.svg" alt="Products" class="w-6 h-6">
+          Products
+        </button>
 
-  <button onclick="showTab('products')" 
-    class="admin-nav flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
-    
-    <img src="./public/image/products-svgrepo-com.svg" alt="Products" class="w-6 h-6 ">
-    Products
-  </button>
+        <button onclick="showTab('orders')" 
+          class="admin-nav flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
+          <img src="./public/image/img.icons8.png" alt="" class="w-6 h-6">
+          Orders
+        </button>
 
-  <button onclick="showTab('orders')" 
-    class="admin-nav flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
-    
-    <img src="./public/image/img.icons8.png" alt="" class="w-6 h-6 ">
-    Orders
-  </button>
+        <button onclick="showTab('users')" 
+          class="admin-nav flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
+          <img src="./public/image/users-svgrepo-com.svg" alt="Users" class="w-6 h-6">
+          Users
+        </button>
 
-  <button onclick="showTab('users')" 
-    class="admin-nav flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
-    
-    <img src="./public/image/users-svgrepo-com.svg" alt="Users" class="w-6 h-6">
-    Users
-  </button>
-
-  <button onclick="showTab('add-product')" 
-    class="admin-nav flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
-    
-    <img src="./public/image/add-note-svgrepo-com.svg" alt="Add Product" class="w-6 h-6 ">
-    Add Product
-  </button>
-
-</nav>
+        <button onclick="showTab('add-product')" 
+          class="admin-nav flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
+          <img src="./public/image/add-note-svgrepo-com.svg" alt="Add Product" class="w-6 h-6">
+          Add Product
+        </button>
+      </nav>
 
       <div class="p-4 border-t border-cream/10">
-        <button onclick="logout()" class="w-full text-left px-4 py-2.5 text-sm  border-[brown] text-cream/50 hover:text-rust transition-colors">
+        <button onclick="logout()" class="w-full text-left px-4 py-2.5 text-sm text-cream/50 hover:text-rust transition-colors">
           ← Sign Out
         </button>
       </div>
     </aside>
 
     <!-- ── MAIN ── -->
-    <div class="flex-1 lg:ml-60">
+    <div class="flex-1 lg:ml-64 min-w-0">
 
       <!-- Top Bar -->
-      <header class="bg-white border-b border-parchment px-6 py-4 flex items-center justify-between sticky top-0 z-30">
-        <h2 id="page-title" class="font-serif text-2xl text-brown">Dashboard</h2>
+      <header class="bg-white border-b border-parchment px-4 lg:px-6 py-4 flex items-center justify-between sticky top-0 z-20">
         <div class="flex items-center gap-3">
-          <span id="admin-name" class="text-sm text-muted"></span>
-          <a href="index.html" class="text-xs text-amber hover:text-rust transition-colors">View Site →</a>
+          <!-- Hamburger (mobile only) -->
+          <button onclick="openSidebar()" class="lg:hidden p-2 rounded-lg hover:bg-parchment transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-brown" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          <h2 id="page-title" class="font-serif text-xl lg:text-2xl text-brown">Overview</h2>
         </div>
-      </header>+
+        <div class="flex items-center gap-2 lg:gap-3">
+          <span id="admin-name" class="text-xs lg:text-sm text-muted sm:inline"></span>
+          <a href="index.html" class="text-xs text-amber hover:text-rust transition-colors whitespace-nowrap">View Site →</a>
+        </div>
+      </header>
 
-      <main class="p-6">
+      <main class="p-4 lg:p-6">
 
-        <!-- ── DASHBOARD TAB ── -->
-        <div id="tab-dashboard" class="fade-in">
-          <!-- Stats -->
-          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            <div class="bg-white rounded-2xl p-5">
+        <!-- ── OVERVIEW TAB ── -->
+        <div id="tab-overview" class="fade-in">
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-6 lg:mb-8">
+
+            <div class="bg-white rounded-2xl p-4 lg:p-5">
               <p class="text-xs font-sans text-muted tracking-wide mb-2">Total Revenue</p>
-              <p class="font-serif text-3xl text-amber">$24,580</p>
-              <p class="text-xs text-sage mt-1">↑ 12% this month</p>
+              <p id="stat-revenue" class="text-2xl lg:text-3xl text-amber">—</p>
+              <p id="stat-revenue-change" class="text-xs text-sage mt-1">—</p>
             </div>
-            <div class="bg-white rounded-2xl p-5">
+
+            <div class="bg-white rounded-2xl p-4 lg:p-5">
               <p class="text-xs font-sans text-muted tracking-wide mb-2">Total Orders</p>
-              <p class="font-serif text-3xl text-brown">184</p>
-              <p class="text-xs text-sage mt-1">↑ 8 this week</p>
+              <p id="stat-orders" class="text-2xl lg:text-3xl text-brown">—</p>
+              <p id="stat-orders-change" class="text-xs text-sage mt-1">—</p>
             </div>
-            <div class="bg-white rounded-2xl p-5">
+
+            <div class="bg-white rounded-2xl p-4 lg:p-5">
               <p class="text-xs font-sans text-muted tracking-wide mb-2">Products Listed</p>
-              <p class="font-serif text-3xl text-brown">1,204</p>
-              <p class="text-xs text-muted mt-1">18 low stock</p>
+              <p id="stat-products" class="text-2xl lg:text-3xl text-brown">—</p>
+              <p id="stat-low-stock" class="text-xs text-muted mt-1">—</p>
             </div>
-            <div class="bg-white rounded-2xl p-5">
+
+            <div class="bg-white rounded-2xl p-4 lg:p-5">
               <p class="text-xs font-sans text-muted tracking-wide mb-2">Registered Users</p>
-              <p class="font-serif text-3xl text-brown">3,421</p>
-              <p class="text-xs text-sage mt-1">↑ 47 this week</p>
+              <p id="stat-users" class="text-2xl lg:text-3xl text-brown">—</p>
+              <p id="stat-users-change" class="text-xs text-sage mt-1">—</p>
             </div>
+
           </div>
 
-          <!-- Recent Orders Table (preview) -->
-          <div class="bg-white rounded-2xl p-6">
+          <div class="bg-white rounded-2xl p-4 lg:p-6">
             <h3 class="font-serif text-xl text-brown mb-5">Recent Orders</h3>
             <div class="overflow-x-auto">
               <table class="w-full text-sm">
@@ -137,10 +153,10 @@
               <table class="w-full text-sm">
                 <thead class="bg-parchment/40">
                   <tr class="text-left">
-                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">PRODUCT</th>
-                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">PRICE</th>
-                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">STOCK</th>
-                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">ACTIONS</th>
+                    <th class="px-4 lg:px-5 py-3 font-sans text-xs text-muted tracking-wide">PRODUCT</th>
+                    <th class="px-4 lg:px-5 py-3 font-sans text-xs text-muted tracking-wide">PRICE</th>
+                    <th class="px-4 lg:px-5 py-3 font-sans text-xs text-muted tracking-wide">STOCK</th>
+                    <th class="px-4 lg:px-5 py-3 font-sans text-xs text-muted tracking-wide">ACTIONS</th>
                   </tr>
                 </thead>
                 <tbody id="admin-products" class="divide-y divide-parchment/40">
@@ -159,12 +175,12 @@
               <table class="w-full text-sm">
                 <thead class="bg-parchment/40">
                   <tr class="text-left">
-                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">ORDER #</th>
-                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">USER</th>
-                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">PRODUCT</th>
-                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">AMOUNT</th>
-                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">STATUS</th>
-                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">DATE</th>
+                    <th class="px-4 lg:px-5 py-3 font-sans text-xs text-muted tracking-wide">ORDER #</th>
+                    <th class="px-4 lg:px-5 py-3 font-sans text-xs text-muted tracking-wide">USER</th>
+                    <th class="px-4 lg:px-5 py-3 font-sans text-xs text-muted tracking-wide">PRODUCT</th>
+                    <th class="px-4 lg:px-5 py-3 font-sans text-xs text-muted tracking-wide">AMOUNT</th>
+                    <th class="px-4 lg:px-5 py-3 font-sans text-xs text-muted tracking-wide">STATUS</th>
+                    <th class="px-4 lg:px-5 py-3 font-sans text-xs text-muted tracking-wide">DATE</th>
                   </tr>
                 </thead>
                 <tbody id="admin-orders" class="divide-y divide-parchment/40">
@@ -183,10 +199,10 @@
               <table class="w-full text-sm">
                 <thead class="bg-parchment/40">
                   <tr class="text-left">
-                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">USER</th>
-                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">EMAIL</th>
-                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">ROLE</th>
-                    <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">JOINED</th>
+                    <th class="px-4 lg:px-5 py-3 font-sans text-xs text-muted tracking-wide">USER</th>
+                    <th class="px-4 lg:px-5 py-3 font-sans text-xs text-muted tracking-wide">EMAIL</th>
+                    <th class="px-4 lg:px-5 py-3 font-sans text-xs text-muted tracking-wide">ROLE</th>
+                    <th class="px-4 lg:px-5 py-3 font-sans text-xs text-muted tracking-wide">JOINED</th>
                   </tr>
                 </thead>
                 <tbody id="admin-users" class="divide-y divide-parchment/40">
@@ -204,7 +220,7 @@
           <div id="product-error" class="hidden bg-rust/10 border border-rust/20 text-rust rounded-xl px-4 py-3 text-sm mb-5"></div>
           <div id="product-success" class="hidden bg-sage/10 border border-sage/20 text-sage rounded-xl px-4 py-3 text-sm mb-5"></div>
 
-          <form id="product-form" class="bg-white rounded-2xl p-6 space-y-4" onsubmit="submitProduct(event)">
+          <form id="product-form" class="bg-white rounded-2xl p-4 lg:p-6 space-y-4" onsubmit="submitProduct(event)">
             <div>
               <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Product Name *</label>
               <input name="name" type="text" required placeholder="Victorian Cameo Brooch"
@@ -230,7 +246,6 @@
                 class="w-full bg-cream border border-parchment rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber transition-colors resize-none"></textarea>
             </div>
 
-            <!-- Image Upload -->
             <div>
               <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Product Image *</label>
               <div id="drop-zone"
@@ -262,7 +277,7 @@
   </div>
 
   <!-- Delete Confirm Modal -->
-  <div id="delete-modal" class="fixed inset-0 bg-darkbrown/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"> 
+  <div id="delete-modal" class="opacity-0 pointer-events-none fixed inset-0 bg-darkbrown/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-200">
     <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
       <h3 class="font-serif text-xl text-brown mb-2">Delete Product?</h3>
       <p class="text-sm text-muted mb-5">This will permanently remove the product and its Cloudinary image. This cannot be undone.</p>
@@ -275,7 +290,25 @@
         </button>
       </div>
     </div>
-  </div> 
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transition-all duration-300 translate-y-4 opacity-0 pointer-events-none">
+    <div id="toast-inner" class="bg-darkbrown text-cream text-sm font-sans px-5 py-3 rounded-xl shadow-xl">
+      <span id="toast-message"></span>
+    </div>
+  </div>
+
+  <script>
+    function openSidebar() {
+      document.getElementById('sidebar').classList.remove('-translate-x-full');
+      document.getElementById('sidebar-overlay').classList.remove('hidden');
+    }
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.add('-translate-x-full');
+      document.getElementById('sidebar-overlay').classList.add('hidden');
+    }
+  </script>
 
   <script src="./js/app.js"></script>
   <script src="./js/admin.js"></script>

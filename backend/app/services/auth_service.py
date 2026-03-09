@@ -55,6 +55,22 @@ class AuthService:
                 detail="Incorrect email or password",
                 headers={"WWW-Authenticate": "Bearer"},
             )
+        
+        # Check if user is suspended
+        if user.username.startswith("suspended_user_"):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Account is suspended. Please contact administrator.",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        
+        # Check if user is deleted
+        if user.username.startswith("deleted_user_") or user.email.startswith("deleted_"):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Account has been deleted.",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
 
         access_token_expires = timedelta(minutes=settings.jwt_access_token_expire_minutes)
         access_token = create_access_token(

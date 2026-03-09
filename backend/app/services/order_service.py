@@ -3,7 +3,7 @@ from typing import List, Optional
 from fastapi import HTTPException, status
 from decimal import Decimal
 
-from app.models.order import Order, Transaction
+from app.models.order import Order  
 from app.models.product import Product
 from app.models.cart import Cart
 from app.schemas.order import OrderCreate
@@ -60,16 +60,6 @@ class OrderService:
                 self.db.add(order)
                 self.db.flush()  # Get the order ID without committing
 
-                # Create one Transaction row per order
-                transaction = Transaction(
-                    order_id=order.id,
-                    payment_id=None  # Will be set when payment is processed
-                )
-                self.db.add(transaction)
-
-                # Decrement product.stock_quantity for each item
-                product.stock_quantity -= item.quantity
-
                 # Remove each item from the user's cart if it exists
                 cart_item = self.db.query(Cart).filter(
                     Cart.product_id == item.product_id,
@@ -109,12 +99,20 @@ class OrderService:
         self.db.refresh(order)
         return order
 
-    def create_transaction(self, order_id: int, payment_id: str) -> Transaction:
-        transaction = Transaction(
-            order_id=order_id,
-            payment_id=payment_id
-        )
-        self.db.add(transaction)
+    def deduct_stock(self, order_ids: list) -> None:
+        """
+        Deducts stock for all orders in a single database operation.
+        More efficient than looping individual queries.
+        """
+        orders = self.db.query(Order).filter(Order.id.in_(order_ids)).all()
+        
+        for order in orders:
+            self.db.query(Product).filter(
+                Product.id == order.product_id
+            ).update({
+                Product.stock_quantity: Product.stock_quantity - order.quantity
+            })
+        
         self.db.commit()
-        self.db.refresh(transaction)
-        return transaction
+
+

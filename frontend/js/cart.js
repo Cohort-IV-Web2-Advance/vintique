@@ -196,6 +196,7 @@ async function initializePayment() {
 }
 
 
+
 function showStep(step) {
   ["cart", "shipping", "confirm", "success"].forEach((s) => {
     document.getElementById(`step-${s}`)?.classList.add("hidden");

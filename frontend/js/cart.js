@@ -178,64 +178,23 @@ async function initializePayment() {
       })),
       shipping_address: `${shippingData.address}, ${shippingData.city}, ${shippingData.country}`,
     };
-    await ordersAPI.checkout(payload);
 
-    const subtotal = cart.items
-      .filter((i) => i && i.price)
-      .reduce((sum, i) => sum + parseFloat(i.price) * (i.qty || 1), 0);
-    const total =
-      subtotal * 1.08 +
-      (shippingData.shipping_method === "express" ? 12.99 : 0);
-    const amountInKobo = Math.round(total * 100);
+    const result = await ordersAPI.checkout(payload);
 
-    const user = getUser();
-    if (!user?.email)
-      throw new Error("User email not found. Please log in again.");
-    btn.textContent = "Opening Paystack…";
-    const handler = PaystackPop.setup({
-      key: "pk_test_5f356c6492658e40c1b108b8bdbe77c9d4a85c3f", 
-      email: user.email,
-      amount: amountInKobo,
-      currency: "NGN",
-      callback: function (response) {
-        verifyPayment(response.reference);
-      },
-      onClose: function () {
-        showToast("Payment cancelled.");
-        btn.textContent = "Place Order & Pay → Paystack";
-        btn.disabled = false;
-      },
-    });
+    const authUrl = result?.payment?.authorization_url;
+    if (!authUrl) throw new Error("No payment URL returned from server.");
 
-    handler.openIframe();
+    btn.textContent = "Redirecting to Paystack…";
+    cart.clear();
+    window.location.href = authUrl;
+
   } catch (err) {
-    console.error("Payment error:", err);
     showToast(`Payment failed: ${err.message}`);
     btn.textContent = "Place Order & Pay → Paystack";
     btn.disabled = false;
   }
 }
 
-async function verifyPayment(reference) {
-  try {
-    const res = await fetch(
-      `https://vintique.onrender.com/payments/verify/${reference}`,
-      {
-        headers: { Authorization: `Bearer ${getToken()}` },
-      },
-    );
-
-    if (!res.ok) throw new Error("Verification failed");
-
-    // Payment verified — clear cart and redirect
-    cart.clear();
-    window.location.href = "index.html"; 
-  } catch (err) {
-    console.error("Verify error:", err);
-    cart.clear();
-    window.location.href = "index.html";
-  }
-}
 
 function showStep(step) {
   ["cart", "shipping", "confirm", "success"].forEach((s) => {

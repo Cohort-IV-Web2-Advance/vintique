@@ -2030,6 +2030,13 @@
       }
     }
   }
+  .hover\:bg-inherit {
+    &:hover {
+      @media (hover: hover) {
+        background-color: inherit;
+      }
+    }
+  }
   .hover\:bg-parchment {
     &:hover {
       @media (hover: hover) {

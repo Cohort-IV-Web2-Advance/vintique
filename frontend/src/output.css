@@ -908,6 +908,10 @@
     border-style: var(--tw-border-style);
     border-width: 2px;
   }
+  .border-4 {
+    border-style: var(--tw-border-style);
+    border-width: 4px;
+  }
   .border-t {
     border-top-style: var(--tw-border-style);
     border-top-width: 1px;
@@ -941,6 +945,12 @@
   }
   .border-amber {
     border-color: var(--color-amber);
+  }
+  .border-amber\/30 {
+    border-color: color-mix(in srgb, #C9843A 30%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-amber) 30%, transparent);
+    }
   }
   .border-amber\/40 {
     border-color: color-mix(in srgb, #C9843A 40%, transparent);
@@ -995,6 +1005,9 @@
     @supports (color: color-mix(in lab, red, red)) {
       border-color: color-mix(in oklab, var(--color-sage) 20%, transparent);
     }
+  }
+  .border-t-amber {
+    border-top-color: var(--color-amber);
   }
   .bg-\[\#3B2416\] {
     background-color: #3B2416;
@@ -1825,6 +1838,13 @@
       @media (hover: hover) {
         --tw-translate-y: calc(var(--spacing) * -1);
         translate: var(--tw-translate-x) var(--tw-translate-y);
+      }
+    }
+  }
+  .hover\:cursor-pointer {
+    &:hover {
+      @media (hover: hover) {
+        cursor: pointer;
       }
     }
   }

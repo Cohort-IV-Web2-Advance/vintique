@@ -1,8 +1,15 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, ForeignKey, Numeric
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, ForeignKey, Numeric, Enum
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.database import Base
 import uuid
+import enum
+
+
+class UserStatus(enum.Enum):
+    active = "active"
+    inactive = "inactive"
+    suspended = "suspended"
 
 
 class User(Base):
@@ -14,6 +21,7 @@ class User(Base):
     password = Column(String(255), nullable=False)
     shipping_address = Column(Text, nullable=True)
     is_admin = Column(Boolean, default=False, nullable=False)
+    status = Column(Enum(UserStatus, name="user_status"), default=UserStatus.active, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 

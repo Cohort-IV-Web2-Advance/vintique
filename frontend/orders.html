@@ -18,7 +18,7 @@
       </a>
       <div class="flex items-center gap-4">
         <a href="products.html" class="text-sm text-brown hover:text-amber transition-colors hidden md:block">Shop</a>
-        <button onclick="logout()" class="text-sm text-muted hover:text-rust transition-colors hidden md:block">Sign Out</button>
+        <button onclick="logout()" class="text-sm text-muted hover:text-rust transition-colors hidden md:block">Log Out</button>
         <a href="cart.html" class="relative p-2 text-brown hover:text-amber transition-colors">
           <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
@@ -28,9 +28,25 @@
           <span id="cart-count" class="absolute -top-0.5 -right-0.5 bg-rust text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">0</span>
         </a>
         <span id="nav-user-avatar" class="text-xs lg:text-sm text-white sm:inline bg-amber py-2 px-3 rounded-full"></span>
+
+         <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-brown">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="1.8">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
       </div>
     </div>
   </nav>
+  <!-- Mobile Menu -->
+    <div id="mobile-menu"
+      style="max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.3s ease, opacity 0.3s ease;"
+      class="md:hidden bg-cream border-t border-parchment">
+      <div class="px-4 py-4 flex flex-col gap-3">
+        <a href="index.html" class="text-sm text-amber py-1">Shop</a>
+        <a href="register.html" id="mobile-auth" class="text-sm text-brown hover:text-amber py-1">Log Out</a>
+      </div>
+    </div>
 
   <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="flex items-end justify-between mb-10">
@@ -78,81 +94,91 @@
   </div>
 
   <script src="./js/app.js"></script>
-  <script>
-    const STATUS_COLORS = {
-      pending:    'bg-amber/10 text-amber',
-      processing: 'bg-blue-50 text-blue-600',
-      shipped:    'bg-sage/10 text-sage',
-      delivered:  'bg-green-50 text-green-600',
-      cancelled:  'bg-rust/10 text-rust',
-    };
+<script src="./js/app.js"></script>
+<script>
+  function toggleMobileMenu() {
+    const menu = document.getElementById("mobile-menu");
+    if (menu.style.maxHeight && menu.style.maxHeight !== "0px") {
+      menu.style.maxHeight = "0";
+      menu.style.opacity = "0";
+    } else {
+      menu.style.maxHeight = "200px";
+      menu.style.opacity = "1";
+    }
+  }
 
-    // ── Global so onclick can reach it ──
-    let allOrders = [];
+  const STATUS_COLORS = {
+    pending:    'bg-amber/10 text-amber',
+    processing: 'bg-blue-50 text-blue-600',
+    shipped:    'bg-sage/10 text-sage',
+    delivered:  'bg-green-50 text-green-600',
+    cancelled:  'bg-rust/10 text-rust',
+  };
 
-    function filterOrders(status) {
-      // Update active tab styles
-      document.querySelectorAll('.order-tab').forEach(btn => {
-        btn.className = 'order-tab px-5 py-2 text-sm font-sans rounded-lg text-muted hover:text-brown transition-all';
-      });
-      const activeTab = document.getElementById(`tab-${status}`);
-      if (activeTab) {
-        activeTab.className = 'order-tab px-5 py-2 text-sm font-sans rounded-lg bg-white text-brown font-semibold shadow-sm transition-all';
-      }
+  let allOrders = [];
 
-      // Filter and render
-      const filtered = status === 'all'
-        ? allOrders
-        : allOrders.filter(o => o.order_status === status);
+  function filterOrders(status) {
+    document.querySelectorAll('.order-tab').forEach(btn => {
+      btn.className = 'order-tab px-5 py-2 text-sm font-sans rounded-lg text-muted hover:text-brown transition-all';
+    });
 
-      renderOrders(filtered);
+    const activeTab = document.getElementById(`tab-${status}`); // ✅ fixed spacing
+    if (activeTab) {
+      activeTab.className = 'order-tab px-5 py-2 text-sm font-sans rounded-lg bg-white text-brown font-semibold shadow-sm transition-all';
     }
 
-    function renderOrders(orders) {
-      const list  = document.getElementById('orders-list');
-      const empty = document.getElementById('orders-empty');
+    const filtered = status === 'all'
+      ? allOrders
+      : allOrders.filter(o => o.order_status === status);
 
-      list.innerHTML = '';
+    renderOrders(filtered);
+  }
 
-      if (!orders || orders.length === 0) {
-        empty.classList.remove('hidden');
-        return;
-      }
+  function renderOrders(orders) {
+    const list  = document.getElementById('orders-list');
+    const empty = document.getElementById('orders-empty');
 
-      empty.classList.add('hidden');
+    list.innerHTML = '';
 
-      list.innerHTML = orders.map(order => `
-        <div class="bg-white rounded-2xl p-6 shadow-sm fade-in">
-          <div class="flex items-start justify-between mb-3">
-            <div>
-              <p class="font-serif text-lg text-brown mb-1">Order #${order.id}</p>
-              <p class="text-xs text-muted">Date: ${formatDate(order.created_at)}</p>
-              <p class="text-xs text-muted mt-0.5">Qty: ${order.quantity}</p>
-              <p class="text-xs text-muted mt-0.5">Ship to: ${order.shipping_address}</p>
-            </div>
-            <div class="text-right">
-              <p class="text-lg font-semibold text-amber mb-2">${formatPrice(order.unit_price)}</p>
-              <span class="px-3 py-1 rounded-full text-xs font-semibold capitalize ${STATUS_COLORS[order.order_status] || 'bg-parchment text-muted'}">
-                ${order.order_status}
-              </span>
-            </div>
+    if (!orders || orders.length === 0) {
+      empty.classList.remove('hidden');
+      return;
+    }
+
+    empty.classList.add('hidden');
+
+    list.innerHTML = orders.map(order => `
+      <div class="bg-white rounded-2xl p-6 shadow-sm fade-in">
+        <div class="flex items-start justify-between mb-3">
+          <div>
+            <p class="font-serif text-lg text-brown mb-1">Order #${order.id}</p>
+            <p class="text-xs text-muted">Date: ${formatDate(order.created_at)}</p>
+            <p class="text-xs text-muted mt-0.5">Qty: ${order.quantity}</p>
+            <p class="text-xs text-muted mt-0.5">Ship to: ${order.shipping_address}</p>
+          </div>
+          <div class="text-right">
+            <p class="text-lg font-semibold text-amber mb-2">${formatPrice(order.unit_price)}</p>
+            <span class="px-3 py-1 rounded-full text-xs font-semibold capitalize ${STATUS_COLORS[order.order_status] || 'bg-parchment text-muted'}">
+              ${order.order_status}
+            </span>
           </div>
         </div>
-      `).join('');
+      </div>
+    `).join('');
+  }
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    if (!isLoggedIn()) { window.location.href = 'login.html'; return; }
+
+    try {
+      allOrders = await ordersAPI.history();
+      filterOrders('all');
+    } catch (e) {
+      console.error('Failed to load orders:', e.message);
+      document.getElementById('orders-list').innerHTML =
+        `<p class="text-sm text-muted text-center py-10">Failed to load orders. Please try again.</p>`;
     }
-
-    document.addEventListener('DOMContentLoaded', async () => {
-      if (!isLoggedIn()) { window.location.href = 'login.html'; return; }
-
-      try {
-        allOrders = await ordersAPI.history();
-        filterOrders('all');
-      } catch (e) {
-        console.error('Failed to load orders:', e.message);
-        document.getElementById('orders-list').innerHTML =
-          `<p class="text-sm text-muted text-center py-10">Failed to load orders. Please try again.</p>`;
-      }
-    });
-  </script>
+  });
+</script>
 </body>
 </html>

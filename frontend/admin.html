@@ -1,83 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin — Vintique</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;600;700&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="./src/output.css" />
 </head>
+
 <body class="bg-cream font-sans text-darkbrown">
 
   <div class="flex min-h-screen">
 
     <!-- ── SIDEBAR OVERLAY (mobile) ── -->
-    <div id="sidebar-overlay" class="fixed inset-0 bg-darkbrown/50 z-30 hidden lg:hidden" onclick="closeSidebar()"></div>
+    <div id="sidebar-overlay" class="fixed inset-0 bg-darkbrown/50 z-30 hidden lg:hidden" onclick="closeSidebar()">
+    </div>
 
     <!-- ── SIDEBAR ── -->
-    <aside id="sidebar" class="w-64 bg-darkbrown text-cream flex flex-col fixed inset-y-0 left-0 z-40 transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
+    <aside id="sidebar"
+      class="w-64 bg-darkbrown text-cream flex flex-col fixed inset-y-0 left-0 z-40 transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
       <div class="p-6 border-b border-cream/10 flex items-center justify-between">
         <div>
           <p class="font-serif text-2xl font-bold">Vintique</p>
           <p class="text-amber text-xs tracking-widest uppercase mt-0.5">Admin Panel</p>
         </div>
-        <!-- Close button (mobile only) -->
         <button onclick="closeSidebar()" class="lg:hidden text-cream/50 hover:text-cream transition-colors p-1">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
 
       <nav class="flex-1 p-4 space-y-1">
-<button onclick="showTab('overview')"
-class="admin-nav flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors bg-cream/10 text-cream">
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 text-white/80">
-<path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
-</svg>
-Overview
-</button>
 
-<button onclick="showTab('products')"
-class="admin-nav flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
+        <button onclick="showTab('overview')"
+          class="admin-nav flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors bg-cream/10 text-cream">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="size-6 text-white/80">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+          </svg>
+          Overview
+        </button>
 
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 text-white/80">
-<path stroke-linecap="round" stroke-linejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
-</svg>
-Products
-</button>
+        <button onclick="showTab('products')"
+          class="admin-nav flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="size-6 text-white/80">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+          </svg>
+          Products
+        </button>
 
-<button onclick="showTab('orders')"
-class="admin-nav flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
+        <button onclick="showTab('orders')"
+          class="admin-nav flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="size-6 text-white/80">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m15 15 6-6m0 0-6-6m6 6H9a6 6 0 0 0 0 12h3" />
+          </svg>
+          Orders
+        </button>
 
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 text-white/80">
-<path stroke-linecap="round" stroke-linejoin="round" d="m15 15 6-6m0 0-6-6m6 6H9a6 6 0 0 0 0 12h3" />
-</svg>
-Orders
-</button>
+        <button onclick="showTab('users')"
+          class="admin-nav flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="size-6 text-white/80">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
+          </svg>
+          Users
+        </button>
 
-<button onclick="showTab('users')"
-class="admin-nav flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
-
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 text-white/80">
-<path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
-</svg>
-Users
-</button>
-
-<button onclick="showTab('add-product')"
-class="admin-nav flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
-
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 text-white/80">
-<path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z" />
-</svg>
-Add Product
-</button>
+        <button onclick="showTab('add-product')"
+          class="admin-nav flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-lg text-sm font-sans transition-colors text-cream/60 hover:bg-cream/5 hover:text-cream">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="size-6 text-white/80">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z" />
+          </svg>
+          Add Product
+        </button>
 
       </nav>
 
       <div class="p-4 border-t border-cream/10">
-        <button onclick="logout()" class="w-full text-left px-4 py-2.5 text-sm text-cream/50 hover:text-rust transition-colors">
+        <button onclick="logout()"
+          class="w-full text-left px-4 py-2.5 text-sm text-cream/50 hover:text-rust transition-colors">
           ← Sign Out
         </button>
       </div>
@@ -87,11 +100,12 @@ Add Product
     <div class="flex-1 lg:ml-64 min-w-0">
 
       <!-- Top Bar -->
-      <header class="bg-white border-b border-parchment px-4 lg:px-6 py-4 flex items-center justify-between sticky top-0 z-20">
+      <header
+        class="bg-white border-b border-parchment px-4 lg:px-6 py-4 flex items-center justify-between sticky top-0 z-20">
         <div class="flex items-center gap-3">
-          <!-- Hamburger (mobile only) -->
           <button onclick="openSidebar()" class="lg:hidden p-2 rounded-lg hover:bg-parchment transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-brown" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-brown" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
@@ -99,7 +113,8 @@ Add Product
         </div>
         <div class="flex items-center gap-2 lg:gap-3">
           <span id="admin-name" class="text-xs lg:text-sm text-muted sm:inline"></span>
-          <a href="index.html" class="text-xs text-amber hover:text-rust transition-colors whitespace-nowrap">View Site →</a>
+          <a href="index.html" class="text-xs text-amber hover:text-rust transition-colors whitespace-nowrap">View Site
+            →</a>
         </div>
       </header>
 
@@ -108,31 +123,26 @@ Add Product
         <!-- ── OVERVIEW TAB ── -->
         <div id="tab-overview" class="fade-in">
           <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-6 lg:mb-8">
-
             <div class="bg-white rounded-2xl p-4 lg:p-5">
               <p class="text-xs font-sans text-muted tracking-wide mb-2">Total Revenue</p>
               <p id="stat-revenue" class="text-2xl lg:text-3xl text-amber">—</p>
               <p id="stat-revenue-change" class="text-xs text-sage mt-1">—</p>
             </div>
-
             <div class="bg-white rounded-2xl p-4 lg:p-5">
               <p class="text-xs font-sans text-muted tracking-wide mb-2">Total Orders</p>
               <p id="stat-orders" class="text-2xl lg:text-3xl text-brown">—</p>
               <p id="stat-orders-change" class="text-xs text-sage mt-1">—</p>
             </div>
-
             <div class="bg-white rounded-2xl p-4 lg:p-5">
               <p class="text-xs font-sans text-muted tracking-wide mb-2">Products Listed</p>
               <p id="stat-products" class="text-2xl lg:text-3xl text-brown">—</p>
               <p id="stat-low-stock" class="text-xs text-muted mt-1">—</p>
             </div>
-
             <div class="bg-white rounded-2xl p-4 lg:p-5">
               <p class="text-xs font-sans text-muted tracking-wide mb-2">Registered Users</p>
               <p id="stat-users" class="text-2xl lg:text-3xl text-brown">—</p>
               <p id="stat-users-change" class="text-xs text-sage mt-1">—</p>
             </div>
-
           </div>
 
           <div class="bg-white rounded-2xl p-4 lg:p-6">
@@ -148,7 +158,9 @@ Add Product
                   </tr>
                 </thead>
                 <tbody id="dashboard-orders" class="divide-y divide-parchment/60">
-                  <tr><td colspan="4" class="py-4 text-center text-muted text-xs">Loading…</td></tr>
+                  <tr>
+                    <td colspan="4" class="py-4 text-center text-muted text-xs">Loading…</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -159,7 +171,8 @@ Add Product
         <div id="tab-products" class="hidden fade-in">
           <div class="flex items-center justify-between mb-6">
             <h3 class="font-serif text-xl text-brown">All Products</h3>
-            <button onclick="showTab('add-product')" class="bg-amber hover:bg-rust text-cream text-xs font-semibold px-4 py-2.5 rounded-xl transition-colors">
+            <button onclick="showTab('add-product')"
+              class="bg-amber hover:bg-rust text-cream text-xs font-semibold px-4 py-2.5 rounded-xl transition-colors">
               + Add Product
             </button>
           </div>
@@ -175,36 +188,18 @@ Add Product
                   </tr>
                 </thead>
                 <tbody id="admin-products" class="divide-y divide-parchment/40">
-                  <tr><td colspan="4" class="px-5 py-8 text-center text-muted text-xs">Loading products…</td></tr>
+                  <tr>
+                    <td colspan="4" class="px-5 py-8 text-center text-muted text-xs">Loading products…</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
           </div>
         </div>
 
-        <!-- ── ORDERS TAB. ── -->
+        <!-- ── ORDERS TAB ── -->
         <div id="tab-orders" class="hidden fade-in">
           <h3 class="font-serif text-xl text-brown mb-6">All Orders</h3>
-          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            <div class="bg-white rounded-2xl p-5">
-              <p class="text-xs font-sans text-muted tracking-wide mb-2">Pending</p>
-              <p class="font-serif text-3xl text-amber">$24,580</p>
-              <p class="text-xs text-sage mt-1">↑ 12% this month</p>
-            </div>
-            <div class="bg-white rounded-2xl p-5">
-              <p class="text-xs font-sans text-muted tracking-wide mb-2">Total Orders</p>
-              <p class="font-serif text-3xl text-brown">184</p>
-              <p class="text-xs text-sage mt-1">↑ 8 this week</p>
-            </div>
-            <div class="bg-white rounded-2xl p-5">
-              <p class="text-xs font-sans text-muted tracking-wide mb-2">Completed</p>
-              <p class="font-serif text-3xl text-brown">1,204</p>
-              <p class="text-xs text-muted mt-1">18 low stock</p>
-            </div>
-            <div class="bg-white rounded-2xl p-5">
-              <p class="text-xs font-sans text-muted tracking-wide mb-2">Total Customers</p>
-              <p class="font-serif text-3xl text-brown">1,082</p>
-              <p class="text-xs text-sage mt-1">↑ 47 this week</p>
           <div class="bg-white rounded-2xl overflow-hidden">
             <div class="overflow-x-auto">
               <table class="w-full text-sm">
@@ -219,142 +214,13 @@ Add Product
                   </tr>
                 </thead>
                 <tbody id="admin-orders" class="divide-y divide-parchment/40">
-                  <tr><td colspan="6" class="px-5 py-8 text-center text-muted text-xs">Loading orders…</td></tr>
+                  <tr>
+                    <td colspan="6" class="px-5 py-8 text-center text-muted text-xs">Loading orders…</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
           </div>
-
-        <div class="bg-white rounded-2xl overflow-hidden shadow-md">
-        <div class="overflow-x-auto">
-          <table class="w-full text-sm">
-            <thead class="bg-parchment/40">
-              <tr class="text-left">
-                <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">ORDER #</th>
-                <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">DATE</th>
-                <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">USER</th>
-                <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">PRODUCT</th>
-                <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">AMOUNT</th>
-                <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">STATUS</th>
-                <th class="px-5 py-3 font-sans text-xs text-muted tracking-wide">ACTION</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-parchment/40">
-              <tr class="hover:bg-parch-lt transition-colors">
-                <td class="px-5 py-4 font-semibold text-brown">ORD-000123</td>
-                <td class="px-5 py-4 text-muted">Apr 22, 2024</td>
-                <td class="px-5 py-4 text-brown">Wallex Smith</td>
-                <td class="px-5 py-4 text-muted">Victorian Vanity Mirror</td>
-                <td class="px-5 py-4 font-semibold text-brown">$120.00</td>
-                <td class="px-5 py-4">
-                  <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-green-50 text-green-700">
-                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>Shipped
-                  </span>
-                </td>
-                <td class="px-5 py-4">
-                  <button class="bg-brown text-white text-parch-lt text-xs font-semibold px-4 py-2 rounded-lg hover:bg-brown-light transition-colors">View</button>
-                </td>
-              </tr>
-            
-              <tr class="hover:bg-parch-lt transition-colors">
-                <td class="px-5 py-4 font-semibold text-brown">ORD-000122</td>
-                <td class="px-5 py-4 text-muted">Apr 21, 2024</td>
-                <td class="px-5 py-4 text-brown">John week</td>
-                <td class="px-5 py-4 text-muted">Brass Candlestick Set</td>
-                <td class="px-5 py-4 font-semibold text-brown">$35.50</td>
-                <td class="px-5 py-4">
-                  <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-orange-50 text-orange-600">
-                    <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>Processing
-                  </span>
-                </td>
-                <td class="px-5 py-4">
-                  <button class="bg-brown text-white text-parch-lt text-xs font-semibold px-4 py-2 rounded-lg hover:bg-brown-light transition-colors">View</button>
-                </td>
-              </tr>
-            
-              <tr class="hover:bg-parch-lt transition-colors">
-                <td class="px-5 py-4 font-semibold text-brown">ORD-000123</td>
-                <td class="px-5 py-4 text-muted">Apr 22, 2024</td>
-                <td class="px-5 py-4 text-brown">John Doe</td>
-                <td class="px-5 py-4 text-muted">Victorian Vanity Mirror</td>
-                <td class="px-5 py-4 font-semibold text-brown">$120.00</td>
-                <td class="px-5 py-4">
-                  <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-green-50 text-green-700">
-                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>Shipped
-                  </span>
-                </td>
-                <td class="px-5 py-4">
-                  <button class="bg-brown text-white text-parch-lt text-xs font-semibold px-4 py-2 rounded-lg hover:bg-brown-light transition-colors">View</button>
-                </td>
-              </tr>
-            
-              <tr class="hover:bg-parch-lt transition-colors">
-                <td class="px-5 py-4 font-semibold text-brown">ORD-000122</td>
-                <td class="px-5 py-4 text-muted">Apr 21, 2024</td>
-                <td class="px-5 py-4 text-brown">Alice mark</td>
-                <td class="px-5 py-4 text-muted">Brass Candlestick Set</td>
-                <td class="px-5 py-4 font-semibold text-brown">$35.50</td>
-                <td class="px-5 py-4">
-                  <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-orange-50 text-orange-600">
-                    <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>Processing
-                  </span>
-                </td>
-                <td class="px-5 py-4">
-                  <button class="bg-brown text-white text-parch-lt text-xs font-semibold px-4 py-2 rounded-lg hover:bg-brown-light transition-colors">View</button>
-                </td>
-              </tr>
-            
-              <tr class="hover:bg-parch-lt transition-colors">
-                <td class="px-5 py-4 font-semibold text-brown">ORD-000123</td>
-                <td class="px-5 py-4 text-muted">Apr 22, 2024</td>
-                <td class="px-5 py-4 text-brown">Bob dom</td>
-                <td class="px-5 py-4 text-muted">Victorian Vanity Mirror</td>
-                <td class="px-5 py-4 font-semibold text-brown">$120.00</td>
-                <td class="px-5 py-4">
-                  <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-green-50 text-green-700">
-                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>Shipped
-                  </span>
-                </td>
-                <td class="px-5 py-4">
-                  <button class="bg-brown text-white text-parch-lt text-xs font-semibold px-4 py-2 rounded-lg hover:bg-brown-light transition-colors">View</button>
-                </td>
-              </tr>
-            
-              <tr class="hover:bg-parch-lt transition-colors">
-                <td class="px-5 py-4 font-semibold text-brown">ORD-000122</td>
-                <td class="px-5 py-4 text-muted">Apr 21, 2024</td>
-                <td class="px-5 py-4 text-brown">Jaden Smith</td>
-                <td class="px-5 py-4 text-muted">Brass Candlestick Set</td>
-                <td class="px-5 py-4 font-semibold text-brown">$35.50</td>
-                <td class="px-5 py-4">
-                  <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-orange-50 text-orange-600">
-                    <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>Processing
-                  </span>
-                </td>
-                <td class="px-5 py-4">
-                  <button class="bg-brown text-white text-parch-lt text-xs font-semibold px-4 py-2 rounded-lg hover:bg-brown-light transition-colors">View</button>
-                </td>
-              </tr>
-            
-              <tr class="hover:bg-parch-lt transition-colors">
-                <td class="px-5 py-4 font-semibold text-brown">ORD-000123</td>
-                <td class="px-5 py-4 text-muted">Apr 22, 2024</td>
-                <td class="px-5 py-4 text-brown">The rock</td>
-                <td class="px-5 py-4 text-muted">Victorian Vanity Mirror</td>
-                <td class="px-5 py-4 font-semibold text-brown">$120.00</td>
-                <td class="px-5 py-4">
-                  <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-green-50 text-green-700">
-                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>Shipped
-                  </span>
-                </td>
-                <td class="px-5 py-4">
-                  <button class="bg-brown text-white text-parch-lt text-xs font-semibold px-4 py-2 rounded-lg hover:bg-brown-light transition-colors">View</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
         </div>
 
         <!-- ── USERS TAB ── -->
@@ -372,7 +238,9 @@ Add Product
                   </tr>
                 </thead>
                 <tbody id="admin-users" class="divide-y divide-parchment/40">
-                  <tr><td colspan="4" class="px-5 py-8 text-center text-muted text-xs">Loading users…</td></tr>
+                  <tr>
+                    <td colspan="4" class="px-5 py-8 text-center text-muted text-xs">Loading users…</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -380,62 +248,153 @@ Add Product
         </div>
 
         <!-- ── ADD PRODUCT TAB ── -->
-        <div id="tab-add-product" class="hidden fade-in max-w-2xl">
+        <div id="tab-add-product" class="hidden fade-in max-w-5xl">
+
           <h3 class="font-serif text-xl text-brown mb-6">Add New Product</h3>
 
-          <div id="product-error" class="hidden bg-rust/10 border border-rust/20 text-rust rounded-xl px-4 py-3 text-sm mb-5"></div>
-          <div id="product-success" class="hidden bg-sage/10 border border-sage/20 text-sage rounded-xl px-4 py-3 text-sm mb-5"></div>
+          <div id="product-error"
+            class="hidden bg-rust/10 border border-rust/20 text-rust rounded-xl px-4 py-3 text-sm mb-5"></div>
 
-          <form id="product-form" class="bg-white rounded-2xl p-4 lg:p-6 space-y-4" onsubmit="submitProduct(event)">
-            <div>
-              <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Product Name *</label>
-              <input name="name" type="text" required placeholder="Victorian Cameo Brooch"
-                class="w-full bg-cream border border-parchment rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber transition-colors" />
-            </div>
+          <div id="product-success"
+            class="hidden bg-sage/10 border border-sage/20 text-sage rounded-xl px-4 py-3 text-sm mb-5"></div>
 
-            <div class="grid sm:grid-cols-2 gap-4">
+          <!-- LAYOUT WRAPPER -->
+          <div class="flex flex-col lg:flex-row gap-8">
+
+            <!-- ── PRODUCT FORM ── -->
+            <form id="product-form" class="bg-white rounded-2xl p-4 lg:p-6 space-y-4 flex-1"
+              onsubmit="submitProduct(event)">
+
               <div>
-                <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Price (USD) *</label>
-                <input name="price" type="number" step="0.01" min="0" required placeholder="89.99"
+                <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">
+                  Product Name *
+                </label>
+
+                <input name="name" type="text" required placeholder="Victorian Cameo Brooch"
                   class="w-full bg-cream border border-parchment rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber transition-colors" />
               </div>
-              <div>
-                <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Stock Quantity *</label>
-                <input name="stock_quantity" type="number" min="0" required placeholder="5"
-                  class="w-full bg-cream border border-parchment rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber transition-colors" />
-              </div>
-            </div>
 
-            <div>
-              <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Description *</label>
-              <textarea name="description" rows="4" required placeholder="Describe the item, its era, condition, and any special features…"
-                class="w-full bg-cream border border-parchment rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber transition-colors resize-none"></textarea>
-            </div>
+              <div class="grid sm:grid-cols-2 gap-4">
 
-            <div>
-              <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Product Image *</label>
-              <div id="drop-zone"
-                class="border-2 border-dashed border-parchment rounded-xl p-8 text-center cursor-pointer hover:border-amber transition-colors"
-                onclick="document.getElementById('image-input').click()"
-                ondragover="event.preventDefault(); this.classList.add('border-amber')"
-                ondragleave="this.classList.remove('border-amber')"
-                ondrop="handleDrop(event)">
-                <input type="file" id="image-input" name="image" accept="image/*" class="hidden"
-                  onchange="previewImage(this)" />
-                <div id="upload-placeholder">
-                  <p class="text-4xl mb-3">🖼</p>
-                  <p class="text-sm font-sans text-muted">Drop image here or <span class="text-amber font-semibold">browse</span></p>
-                  <p class="text-xs text-muted mt-1">JPG, PNG, WebP — max 5MB. Uploads to Cloudinary.</p>
+                <div>
+                  <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">
+                    Price (NGN) *
+                  </label>
+
+                  <input name="price" type="number" step="0.01" min="0" required placeholder="89.99"
+                    class="w-full bg-cream border border-parchment rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber transition-colors" />
                 </div>
-                <img id="image-preview" class="hidden max-h-40 mx-auto rounded-lg object-cover" />
+
+                <div>
+                  <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">
+                    Stock Quantity *
+                  </label>
+
+                  <input name="stock_quantity" type="number" min="0" required placeholder="5"
+                    class="w-full bg-cream border border-parchment rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber transition-colors" />
+                </div>
+
               </div>
+
+              <div>
+                <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">
+                  Description *
+                </label>
+
+                <textarea name="description" rows="4" required
+                  placeholder="Describe the item, its era, condition, and any special features…"
+                  class="w-full bg-cream border border-parchment rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber transition-colors resize-none"></textarea>
+              </div>
+
+              <!-- IMAGE UPLOAD -->
+              <div>
+                <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">
+                  Product Image *
+                </label>
+
+                <div id="drop-zone"
+                  class="border-2 border-dashed border-parchment rounded-xl p-8 text-center cursor-pointer hover:border-amber transition-colors"
+                  onclick="document.getElementById('image-input').click()"
+                  ondragover="event.preventDefault(); this.classList.add('border-amber')"
+                  ondragleave="this.classList.remove('border-amber')" ondrop="handleDrop(event)">
+
+                  <input type="file" id="image-input" name="image_file" accept="image/*" class="hidden"
+                    onchange="previewImage(this)" />
+
+                  <div id="upload-placeholder">
+                    <p class="text-4xl mb-3">🖼</p>
+                    <p class="text-sm font-sans text-muted">
+                      Drop image here or
+                      <span class="text-amber font-semibold">browse</span>
+                    </p>
+                    <p class="text-xs text-muted mt-1">
+                      JPG, PNG, WebP — max 5MB. Uploads to Cloudinary.
+                    </p>
+                  </div>
+
+                  <img id="image-preview" class="hidden max-h-40 mx-auto rounded-lg object-cover" />
+
+                </div>
+              </div>
+
+              <button type="submit" id="submit-btn"
+                class="w-full bg-amber hover:bg-rust text-cream font-sans font-semibold py-4 rounded-xl transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
+                Upload & Publish Product
+              </button>
+
+            </form>
+
+            <!-- ── LIVE PREVIEW ── -->
+            <div class="lg:w-80 shrink-0 lg:sticky lg:top-6">
+
+              <p class="text-xs font-sans tracking-wide text-muted mb-3 uppercase">
+                Live Preview
+              </p>
+
+              <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-parchment">
+
+                <div class="aspect-4/3 bg-parchment/40 flex items-center justify-center" id="preview-img-wrap">
+
+                  <p class="text-muted text-xs">
+                    No image yet
+                  </p>
+
+                </div>
+
+                <div class="p-4">
+
+                  <p class="text-[11px] font-sans tracking-widest uppercase text-muted mb-1">
+                    Vintique
+                  </p>
+
+                  <h3 id="preview-name" class="font-serif text-base text-brown font-semibold leading-tight mb-1">
+                    Product Name
+                  </h3>
+
+                  <p id="preview-description" class="text-muted text-xs line-clamp-2 mb-3">
+                    Description will appear here…
+                  </p>
+
+                  <div class="flex items-center justify-between">
+
+                    <p id="preview-price" class="text-lg text-amber font-semibold">
+                      ₦0.00
+                    </p>
+
+                    <span id="preview-stock" class="text-xs text-sage">
+                      In stock
+                    </span>
+
+                  </div>
+
+                </div>
+
+              </div>
+
             </div>
 
-            <button type="submit" id="submit-btn"
-              class="w-full bg-amber hover:bg-rust text-cream font-sans font-semibold py-4 rounded-xl transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
-              Upload & Publish Product
-            </button>
-          </form>
+          </div>
+
         </div>
 
       </main>
@@ -443,15 +402,19 @@ Add Product
   </div>
 
   <!-- Delete Confirm Modal -->
-  <div id="delete-modal" class="opacity-0 pointer-events-none fixed inset-0 bg-darkbrown/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-200">
+  <div id="delete-modal"
+    class="opacity-0 pointer-events-none fixed inset-0 bg-darkbrown/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-200">
     <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
       <h3 class="font-serif text-xl text-brown mb-2">Delete Product?</h3>
-      <p class="text-sm text-muted mb-5">This will permanently remove the product and its Cloudinary image. This cannot be undone.</p>
+      <p class="text-sm text-muted mb-5">This will permanently remove the product and its Cloudinary image. This cannot
+        be undone.</p>
       <div class="flex gap-3">
-        <button onclick="confirmDelete()" class="flex-1 bg-rust hover:bg-rust/80 text-cream font-sans font-semibold py-3 rounded-xl transition-colors">
+        <button onclick="confirmDelete()"
+          class="flex-1 bg-rust hover:bg-rust/80 text-cream font-sans font-semibold py-3 rounded-xl transition-colors">
           Delete
         </button>
-        <button onclick="cancelDelete()" class="flex-1 border border-parchment text-brown hover:bg-parchment font-sans font-semibold py-3 rounded-xl transition-colors">
+        <button onclick="cancelDelete()"
+          class="flex-1 border border-parchment text-brown hover:bg-parchment font-sans font-semibold py-3 rounded-xl transition-colors">
           Cancel
         </button>
       </div>
@@ -459,7 +422,8 @@ Add Product
   </div>
 
   <!-- Toast Notification -->
-  <div id="toast" class="fixed bottom-6 right-6 z-50 transition-all duration-300 translate-y-4 opacity-0 pointer-events-none">
+  <div id="toast"
+    class="fixed bottom-6 right-6 z-50 transition-all duration-300 translate-y-4 opacity-0 pointer-events-none">
     <div id="toast-inner" class="bg-darkbrown text-cream text-sm font-sans px-5 py-3 rounded-xl shadow-xl">
       <span id="toast-message"></span>
     </div>
@@ -479,4 +443,5 @@ Add Product
   <script src="./js/app.js"></script>
   <script src="./js/admin.js"></script>
 </body>
+
 </html>

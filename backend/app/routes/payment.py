@@ -127,51 +127,14 @@ async def verify_payment_status(
     db_status = transactions[0].status if transactions else "not_found"
 
     # Step 3 — Return everything frontend needs
-    # return {
-    #     "paid": result["paid"],
-    #     "amount": result["amount"],
-    #     "email": result["email"],
-    #     "reference": reference,
-    #     "order_ids": order_ids,
-    #     "db_status": db_status,
-    #     "message": result["message"]          # POINT: This was commented since the frontend is not handling the success message.
-    # }    
-
-    return RedirectResponse(url="https://vintique-one.vercel.app/orders.html")   #Added redirect to orders page. Payment integration can check it.
-    # return RedirectResponse(url=f"/payment/success?reference={reference}")                     
-
-@payment_router.get("/callback")
-async def payment_callback(
-    reference: str = None,
-    trxref: str = None,
-    db: Session = Depends(get_db)
-):
-    """
-    Temporary callback endpoint for testing without frontend.
-    In production this will be replaced by Solex's frontend page.
-    """
-    ref = reference or trxref
-
-    if not ref:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="No reference provided"
-        )
-
-    result = verify_payment(ref)
-    transactions = db.query(Transaction).filter(
-        Transaction.reference == ref
-    ).all()
-
-    order_ids = [t.order_id for t in transactions]
-    db_status = transactions[0].status if transactions else "not_found"
-
     return {
         "paid": result["paid"],
         "amount": result["amount"],
         "email": result["email"],
-        "reference": ref,
+        "reference": reference,
         "order_ids": order_ids,
         "db_status": db_status,
-        "message": result["message"]
-    }
+        "message": result["message"] 
+    }    
+                    
+

@@ -488,9 +488,6 @@
   .aspect-4\/3 {
     aspect-ratio: 4/3;
   }
-  .aspect-\[4\/3\] {
-    aspect-ratio: 4/3;
-  }
   .aspect-square {
     aspect-ratio: 1 / 1;
   }
@@ -911,6 +908,10 @@
     border-style: var(--tw-border-style);
     border-width: 2px;
   }
+  .border-4 {
+    border-style: var(--tw-border-style);
+    border-width: 4px;
+  }
   .border-t {
     border-top-style: var(--tw-border-style);
     border-top-width: 1px;
@@ -944,6 +945,12 @@
   }
   .border-amber {
     border-color: var(--color-amber);
+  }
+  .border-amber\/30 {
+    border-color: color-mix(in srgb, #C9843A 30%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-amber) 30%, transparent);
+    }
   }
   .border-amber\/40 {
     border-color: color-mix(in srgb, #C9843A 40%, transparent);
@@ -998,6 +1005,9 @@
     @supports (color: color-mix(in lab, red, red)) {
       border-color: color-mix(in oklab, var(--color-sage) 20%, transparent);
     }
+  }
+  .border-t-amber {
+    border-top-color: var(--color-amber);
   }
   .bg-\[\#3B2416\] {
     background-color: #3B2416;
@@ -1119,17 +1129,8 @@
   .bg-green-50 {
     background-color: var(--color-green-50);
   }
-  .bg-green-500 {
-    background-color: var(--color-green-500);
-  }
   .bg-muted {
     background-color: var(--color-muted);
-  }
-  .bg-orange-50 {
-    background-color: var(--color-orange-50);
-  }
-  .bg-orange-500 {
-    background-color: var(--color-orange-500);
   }
   .bg-parchment {
     background-color: var(--color-parchment);
@@ -1644,9 +1645,6 @@
   .text-green-600 {
     color: var(--color-green-600);
   }
-  .text-green-700 {
-    color: var(--color-green-700);
-  }
   .text-muted {
     color: var(--color-muted);
   }
@@ -1655,9 +1653,6 @@
     @supports (color: color-mix(in lab, red, red)) {
       color: color-mix(in oklab, var(--color-muted) 60%, transparent);
     }
-  }
-  .text-orange-600 {
-    color: var(--color-orange-600);
   }
   .text-parchment {
     color: var(--color-parchment);
@@ -1843,6 +1838,13 @@
       @media (hover: hover) {
         --tw-translate-y: calc(var(--spacing) * -1);
         translate: var(--tw-translate-x) var(--tw-translate-y);
+      }
+    }
+  }
+  .hover\:cursor-pointer {
+    &:hover {
+      @media (hover: hover) {
+        cursor: pointer;
       }
     }
   }
@@ -2180,11 +2182,6 @@
   .lg\:hidden {
     @media (width >= 64rem) {
       display: none;
-    }
-  }
-  .lg\:w-72 {
-    @media (width >= 64rem) {
-      width: calc(var(--spacing) * 72);
     }
   }
   .lg\:w-80 {

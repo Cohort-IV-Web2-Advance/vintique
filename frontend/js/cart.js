@@ -195,7 +195,51 @@ async function initializePayment() {
   }
 }
 
+async function verifyPayment() {
+  const content = document.getElementById('verify-content');
+  if (!content) return; // only runs on verify.html
 
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const reference = params.get('reference');
+
+    if (!reference) {
+      content.innerHTML = `
+        <p class="text-5xl mb-4">❌</p>
+        <p class="font-serif text-2xl text-brown">No reference found</p>
+        <a href="index.html" class="inline-block mt-6 bg-amber hover:bg-rust text-cream text-sm font-semibold px-6 py-3 rounded-xl transition-colors">Back to Shop</a>
+      `;
+      return;
+    }
+
+    const data = await apiFetch(`/payments/verify/${reference}`);
+
+    if (data.paid) {
+      content.innerHTML = `
+        <p class="text-5xl mb-4">✅</p>
+        <p class="font-serif text-2xl text-brown">Payment Successful!</p>
+        <p class="text-sm text-muted mt-2">Redirecting to your orders…</p>
+      `;
+      setTimeout(() => window.location.href = 'orders.html', 2000);
+    } else {
+      content.innerHTML = `
+        <p class="text-5xl mb-4">❌</p>
+        <p class="font-serif text-2xl text-brown">Payment Failed</p>
+        <a href="index.html" class="inline-block mt-6 bg-amber hover:bg-rust text-cream text-sm font-semibold px-6 py-3 rounded-xl transition-colors">Back to Shop</a>
+      `;
+    }
+
+  } catch (err) {
+    content.innerHTML = `
+      <p class="text-5xl mb-4">❌</p>
+      <p class="font-serif text-2xl text-brown">Verification Failed</p>
+      <p class="text-sm text-muted mt-2">${err.message}</p>
+      <a href="index.html" class="inline-block mt-6 bg-amber hover:bg-rust text-cream text-sm font-semibold px-6 py-3 rounded-xl transition-colors">Back to Shop</a>
+    `;
+  }
+}
+
+verifyPayment();
 
 function showStep(step) {
   ["cart", "shipping", "confirm", "success"].forEach((s) => {

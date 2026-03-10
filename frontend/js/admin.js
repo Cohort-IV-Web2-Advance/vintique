@@ -292,10 +292,32 @@ async function loadUsers() {
         </span>
       </td>
       <td class="px-5 py-3 text-xs text-muted">${formatDate(u.created_at)}</td>
+      <td class="px-5 py-3">
+        ${
+          !u.is_admin
+            ? `
+          <button onclick="handleMakeAdmin(${u.id})"
+            class="text-xs bg-amber/10 hover:bg-amber text-amber hover:text-cream font-semibold px-3 py-1.5 rounded-lg transition-colors">
+            Make Admin
+          </button>
+        `
+            : "—"
+        }
+      </td>
     </tr>
   `,
     )
     .join("");
+}
+
+async function handleMakeAdmin(userId) {
+  try {
+    await adminAPI.makeUserAdmin(userId);
+    showToast("User promoted to admin!");
+    loadUsers();
+  } catch (err) {
+    showToast(err.message, "error");
+  }
 }
 
 // ── PRODUCT MANAGEMENT ────────────────────────────────────────────────────────
@@ -408,24 +430,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   showTab("overview");
 });
-
-// ── TOAST ─────────────────────────────────────────────────────────────────────
-// Only define if app.js doesn't already have showToast
-if (typeof showToast === "undefined") {
-  function showToast(message) {
-    const toast = document.getElementById("toast");
-    const toastMsg = document.getElementById("toast-message");
-    if (!toast || !toastMsg) return;
-
-    toastMsg.textContent = message;
-    toast.classList.remove("translate-y-4", "opacity-0", "pointer-events-none");
-
-    clearTimeout(window._toastTimer);
-    window._toastTimer = setTimeout(() => {
-      toast.classList.add("translate-y-4", "opacity-0", "pointer-events-none");
-    }, 3000);
-  }
-}
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("product-form");

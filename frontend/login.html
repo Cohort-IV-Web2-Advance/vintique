@@ -54,8 +54,9 @@
         <form id="login-form" class="space-y-4" onsubmit="handleLogin(event)">
           <div>
             <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Email Address</label>
-            <input type="email" name="email" required placeholder="margaret@example.com"
-              class="w-full bg-white border border-parchment rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-amber transition-colors" />
+            <input type="email" name="email" placeholder="margaret@example.com"
+              class="w-full bg-white border border-parchment rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-amber transition-colors"
+              oninput="this.value = this.value.replace(/\s/g, '')" />
           </div>
 
           <div>
@@ -64,8 +65,9 @@
               <a href="#" class="text-xs text-amber hover:text-rust transition-colors">Forgot password?</a>
             </div>
             <div class="relative">
-              <input type="password" name="password" id="password-input" required placeholder="••••••••"
-                class="w-full bg-white border border-parchment rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-amber transition-colors pr-12" />
+              <input type="password" name="password" id="password-input" placeholder="••••••••"
+                class="w-full bg-white border border-parchment rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-amber transition-colors pr-12"
+                oninput="this.value = this.value.replace(/\s/g, '')" />
               <button type="button" onclick="togglePassword()"
                 class="absolute right-4 top-1/2 -translate-y-1/2 text-muted hover:text-brown transition-colors">
                 <svg id="eye-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"
@@ -105,13 +107,25 @@
       const errEl = document.getElementById('auth-error');
       const form = e.target;
 
+      const email = form.email.value.trim();
+      const pw = form.password.value.trim();
+
+      errEl.classList.add('hidden');
+      errEl.textContent = '';
+
+      if (!email || !pw) {
+        errEl.textContent = 'All fields are required. Please fill in all fields.';
+        errEl.classList.remove('hidden');
+        if (!email) form.email.focus();
+        else form.password.focus();
+        return;
+      }
+
       btn.textContent = 'Signing in…';
       btn.disabled = true;
-      errEl.classList.add('hidden');
 
       try {
-        await login(form.email.value, form.password.value);
-
+        await login(email, pw);
         if (isAdmin()) {
           window.location.href = 'admin.html';
         } else {
@@ -126,7 +140,6 @@
         btn.disabled = false;
       }
     }
-
     function togglePassword() {
       const input = document.getElementById('password-input');
       input.type = input.type === 'password' ? 'text' : 'password';

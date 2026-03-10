@@ -127,15 +127,18 @@ async def verify_payment_status(
     db_status = transactions[0].status if transactions else "not_found"
 
     # Step 3 — Return everything frontend needs
-    return {
-        "paid": result["paid"],
-        "amount": result["amount"],
-        "email": result["email"],
-        "reference": reference,
-        "order_ids": order_ids,
-        "db_status": db_status,
-        "message": result["message"]
-    }
+    # return {
+    #     "paid": result["paid"],
+    #     "amount": result["amount"],
+    #     "email": result["email"],
+    #     "reference": reference,
+    #     "order_ids": order_ids,
+    #     "db_status": db_status,
+    #     "message": result["message"]          # POINT: This was commented since the frontend is not handling the success message.
+    # }    
+
+    return RedirectResponse(url="https://vintique-one.vercel.app/orders.html")   #Added redirect to orders page. Payment integration can check it.
+    # return RedirectResponse(url=f"/payment/success?reference={reference}")                     
 
 @payment_router.get("/callback")
 async def payment_callback(

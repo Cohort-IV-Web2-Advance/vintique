@@ -25,3 +25,15 @@ def get_product(product_id: int, db: Session = Depends(get_db)):
             detail="Product not found"
         )
     return product
+
+@product_router.get("/name/{product_name}", response_model=ProductResponse)
+def get_product_by_name(product_name: str, db: Session = Depends(get_db)):
+    product_service = ProductService(db)
+    product = product_service.get_product_by_name(product_name)
+    if not product:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Product not found"
+        )
+    return product
+

@@ -12,10 +12,27 @@ class ProductService:
         self.db = db
 
     def get_product_by_id(self, product_id: int) -> Optional[Product]:
-        return self.db.query(Product).filter(Product.id == product_id).first()
+        product = self.db.query(Product).filter(Product.id == product_id).first()
+        if product:
+            if product.is_deleted:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Product not available"
+                )
+        return product
 
     def get_all_products(self) -> List[Product]:
-        return self.db.query(Product).all()
+        return self.db.query(Product).filter(Product.is_deleted == False).all()
+
+    def get_product_by_name(self, product_name: str) -> Optional[Product]:
+        product = self.db.query(Product).filter(Product.name == product_name).first()
+        if product:
+            if product.is_deleted:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Product not available"
+                )
+        return product
 
     def create_product(self, product_data) -> Product:
         """
@@ -165,23 +182,23 @@ class ProductService:
             )
 
         # Store image URL for cleanup
-        image_url_to_delete = product.image_url
+        # image_url_to_delete = product.image_url
 
         try:
-            # Delete product from database first
-            self.db.delete(product)
+            # Update product as deleted in database
+            self.db.query(Product).filter(Product.id == product_id).update({"is_deleted": True})
             self.db.commit()
             
             # Delete image from Cloudinary if it exists
-            if image_url_to_delete:
-                try:
-                    delete_image(image_url_to_delete)
-                except Exception as img_error:
-                    # Log error but don't fail the deletion
-                    # In production, you'd want to log this properly
-                    print(f"Warning: Failed to delete image {image_url_to_delete}: {str(img_error)}")
+            # if image_url_to_delete:
+            #     try:
+            #         delete_image(image_url_to_delete)
+            #     except Exception as img_error:
+            #         # Log error but don't fail the deletion
+            #         # In production, you'd want to log this properly
+            #         print(f"Warning: Failed to delete image {image_url_to_delete}: {str(img_error)}")
             
-            return True
+            # return True
             
         except Exception as e:
             self.db.rollback()

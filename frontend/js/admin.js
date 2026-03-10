@@ -13,6 +13,7 @@ let activeTab = 'overview';
 
 // ── TAB NAVIGATION ────────────────────────────────────────────────────────────
 function showTab(tab) {
+  // Close sidebar on mobile after nav tap
   if (window.innerWidth < 1024) closeSidebar();
   activeTab = tab;
 
@@ -97,6 +98,7 @@ async function loadOverview() {
   set('stat-users', totalUsers.toLocaleString());
   set('stat-users-change', usersThisWeek > 0 ? `↑ ${usersThisWeek} this week` : 'No new users this week');
 
+  // Build product lookup for recent orders table
   const productMap = Object.fromEntries(products.map(p => [p.id, p]));
 
   const tbody = document.getElementById('dashboard-orders');
@@ -168,6 +170,7 @@ async function loadOrders() {
   try { products = await adminAPI.getProducts(); }
   catch { products = MOCK_ADMIN_PRODUCTS; }
 
+  // Build lookup maps by ID for fast cross-referencing
   const userMap = Object.fromEntries(users.map(u => [u.id, u]));
   const productMap = Object.fromEntries(products.map(p => [p.id, p]));
 
@@ -266,7 +269,6 @@ async function submitProduct(e) {
   succEl.classList.add('hidden');
 
   const formData = new FormData(form);
-  formData.set('price', String(formData.get('price')));
 
   try {
     await adminAPI.createProduct(formData);
@@ -308,6 +310,7 @@ async function confirmDelete() {
     showToast('Product deleted successfully.');
     loadProducts();
   } catch (err) {
+    console.error('Delete failed — server response:', err);
     showToast(`Delete failed: ${err.message}`);
   } finally {
     cancelDelete();
@@ -316,11 +319,13 @@ async function confirmDelete() {
 
 function updateOrderStatus(orderId, status) {
   showToast(`Order #${orderId} marked as "${status}"`);
+  // Wire: PATCH /admin/orders/{orderId}/status
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  if (!isLoggedIn()) { window.location.href = 'login.html'; return; }
+  if (!isLoggedIn()) { window.location.href = './login.html'; return; }
+  // if (!isAdmin()) { window.location.href = '../index.html'; return; }
 
   const user = getUser();
   if (user) document.getElementById('admin-name').textContent = `@${user.username || user.email}`;
@@ -329,6 +334,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ── TOAST ─────────────────────────────────────────────────────────────────────
+// Only define if app.js doesn't already have showToast
 if (typeof showToast === 'undefined') {
   function showToast(message) {
     const toast = document.getElementById('toast');

@@ -8,5 +8,10 @@
   "devDependencies": {
     "@tailwindcss/cli": "^4.2.1",
     "tailwindcss": "^4.2.1"
-  }
+  },
+  "description": "A production-quality vintage e-commerce frontend built with **HTML + Tailwind CSS + Vanilla JS**.",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

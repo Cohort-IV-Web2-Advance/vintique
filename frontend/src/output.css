@@ -488,9 +488,6 @@
   .aspect-4\/3 {
     aspect-ratio: 4/3;
   }
-  .aspect-\[4\/3\] {
-    aspect-ratio: 4/3;
-  }
   .aspect-square {
     aspect-ratio: 1 / 1;
   }
@@ -1119,17 +1116,8 @@
   .bg-green-50 {
     background-color: var(--color-green-50);
   }
-  .bg-green-500 {
-    background-color: var(--color-green-500);
-  }
   .bg-muted {
     background-color: var(--color-muted);
-  }
-  .bg-orange-50 {
-    background-color: var(--color-orange-50);
-  }
-  .bg-orange-500 {
-    background-color: var(--color-orange-500);
   }
   .bg-parchment {
     background-color: var(--color-parchment);
@@ -1644,9 +1632,6 @@
   .text-green-600 {
     color: var(--color-green-600);
   }
-  .text-green-700 {
-    color: var(--color-green-700);
-  }
   .text-muted {
     color: var(--color-muted);
   }
@@ -1655,9 +1640,6 @@
     @supports (color: color-mix(in lab, red, red)) {
       color: color-mix(in oklab, var(--color-muted) 60%, transparent);
     }
-  }
-  .text-orange-600 {
-    color: var(--color-orange-600);
   }
   .text-parchment {
     color: var(--color-parchment);
@@ -2180,11 +2162,6 @@
   .lg\:hidden {
     @media (width >= 64rem) {
       display: none;
-    }
-  }
-  .lg\:w-72 {
-    @media (width >= 64rem) {
-      width: calc(var(--spacing) * 72);
     }
   }
   .lg\:w-80 {

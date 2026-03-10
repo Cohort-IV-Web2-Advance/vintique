@@ -26,6 +26,12 @@ class Settings(BaseSettings):
     
     # Environment
     environment: str = os.getenv("ENVIRONMENT", "development")
+
+    # Paystack  ← ADD THIS BLOCK
+    paystack_secret_key: str = os.getenv("PAYSTACK_SECRET_KEY")
+    paystack_public_key: str = os.getenv("PAYSTACK_PUBLIC_KEY")
+    payment_callback_url: str = os.getenv("PAYMENT_CALLBACK_URL")
+
     
     # CORS
     cors_origins: List[str] = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")

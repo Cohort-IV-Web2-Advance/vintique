@@ -1618,6 +1618,13 @@
       }
     }
   }
+  .hover\:bg-inherit {
+    &:hover {
+      @media (hover: hover) {
+        background-color: inherit;
+      }
+    }
+  }
   .hover\:bg-parchment {
     &:hover {
       @media (hover: hover) {
@@ -1728,19 +1735,6 @@
   }
   .has-checked\:bg-amber\/5 {
     &:has(*:checked) {
-      background-color: color-mix(in srgb, #C9843A 5%, transparent);
-      @supports (color: color-mix(in lab, red, red)) {
-        background-color: color-mix(in oklab, var(--color-amber) 5%, transparent);
-      }
-    }
-  }
-  .has-\[\:checked\]\:border-amber {
-    &:has(*:is(:checked)) {
-      border-color: var(--color-amber);
-    }
-  }
-  .has-\[\:checked\]\:bg-amber\/5 {
-    &:has(*:is(:checked)) {
       background-color: color-mix(in srgb, #C9843A 5%, transparent);
       @supports (color: color-mix(in lab, red, red)) {
         background-color: color-mix(in oklab, var(--color-amber) 5%, transparent);

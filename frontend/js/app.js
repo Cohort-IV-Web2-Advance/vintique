@@ -44,56 +44,56 @@ function clearAuth() {
   localStorage.removeItem('vintique_user');
 }
 
-// async function register(userData) {
-//   const res = await fetch(`${API_BASE}/auth/register`, {
-//     method: "POST",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify(userData)
-//   });
-
-//   const data = await res.json();
-
-//   if (!res.ok) throw new Error(data.message || "Registration failed");
-
-//   if (data.access_token) {
-//     setAuth(data.access_token, data.user || {});
-//   }
-
-//   return data;
-// }
 async function register(userData) {
-// Remove leading @ from username if present
-if (userData.username && userData.username.startsWith("@")) {
-userData.username = userData.username.slice(1);
-}
+  const res = await fetch(`${API_BASE}/auth/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(userData)
+  });
 
-const res = await fetch(`${API_BASE}/auth/register`, {
-method: "POST",
-headers: { "Content-Type": "application/json" },
-body: JSON.stringify(userData)
-});
+  const data = await res.json();
 
-let data;
-try {
-data = await res.json();
-} catch {
-data = {};
-}
+  if (!res.ok) throw new Error(data.message || "Registration failed");
 
-// Throw detailed error if registration fails
-if (!res.ok) {
-// Some servers send errors in 'message', 'detail', or 'errors'
-const errMsg = data.message || data.detail || JSON.stringify(data) || "Registration failed";
-throw new Error(errMsg);
-}
+  if (data.access_token) {
+    setAuth(data.access_token, data.user || {});
+  }
 
-// Save auth if token returned
-if (data.access_token) {
-setAuth(data.access_token, data.user || {});
+  return data;
 }
+// async function register(userData) {
+// // Remove leading @ from username if present
+// if (userData.username && userData.username.startsWith("@")) {
+// userData.username = userData.username.slice(1);
+// }
 
-return data;
-}
+// const res = await fetch(`${API_BASE}/auth/register`, {
+// method: "POST",
+// headers: { "Content-Type": "application/json" },
+// body: JSON.stringify(userData)
+// });
+
+// let data;
+// try {
+// data = await res.json();
+// } catch {
+// data = {};
+// }
+
+// // Throw detailed error if registration fails
+// if (!res.ok) {
+// // Some servers send errors in 'message', 'detail', or 'errors'
+// const errMsg = data.message || data.detail || JSON.stringify(data) || "Registration failed";
+// throw new Error(errMsg);
+// }
+
+// // Save auth if token returned
+// if (data.access_token) {
+// setAuth(data.access_token, data.user || {});
+// }
+
+// return data;
+// }
 async function login(email, password) {
   const res = await fetch(`${API_BASE}/auth/login`, {
     method: "POST",
@@ -356,14 +356,26 @@ function getUserSafe() {
 
 function updateNavAuth() {
   const link = document.getElementById('auth-link');
-  if (!link) return;
+  const signoutBtn = document.getElementById('nav-signout');
+  const avatar = document.getElementById('nav-user-avatar');
 
   if (isLoggedIn()) {
-    link.textContent = 'Orders';
-    link.href = 'orders.html';
+    const user = getUser();
+    const initial = (user?.username || user?.email || '?')[0].toUpperCase();
+
+    // Orders — desktop only
+    if (link) { link.textContent = 'Orders'; link.href = 'orders.html'; link.classList.remove('hidden'); link.classList.add('hidden', 'md:block'); link.classList.replace('md:hidden', 'md:block'); }
+    // Sign Out — desktop only
+    if (signoutBtn) signoutBtn.classList.replace('md:hidden', 'md:block');
+    // Avatar
+    if (avatar) { avatar.textContent = initial; avatar.classList.remove('hidden'); }
   } else {
-    link.textContent = 'Sign In';
-    link.href = 'login.html';
+    // Sign In — desktop only
+    if (link) { link.classList.replace('md:block', 'md:hidden'); }
+    // Hide Sign Out
+    if (signoutBtn) signoutBtn.classList.replace('md:block', 'md:hidden');
+    // Hide avatar
+    if (avatar) avatar.classList.add('hidden');
   }
 }
 

@@ -94,103 +94,20 @@ def manage_user_account(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_admin_user)
 ):
-    """
-    Manage user accounts with actions: delete, suspend, reactivate
-    
-    Args:
-        action_data: Contains user_id (int or str), action (delete/suspend/reactivate), and optional reason
-    
-    Returns:
-        dict: Success message with details of the action performed
-    """
     user_service = UserService(db)
-    
-    # Find user by ID or username
-    user = None
-    if isinstance(action_data.user_id, int):
-        user = db.query(User).filter(User.id == action_data.user_id).first()
-    elif isinstance(action_data.user_id, str):
-        # Try to find by ID first (in case string represents a number)
-        try:
-            user_id = int(action_data.user_id)
-            user = db.query(User).filter(User.id == user_id).first()
-        except ValueError:
-            pass
-        
-        # If not found by ID, try username
-        if not user:
-            user = db.query(User).filter(User.username == action_data.user_id).first()
-    
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"User with identifier '{action_data.user_id}' not found"
-        )
-    
-    # Prevent admin from acting on themselves
-    if user.id == current_user.id:
+
+    # Prevent admin acting on themselves
+    if str(action_data.user_id) == str(current_user.id) or action_data.user_id == current_user.username:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="You cannot perform this action on your own account"
         )
-    
-    # Perform the requested action
-    if action_data.action == "delete":
-        # Soft delete by setting is_active to False
-        user.is_active = False
-        user.is_deleted = True
-        db.commit()
-        return {
-            "message": f"User '{user.username}' (ID: {user.id}) has been deleted successfully",
-            "action": "delete",
-            "user_id": user.id,
-            "username": user.username,
-            "reason": action_data.reason
-        }
-    
-    elif action_data.action == "suspend":
-        if user.is_suspended:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"User '{user.username}' is already suspended"
-            )
-        
-        user.is_suspended = True
-        user.is_active = False
-        db.commit()
-        return {
-            "message": f"User '{user.username}' (ID: {user.id}) has been suspended successfully",
-            "action": "suspend",
-            "user_id": user.id,
-            "username": user.username,
-            "reason": action_data.reason
-        }
-    
-    elif action_data.action == "reactivate":
-        if not user.is_suspended and not (user.is_deleted or not user.is_active):
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"User '{user.username}' is already active"
-            )
-        
-        user.is_suspended = False
-        user.is_active = True
-        user.is_deleted = False
-        db.commit()
-        return {
-            "message": f"User '{user.username}' (ID: {user.id}) has been reactivated successfully",
-            "action": "reactivate",
-            "user_id": user.id,
-            "username": user.username,
-            "reason": action_data.reason
-        }
-    
-    else:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Invalid action '{action_data.action}'. Supported actions: delete, suspend, reactivate"
-        )
 
+    return user_service.update_user_status(
+        identifier=str(action_data.user_id),
+        action=action_data.action,
+        reason=action_data.reason
+    )
 
 
 # Inventory Management Routes

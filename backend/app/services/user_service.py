@@ -3,8 +3,7 @@ from typing import List, Optional
 from fastapi import HTTPException, status
 from decimal import Decimal
 
-from app.models.user import User, Account
-from app.schemas.user import AccountResponse
+from app.models.user import User, Account, UserStatus
 
 
 class UserService:
@@ -21,139 +20,94 @@ class UserService:
         return self.db.query(User).all()
 
     def update_account_balance(self, user_id: int, new_balance: Decimal) -> Account:
-        """
-        Update account balance with proper decimal handling.
-        
-        Args:
-            user_id: ID of the user
-            new_balance: New balance as Decimal
-            
-        Returns:
-            Account: Updated account object
-            
-        Raises:
-            HTTPException: If account not found
-        """
         account = self.db.query(Account).filter(Account.user_id == user_id).first()
         if not account:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Account not found"
-            )
-        
-        # Ensure new_balance is a Decimal
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Account not found")
         if not isinstance(new_balance, Decimal):
             new_balance = Decimal(str(new_balance))
-        
         account.balance = new_balance
         self.db.commit()
         self.db.refresh(account)
         return account
 
     def fund_account(self, user_id: int, amount: Decimal) -> Account:
-        """
-        Fund account with transactional safety.
-        
-        Args:
-            user_id: ID of the user
-            amount: Amount to add (must be positive)
-            
-        Returns:
-            Account: Updated account object
-            
-        Raises:
-            HTTPException: If account not found or amount is invalid
-        """
         if amount <= 0:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Amount must be greater than 0"
-            )
-        
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Amount must be greater than 0")
         try:
-            # Get account and lock for update
             account = self.db.query(Account).filter(Account.user_id == user_id).with_for_update().first()
             if not account:
-                raise HTTPException(
-                    status_code=status.HTTP_404_NOT_FOUND,
-                    detail="Account not found"
-                )
-            
-            # Ensure amount is Decimal
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Account not found")
             if not isinstance(amount, Decimal):
                 amount = Decimal(str(amount))
-            
-            # Update balance
-            old_balance = account.balance
             account.balance += amount
-            
             self.db.commit()
             self.db.refresh(account)
-            
             return account
-            
         except Exception as e:
             self.db.rollback()
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Failed to fund account: {str(e)}"
-            )
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Failed to fund account: {str(e)}")
 
     def withdraw_from_account(self, user_id: int, amount: Decimal) -> Account:
-        """
-        Withdraw from account with sufficient funds check.
-        
-        Args:
-            user_id: ID of the user
-            amount: Amount to withdraw (must be positive)
-            
-        Returns:
-            Account: Updated account object
-            
-        Raises:
-            HTTPException: If account not found, insufficient funds, or amount is invalid
-        """
         if amount <= 0:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Amount must be greater than 0"
-            )
-        
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Amount must be greater than 0")
         try:
-            # Get account and lock for update
             account = self.db.query(Account).filter(Account.user_id == user_id).with_for_update().first()
             if not account:
-                raise HTTPException(
-                    status_code=status.HTTP_404_NOT_FOUND,
-                    detail="Account not found"
-                )
-            
-            # Ensure amount is Decimal
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Account not found")
             if not isinstance(amount, Decimal):
                 amount = Decimal(str(amount))
-            
-            # Check sufficient funds
             if account.balance < amount:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Insufficient funds"
-                )
-            
-            # Update balance
-            old_balance = account.balance
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Insufficient funds")
             account.balance -= amount
-            
             self.db.commit()
             self.db.refresh(account)
-            
             return account
-            
         except HTTPException:
-            # Re-raise HTTP exceptions as-is
             raise
         except Exception as e:
             self.db.rollback()
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Failed to withdraw from account: {str(e)}"
-            )
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Failed to withdraw from account: {str(e)}")
+
+    def update_user_status(self, identifier: str, action: str, reason: Optional[str] = None):
+        """Update user status: suspend, reactivate, or delete."""
+        user = None
+        try:
+            user_id = int(identifier)
+            user = self.db.query(User).filter(User.id == user_id).first()
+        except ValueError:
+            pass
+
+        if not user:
+            user = self.db.query(User).filter(User.username == identifier).first()
+
+        if not user:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User '{identifier}' not found")
+
+        if action == "suspend":
+            if user.status == UserStatus.suspended:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"User '{user.username}' is already suspended")
+            user.status = UserStatus.suspended
+
+        elif action == "reactivate":
+            if user.status == UserStatus.active:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"User '{user.username}' is already active")
+            user.status = UserStatus.active
+
+        elif action == "delete":
+            if user.status == UserStatus.inactive:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"User '{user.username}' is already deleted")
+            user.status = UserStatus.inactive
+
+        else:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid action '{action}'. Use: suspend, reactivate, delete")
+
+        self.db.commit()
+        self.db.refresh(user)
+        return {
+            "message": f"User '{user.username}' (ID: {user.id}) {action}d successfully",
+            "action": action,
+            "user_id": user.id,
+            "username": user.username,
+            "status": user.status.value,
+            "reason": reason
+        }

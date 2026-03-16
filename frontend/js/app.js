@@ -426,30 +426,83 @@ function updateNavAuth() {
   const link = document.getElementById("auth-link");
   const signoutBtn = document.getElementById("nav-signout");
   const avatar = document.getElementById("nav-user-avatar");
+  const mobileAuthLink = document.getElementById("mobile-auth");
+  const mobileSignout = document.getElementById("mobile-signout");
 
   if (isLoggedIn()) {
     const user = getUser();
+    const admin = isAdmin();
     const initial = (user?.username || user?.email || "?")[0].toUpperCase();
 
+    // Desktop Orders link — hidden on mobile, visible on desktop
     if (link) {
       link.textContent = "Orders";
       link.href = "orders.html";
-      link.classList.remove("hidden");
+      link.classList.remove("md:hidden");
       link.classList.add("hidden", "md:block");
-      link.classList.replace("md:hidden", "md:block");
     }
-    if (user && signoutBtn && !isAdmin())
-      signoutBtn.classList.replace("md:hidden", "md:block");
+
+    // Desktop Signout — only for non-admin
+    if (signoutBtn) {
+      if (admin) {
+        signoutBtn.classList.add("hidden");
+        signoutBtn.classList.remove("md:block");
+      } else {
+        signoutBtn.classList.remove("md:hidden");
+        signoutBtn.classList.add("hidden", "md:block");
+      }
+    }
+
+    // Avatar — show for BOTH admin and regular user
     if (avatar) {
       avatar.textContent = initial;
       avatar.classList.remove("hidden");
+      avatar.style.display = "flex"; // your avatar needs flex for centering
+      avatar.classList.add("md:flex");
     }
+
+    // Mobile Orders link
+    if (mobileAuthLink) {
+      mobileAuthLink.textContent = "Orders";
+      mobileAuthLink.href = "orders.html";
+      mobileAuthLink.classList.remove("hidden");
+    }
+
+    // Mobile Signout — show for ALL logged in users including admin
+    if (mobileSignout) {
+      mobileSignout.classList.remove("hidden");
+    }
+
   } else {
+    // Not logged in
+
     if (link) {
-      link.classList.replace("md:block", "md:hidden");
+      link.textContent = "Sign In";
+      link.href = "login.html";
+      link.classList.remove("hidden", "md:hidden");
+      link.classList.add("hidden", "md:block");
     }
-    if (signoutBtn) signoutBtn.classList.replace("md:block", "md:hidden");
-    if (avatar) avatar.classList.add("hidden");
+
+    if (signoutBtn) {
+      signoutBtn.classList.remove("md:block");
+      signoutBtn.classList.add("hidden");
+    }
+
+    if (avatar) {
+      avatar.classList.add("hidden");
+      avatar.style.display = "none";
+      avatar.classList.remove("md:flex");
+    }
+
+    if (mobileAuthLink) {
+      mobileAuthLink.textContent = "Sign In";
+      mobileAuthLink.href = "login.html";
+      mobileAuthLink.classList.remove("hidden");
+    }
+
+    if (mobileSignout) {
+      mobileSignout.classList.add("hidden");
+    }
   }
 }
 

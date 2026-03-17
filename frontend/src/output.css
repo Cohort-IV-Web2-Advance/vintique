@@ -7,14 +7,9 @@
     --font-serif: "Playfair Display", Georgia, serif;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
-    --color-orange-50: oklch(98% 0.016 73.684);
-    --color-orange-500: oklch(70.5% 0.213 47.604);
-    --color-orange-600: oklch(64.6% 0.222 41.116);
     --color-amber-50: oklch(98.7% 0.022 95.277);
     --color-green-50: oklch(98.2% 0.018 155.826);
-    --color-green-500: oklch(72.3% 0.219 149.579);
     --color-green-600: oklch(62.7% 0.194 149.214);
-    --color-green-700: oklch(52.7% 0.154 150.069);
     --color-blue-50: oklch(97% 0.014 254.604);
     --color-blue-600: oklch(54.6% 0.245 262.881);
     --color-white: #fff;
@@ -473,6 +468,9 @@
   .hidden {
     display: none;
   }
+  .inline {
+    display: inline;
+  }
   .inline-block {
     display: inline-block;
   }
@@ -713,6 +711,9 @@
   }
   .cursor-pointer {
     cursor: pointer;
+  }
+  .resize {
+    resize: both;
   }
   .resize-none {
     resize: none;
@@ -1047,12 +1048,6 @@
   }
   .bg-\[\#F5F0E8\] {
     background-color: #F5F0E8;
-  }
-  .bg-\[var\(--color-amber\)\] {
-    background-color: var(--color-amber);
-  }
-  .bg-\[var\(--color-cream\)\] {
-    background-color: var(--color-cream);
   }
   .bg-amber {
     background-color: var(--color-amber);
@@ -1591,12 +1586,6 @@
   .text-\[\#EDE5D0\] {
     color: #EDE5D0;
   }
-  .text-\[var\(--color-amber\)\] {
-    color: var(--color-amber);
-  }
-  .text-\[var\(--color-brown\)\] {
-    color: var(--color-brown);
-  }
   .text-amber {
     color: var(--color-amber);
   }
@@ -1838,13 +1827,6 @@
       @media (hover: hover) {
         --tw-translate-y: calc(var(--spacing) * -1);
         translate: var(--tw-translate-x) var(--tw-translate-y);
-      }
-    }
-  }
-  .hover\:cursor-pointer {
-    &:hover {
-      @media (hover: hover) {
-        cursor: pointer;
       }
     }
   }

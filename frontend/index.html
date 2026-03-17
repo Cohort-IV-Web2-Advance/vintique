@@ -46,7 +46,7 @@
           </a>
 
           <a href="login.html" id="auth-link"
-            class="border px-6 py-1 border-[brown] text-sm font-sans text-brown hover:text-amber transition-colors">
+            class="hidden md:block border px-6 py-1 border-[brown] text-sm font-sans text-brown hover:text-amber transition-colors">
             Sign In
           </a>
 
@@ -396,10 +396,31 @@
 
     // Show Admin Panel link if user is admin
     document.addEventListener('DOMContentLoaded', () => {
-      const user = getUser();
-      if (user?.is_admin) {
-        document.getElementById('admin-link')?.classList.remove('hidden');
-        document.getElementById('mobile-admin-link')?.classList.remove('hidden');
+      if (isAdmin()) {
+
+        // Desktop admin link — only show on md and above using inline style
+        const adminLink = document.getElementById('admin-link');
+        if (adminLink) {
+          adminLink.classList.remove('hidden');
+          // Only show on desktop — hide on mobile using a media query check
+          if (window.innerWidth >= 768) {
+            adminLink.style.display = 'block';
+          } else {
+            adminLink.style.display = 'none';
+          }
+
+          // Also listen for resize in case orientation changes
+          window.addEventListener('resize', () => {
+            adminLink.style.display = window.innerWidth >= 768 ? 'block' : 'none';
+          });
+        }
+
+        // Mobile admin link — always show inside mobile menu
+        const mobileAdminLink = document.getElementById('mobile-admin-link');
+        if (mobileAdminLink) {
+          mobileAdminLink.classList.remove('hidden');
+          mobileAdminLink.style.display = 'block';
+        }
       }
     });
   </script>

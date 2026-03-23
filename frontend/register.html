@@ -198,6 +198,7 @@
   <script src="./js/app.js"></script>
   <script>
 
+    // ── Helpers ───────────────────────────────────────────────────────────────
     function togglePassword(id) {
       const input = document.getElementById(id);
       input.type = input.type === 'password' ? 'text' : 'password';
@@ -234,37 +235,44 @@
       label.className = `text-xs mt-0.5 ${level.textColor}`;
     }
 
+    // ── Username check ────────────────────────────────────────────────────────
+    // No /check-username endpoint available — validation happens on submit via
+    // the registration API. The spinner is shown briefly to indicate the field
+    // was seen, then cleared. A taken-username error from the server will
+    // highlight this field automatically after submission.
     let usernameTimer;
+
     function checkUsername(val) {
       const status = document.getElementById('username-status');
       const hint = document.getElementById('username-hint');
       clearTimeout(usernameTimer);
 
-      if (val.length < 3) {
+      // Strip leading @ before evaluating length
+      const clean = val.startsWith('@') ? val.slice(1) : val;
+
+      if (clean.length < 3) {
         status.classList.add('hidden');
         hint.classList.add('hidden');
         return;
       }
 
-      // Show loading spinner
+      // Show brief loading spinner
       status.innerHTML = `<svg class="w-4 h-4 text-muted animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>`;
       status.classList.remove('hidden');
       hint.classList.add('hidden');
 
+      // Clear spinner after delay — real availability is checked on submit
       usernameTimer = setTimeout(() => {
-        const taken = ['admin', 'margaret_h', 'vintique'].includes(val.toLowerCase());
-
-        if (taken) {
-          status.innerHTML = `<svg class="w-4 h-4 text-rust" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>`;
-          hint.textContent = 'That username is already taken.';
-          hint.className = 'text-xs text-rust mt-1';
-        } else {
-          status.innerHTML = `<svg class="w-4 h-4 text-sage" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>`;
-          hint.textContent = `@${val} is available!`;
-          hint.className = 'text-xs text-sage mt-1';
-        }
-        hint.classList.remove('hidden');
+        status.classList.add('hidden');
       }, 600);
+    }
+
+    // ── Field highlight helper ────────────────────────────────────────────────
+    function highlightField(field) {
+      field.classList.add('border-rust');
+      field.addEventListener('input', () => {
+        field.classList.remove('border-rust');
+      }, { once: true });
     }
 
     // ── Form submission ───────────────────────────────────────────────────────
@@ -274,29 +282,40 @@
       const errEl = document.getElementById('auth-error');
       const form = e.target;
 
+      const usernameInput = document.getElementById('username-input');
       const username = form.username.value.trim();
       const email = form.email.value.trim();
       const pw = form.password.value;
       const shipping_address = form.shipping_address.value.trim();
       const terms = document.getElementById('terms-check');
 
+      // Clear previous errors
       errEl.classList.add('hidden');
       errEl.textContent = '';
 
-      if (!username || !email || !pw || !shipping_address) {
-        errEl.textContent = 'All fields are required. Please fill in all fields.';
+      // ── Client-side validation ──────────────────────────────────────────────
+
+      if (!username) {
+        errEl.textContent = 'Username is required.';
         errEl.classList.remove('hidden');
-        if (!username) form.username.focus();
-        else if (!email) form.email.focus();
-        else if (!pw) form.password.focus();
-        else if (!shipping_address) form.shipping_address.focus();
+        usernameInput.focus();
+        highlightField(usernameInput);
         return;
       }
 
       if (username.length < 3) {
         errEl.textContent = 'Username must be at least 3 characters.';
         errEl.classList.remove('hidden');
-        form.username.focus();
+        usernameInput.focus();
+        highlightField(usernameInput);
+        return;
+      }
+
+      if (!email) {
+        errEl.textContent = 'Email address is required.';
+        errEl.classList.remove('hidden');
+        form.email.focus();
+        highlightField(form.email);
         return;
       }
 
@@ -305,6 +324,15 @@
         errEl.textContent = 'Please enter a valid email address.';
         errEl.classList.remove('hidden');
         form.email.focus();
+        highlightField(form.email);
+        return;
+      }
+
+      if (!pw) {
+        errEl.textContent = 'Password is required.';
+        errEl.classList.remove('hidden');
+        form.password.focus();
+        highlightField(form.password);
         return;
       }
 
@@ -312,6 +340,7 @@
         errEl.textContent = 'Password must be at least 8 characters long.';
         errEl.classList.remove('hidden');
         form.password.focus();
+        highlightField(form.password);
         return;
       }
 
@@ -319,6 +348,7 @@
         errEl.textContent = 'Password must contain at least one uppercase letter.';
         errEl.classList.remove('hidden');
         form.password.focus();
+        highlightField(form.password);
         return;
       }
 
@@ -326,6 +356,7 @@
         errEl.textContent = 'Password must contain at least one lowercase letter.';
         errEl.classList.remove('hidden');
         form.password.focus();
+        highlightField(form.password);
         return;
       }
 
@@ -333,6 +364,7 @@
         errEl.textContent = 'Password must contain at least one number.';
         errEl.classList.remove('hidden');
         form.password.focus();
+        highlightField(form.password);
         return;
       }
 
@@ -340,6 +372,7 @@
         errEl.textContent = 'Password must contain at least one special character (!@#$%^&*...).';
         errEl.classList.remove('hidden');
         form.password.focus();
+        highlightField(form.password);
         return;
       }
 
@@ -349,6 +382,7 @@
         return;
       }
 
+      // ── Submit ──────────────────────────────────────────────────────────────
       btn.textContent = 'Creating account…';
       btn.disabled = true;
 
@@ -359,13 +393,29 @@
         await login(payload.email, payload.password);
         window.location.href = 'index.html';
       } catch (err) {
-        errEl.textContent = err.message || 'Registration failed. Please try again.';
+        const msg = err.message || 'Registration failed. Please try again.';
+        errEl.textContent = msg;
         errEl.classList.remove('hidden');
+
+        // Highlight the relevant field based on the server error message
+        const lower = msg.toLowerCase();
+        if (lower.includes('username')) {
+          usernameInput.focus();
+          highlightField(usernameInput);
+        } else if (lower.includes('email')) {
+          form.email.focus();
+          highlightField(form.email);
+        } else if (lower.includes('password')) {
+          form.password.focus();
+          highlightField(form.password);
+        }
+
         btn.textContent = 'Create My Account';
         btn.disabled = false;
       }
     }
-    // Redirect if already logged in
+
+    // ── Redirect if already logged in ─────────────────────────────────────────
     if (typeof isLoggedIn === 'function' && isLoggedIn()) {
       window.location.href = 'index.html';
     }

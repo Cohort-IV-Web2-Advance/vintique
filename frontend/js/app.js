@@ -60,74 +60,76 @@ function clearAuth() {
 }
 
 async function register(userData) {
+  // Remove leading @ from username if present
+  if (userData.username && userData.username.startsWith("@")) {
+    userData.username = userData.username.slice(1);
+  }
+
   const res = await fetch(`${API_BASE}/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(userData),
   });
 
-  const data = await res.json();
+  // Safely parse JSON, fallback to empty object if parsing fails
+  let data;
+  try {
+    data = await res.json();
+  } catch {
+    data = {};
+  }
 
-  if (!res.ok) throw new Error(data.message || "Registration failed");
+  // Throw detailed error if registration fails
+  if (!res.ok) {
+    const errMsg =
+      data.message || data.detail || JSON.stringify(data) || "Registration failed";
+    throw new Error(errMsg);
+  }
 
+  // Save auth if token returned
   if (data.access_token) {
     setAuth(data.access_token, data.user || {});
   }
 
   return data;
 }
-// async function register(userData) {
-// // Remove leading @ from username if present
-// if (userData.username && userData.username.startsWith("@")) {
-// userData.username = userData.username.slice(1);
-// }
 
-// const res = await fetch(`${API_BASE}/auth/register`, {
-// method: "POST",
-// headers: { "Content-Type": "application/json" },
-// body: JSON.stringify(userData)
-// });
-
-// let data;
-// try {
-// data = await res.json();
-// } catch {
-// data = {};
-// }
-
-// // Throw detailed error if registration fails
-// if (!res.ok) {
-// // Some servers send errors in 'message', 'detail', or 'errors'
-// const errMsg = data.message || data.detail || JSON.stringify(data) || "Registration failed";
-// throw new Error(errMsg);
-// }
-
-// // Save auth if token returned
-// if (data.access_token) {
-// setAuth(data.access_token, data.user || {});
-// }
-
-// return data;
-// }
 async function login(email, password) {
   const res = await fetch(`${API_BASE}/auth/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      email: email,
-      password: password,
-    }),
+    body: JSON.stringify({ email, password }),
   });
 
-  const data = await res.json();
+  // Safe JSON parse
+  let data;
+  try {
+    data = await res.json();
+  } catch {
+    data = {};
+  }
 
-  if (!res.ok) throw new Error(data.detail || "Login failed");
+  if (!res.ok) {
+    let msg = "Login failed";
+
+    if (typeof data.detail === "string") {
+      // Plain string error: { "detail": "Invalid credentials" }
+      msg = data.detail;
+    } else if (Array.isArray(data.detail)) {
+      // FastAPI validation array: { "detail": [{ "msg": "...", "loc": [...] }] }
+      msg = data.detail.map((e) => e.msg).join(", ");
+    } else if (data.message) {
+      msg = data.message;
+    }
+
+    throw new Error(msg);
+  }
 
   const token = data.access_token || data.token;
-
   if (!token) throw new Error("No token returned");
+
   const user = data.user || { email };
   setAuth(token, user);
 

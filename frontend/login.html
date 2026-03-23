@@ -37,6 +37,7 @@
     <!-- Right: Form Panel -->
     <div class="flex items-center justify-center px-6 py-12">
       <div class="w-full max-w-md fade-in">
+
         <!-- Mobile Logo -->
         <a href="index.html" class="flex items-center gap-2 lg:hidden mb-10">
           <span class="font-serif text-2xl text-brown font-bold">Vintique</span>
@@ -51,10 +52,18 @@
         <div id="auth-error"
           class="hidden bg-rust/10 border border-rust/20 text-rust rounded-xl px-4 py-3 text-sm mb-5"></div>
 
-        <form id="login-form" class="space-y-4" onsubmit="handleLogin(event)">
+        <!-- novalidate disables ALL browser native validation popups -->
+        <form id="login-form" class="space-y-4" onsubmit="handleLogin(event)" novalidate>
           <div>
             <label class="block text-xs font-sans tracking-wide text-muted mb-1.5">Email Address</label>
-            <input type="email" name="email" placeholder="margaret@example.com"
+            <!-- type="text" prevents browser from intercepting with its own email popup -->
+            <input
+              type="text"
+              name="email"
+              id="email-input"
+              placeholder="margaret@example.com"
+              autocomplete="email"
+              inputmode="email"
               class="w-full bg-white border border-parchment rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-amber transition-colors"
               oninput="this.value = this.value.replace(/\s/g, '')" />
           </div>
@@ -65,7 +74,12 @@
               <a href="#" class="text-xs text-amber hover:text-rust transition-colors">Forgot password?</a>
             </div>
             <div class="relative">
-              <input type="password" name="password" id="password-input" placeholder="••••••••"
+              <input
+                type="password"
+                name="password"
+                id="password-input"
+                placeholder="••••••••"
+                autocomplete="current-password"
                 class="w-full bg-white border border-parchment rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-amber transition-colors pr-12"
                 oninput="this.value = this.value.replace(/\s/g, '')" />
               <button type="button" onclick="togglePassword()"
@@ -79,11 +93,6 @@
               </button>
             </div>
           </div>
-
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" class="accent-amber rounded" />
-            <span class="text-sm text-muted">Remember me for 30 days</span>
-          </label>
 
           <button type="submit" id="login-btn"
             class="w-full bg-amber hover:bg-rust text-cream font-sans font-semibold py-4 rounded-xl transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 mt-2 cursor-pointer">
@@ -101,26 +110,58 @@
 
   <script src="./js/app.js"></script>
   <script>
+
+    // ── Field highlight helper ─────────────────────────────────────────────────
+    function highlightField(field) {
+      field.classList.add('border-rust');
+      field.addEventListener('input', () => {
+        field.classList.remove('border-rust');
+      }, { once: true });
+    }
+
+    // ── Login handler ──────────────────────────────────────────────────────────
     async function handleLogin(e) {
       e.preventDefault();
       const btn = document.getElementById('login-btn');
       const errEl = document.getElementById('auth-error');
       const form = e.target;
 
-      const email = form.email.value.trim();
-      const pw = form.password.value.trim();
+      const emailInput = document.getElementById('email-input');
+      const passwordInput = document.getElementById('password-input');
+      const email = emailInput.value.trim();
+      const pw = passwordInput.value.trim();
 
+      // Clear previous errors
       errEl.classList.add('hidden');
       errEl.textContent = '';
 
-      if (!email || !pw) {
-        errEl.textContent = 'All fields are required. Please fill in all fields.';
+      // ── Client-side validation ──────────────────────────────────────────────
+      if (!email) {
+        errEl.textContent = 'Email address is required.';
         errEl.classList.remove('hidden');
-        if (!email) form.email.focus();
-        else form.password.focus();
+        emailInput.focus();
+        highlightField(emailInput);
         return;
       }
 
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        errEl.textContent = 'Please enter a valid email address.';
+        errEl.classList.remove('hidden');
+        emailInput.focus();
+        highlightField(emailInput);
+        return;
+      }
+
+      if (!pw) {
+        errEl.textContent = 'Password is required.';
+        errEl.classList.remove('hidden');
+        passwordInput.focus();
+        highlightField(passwordInput);
+        return;
+      }
+
+      // ── Submit ──────────────────────────────────────────────────────────────
       btn.textContent = 'Signing in…';
       btn.disabled = true;
 
@@ -134,18 +175,37 @@
           window.location.href = redirect;
         }
       } catch (err) {
-        errEl.textContent = err.message || 'Invalid email or password.';
+        // Safely extract message — guards against [object Object]
+        const msg =
+          typeof err.message === 'string' && err.message
+            ? err.message
+            : 'Invalid email or password.';
+
+        errEl.textContent = msg;
         errEl.classList.remove('hidden');
+
+        // Highlight the relevant field based on server error
+        const lower = msg.toLowerCase();
+        if (lower.includes('email')) {
+          emailInput.focus();
+          highlightField(emailInput);
+        } else if (lower.includes('password')) {
+          passwordInput.focus();
+          highlightField(passwordInput);
+        }
+
         btn.textContent = 'Sign In';
         btn.disabled = false;
       }
     }
+
+    // ── Toggle password visibility ─────────────────────────────────────────────
     function togglePassword() {
       const input = document.getElementById('password-input');
       input.type = input.type === 'password' ? 'text' : 'password';
     }
 
-    // Redirect if already logged in
+    // ── Redirect if already logged in ─────────────────────────────────────────
     if (isLoggedIn()) window.location.href = isAdmin() ? 'admin.html' : 'index.html';
   </script>
 </body>

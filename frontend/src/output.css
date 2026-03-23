@@ -995,6 +995,9 @@
   .border-parchment {
     border-color: var(--color-parchment);
   }
+  .border-rust {
+    border-color: var(--color-rust);
+  }
   .border-rust\/20 {
     border-color: color-mix(in srgb, #B55330 20%, transparent);
     @supports (color: color-mix(in lab, red, red)) {

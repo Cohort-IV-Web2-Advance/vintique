@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
 echo "Running database migrations..."
-alembic upgrade head #Perhaps we should use alembic upgrade head --autogenerate
+alembic upgrade head 
 echo "Starting application..."
 exec gunicorn app.main:app -k uvicorn.workers.UvicornWorker -c gunicorn.conf.py

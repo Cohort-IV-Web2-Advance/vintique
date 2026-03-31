@@ -35,7 +35,7 @@ if settings.environment == "development":
     ]
 else:
     origins = [
-        "https://vintique.onrender.com",
+        "https://vintique-one.vercel.app",
     ]
 
 app.add_middleware(

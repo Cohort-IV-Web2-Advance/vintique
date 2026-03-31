@@ -1,5 +1,6 @@
 from pydantic_settings import BaseSettings
-from typing import Optional, List
+from pydantic import field_validator
+from typing import Optional, List, Any
 import os
 import sys
 
@@ -8,11 +9,12 @@ class Settings(BaseSettings):
     # Database
     database_url: str = os.getenv("DATABASE_URL")
     
-    # MySQL Environment Variables (for docker-compose)
-    mysql_root_password: Optional[str] = os.getenv("MYSQL_ROOT_PASSWORD")
-    mysql_database: str = os.getenv("MYSQL_DATABASE", "vintique_db")
-    mysql_user: str = os.getenv("MYSQL_USER", "vintique_user")
-    mysql_password: Optional[str] = os.getenv("MYSQL_PASSWORD")
+    # PostgreSQL Environment Variables (for docker-compose)
+    postgres_user: str = os.getenv("POSTGRES_USER", "vintique_user")
+    postgres_password: Optional[str] = os.getenv("POSTGRES_PASSWORD")
+    postgres_db: str = os.getenv("POSTGRES_DB", "vintique_db")
+    postgres_host: str = os.getenv("POSTGRES_HOST", "localhost")
+    postgres_port: str = os.getenv("POSTGRES_PORT", "5432")
     
     # JWT
     jwt_secret_key: str = os.getenv("JWT_SECRET_KEY")
@@ -34,7 +36,18 @@ class Settings(BaseSettings):
 
     
     # CORS
-    cors_origins: List[str] = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")
+    cors_origins: Any = ["http://localhost:3000", "http://127.0.0.1:3000"]
+    
+    @field_validator('cors_origins', mode='before')
+    @classmethod
+    def parse_cors_origins(cls, v):
+        if isinstance(v, str):
+            if not v.strip():  # Handle empty string
+                return []
+            return [origin.strip() for origin in v.split(",") if origin.strip()]
+        elif isinstance(v, list):
+            return v
+        return ["http://localhost:3000", "http://127.0.0.1:3000"]
     
     # Gunicorn
     gunicorn_workers: int = int(os.getenv("GUNICORN_WORKERS", "3"))

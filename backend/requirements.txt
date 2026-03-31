@@ -2,8 +2,7 @@ fastapi==0.104.1
 uvicorn[standard]==0.24.0
 sqlalchemy==2.0.23
 alembic==1.12.1
-mysqlclient==2.2.0
-pymysql==1.1.1 #updated from 1.1.0 for high security vulnerability
+psycopg2-binary==2.9.9
 python-jose[cryptography]==3.4.0 #updated from 3.3.0 for high security vulnerability
 passlib[bcrypt]==1.7.4
 python-multipart==0.0.22 #updated from 0.0.6 for high (DoS) security vulnerability
